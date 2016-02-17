@@ -1,11 +1,12 @@
-﻿using System.Collections.Specialized;
-using System.Configuration;
-
-namespace SemanticRelationsResolver.Console.Config
+﻿namespace SemanticRelationsResolver.Console.Config
 {
+    using System.Collections.Specialized;
+    using System.Configuration;
+
     public class AppConfig : IAppConfig
     {
-        private static readonly NameValueCollection FilePaths = ConfigurationManager.GetSection("filePaths") as NameValueCollection;
+        private static readonly NameValueCollection FilePaths =
+            ConfigurationManager.GetSection("filePaths") as NameValueCollection;
 
         public string GetString(string key)
         {

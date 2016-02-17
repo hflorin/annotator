@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace SemanticRelationsResolver.Console.Config
+﻿namespace SemanticRelationsResolver.Console.Config
 {
+    using System;
+
     public class ConsoleConfig
     {
         private readonly IAppConfig _appConfig;
@@ -18,19 +18,12 @@ namespace SemanticRelationsResolver.Console.Config
 
         public string InputDirectoryPath
         {
-            get
-            {
-                return _appConfig.GetString("inputDirectoryPath");
-            }
+            get { return _appConfig.GetString("inputDirectoryPath"); }
         }
 
         public string OutputDirectoryPath
         {
-            get
-            {
-                return _appConfig.GetString("outputDirectoryPath");
-            }
+            get { return _appConfig.GetString("outputDirectoryPath"); }
         }
-
     }
 }

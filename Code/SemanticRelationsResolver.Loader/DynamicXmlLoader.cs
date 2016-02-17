@@ -104,7 +104,10 @@
             {
                 var dictionary = parent as IDictionary<string, object>;
 
-                if (dictionary == null) return;
+                if (dictionary == null)
+                {
+                    return;
+                }
 
                 if (dictionary.ContainsKey(name))
                 {
