@@ -1,0 +1,8 @@
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.dll.config
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.dll
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.pdb
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\bin\Debug\nunit.framework.dll
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\bin\Debug\nunit.framework.xml
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.csprojResolveAssemblyReference.cache
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.dll
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.pdb

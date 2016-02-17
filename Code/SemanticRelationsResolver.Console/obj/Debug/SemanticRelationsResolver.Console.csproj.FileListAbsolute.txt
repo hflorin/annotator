@@ -1,0 +1,16 @@
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Console.exe.config
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Console.exe
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Console.pdb
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\Autofac.dll
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\NLog.dll
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Domain.dll
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Loaders.dll
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Mappers.dll
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Domain.pdb
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Loaders.pdb
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Mappers.pdb
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\Autofac.xml
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\bin\Debug\NLog.xml
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.csprojResolveAssemblyReference.cache
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.exe
+D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.pdb
