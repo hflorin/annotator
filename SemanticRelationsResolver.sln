@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.UnitTests", "Code\SemanticRelationsResolver.UnitTests\SemanticRelationsResolver.UnitTests.csproj", "{F7938232-E8F0-4F5D-851A-31EF0DAD1F1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.Annotator.UnitTests", "Code\SemanticRelationsResolver.UnitTests\SemanticRelationsResolver.Annotator.UnitTests.csproj", "{F7938232-E8F0-4F5D-851A-31EF0DAD1F1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.Domain", "Code\SemanticRelationsResolver.Domain\SemanticRelationsResolver.Domain.csproj", "{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}"
 EndProject

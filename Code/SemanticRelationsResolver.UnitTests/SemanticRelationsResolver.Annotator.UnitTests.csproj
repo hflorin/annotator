@@ -42,6 +42,23 @@
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Wrapper\BasicTests.cs" />
+    <Compile Include="Wrapper\ChangeNotificationSimpleProperty.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SemanticRelationsResolver.Annotator\SemanticRelationsResolver.Annotator.csproj">
+      <Project>{e51a2f37-743b-4b66-9df2-e8dd7c659e7d}</Project>
+      <Name>SemanticRelationsResolver.Annotator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SemanticRelationsResolver.Domain\SemanticRelationsResolver.Domain.csproj">
+      <Project>{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}</Project>
+      <Name>SemanticRelationsResolver.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

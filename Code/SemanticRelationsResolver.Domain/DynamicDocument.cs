@@ -9,6 +9,6 @@
             DocumentCotent = content;
         }
 
-        public ExpandoObject DocumentCotent { get; private set; }
+        public ExpandoObject DocumentCotent { get; set; }
     }
 }

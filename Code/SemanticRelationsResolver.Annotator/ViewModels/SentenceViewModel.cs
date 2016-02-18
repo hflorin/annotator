@@ -1,6 +1,6 @@
 ﻿namespace SemanticRelationsResolver.Annotator.ViewModels
 {
-    public class MainViewModel : Observable
+    public class SentenceViewModel
     {
     }
 }
