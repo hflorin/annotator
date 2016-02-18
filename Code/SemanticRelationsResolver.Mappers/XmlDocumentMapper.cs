@@ -1,15 +1,17 @@
 ﻿namespace SemanticRelationsResolver.Mappers
 {
-    using Domain;
-    using Loaders;
+    using System.Threading.Tasks;
+
+    using SemanticRelationsResolver.Domain;
+    using SemanticRelationsResolver.Loaders;
 
     public class XmlDocumentMapper : IDocumentMapper
     {
         public IResourceLoader ResourceLoader { get; set; }
 
-        public Document Map(string filepath)
+        public async Task<Document> Map(string filepath)
         {
-            var documentContent = ResourceLoader.Load(filepath);
+            var documentContent = await ResourceLoader.LoadAsync(filepath);
 
             var document = new Document();
 

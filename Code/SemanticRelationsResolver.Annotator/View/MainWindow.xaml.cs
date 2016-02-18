@@ -94,7 +94,7 @@
         private void ExitClick(object sender, RoutedEventArgs e)
         {
             // todo:check if there are any unsaved changes, show popup to allow the user to decide, handle his response and then exit the app
-            Application.Current.Shutdown();
+            this.Close();
         }
     }
 }

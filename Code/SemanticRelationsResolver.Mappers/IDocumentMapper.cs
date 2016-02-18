@@ -1,9 +1,11 @@
 ﻿namespace SemanticRelationsResolver.Mappers
 {
-    using Domain;
+    using System.Threading.Tasks;
+
+    using SemanticRelationsResolver.Domain;
 
     public interface IDocumentMapper
     {
-        Document Map(string filepath);
+        Task<Document> Map(string filepath);
     }
 }

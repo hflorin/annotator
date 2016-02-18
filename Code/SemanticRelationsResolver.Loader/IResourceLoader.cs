@@ -1,7 +1,9 @@
 ﻿namespace SemanticRelationsResolver.Loaders
 {
+    using System.Threading.Tasks;
+
     public interface IResourceLoader
     {
-        dynamic Load(string path);
+        Task<dynamic> LoadAsync(string path);
     }
 }
