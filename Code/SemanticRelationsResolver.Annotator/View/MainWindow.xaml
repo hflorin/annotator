@@ -39,7 +39,9 @@
         </Menu>
 
         <StatusBar x:Name="StatusBar" Grid.Row="2" Focusable="False" IsHitTestVisible="False" />
-
-        <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"/>
+        
+        <xcad:DockingManager Grid.Row="1">
+            
+        </xcad:DockingManager>
     </Grid>
 </Window>

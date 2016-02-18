@@ -6,3 +6,8 @@ D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelatio
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.csprojResolveAssemblyReference.cache
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.dll
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.dll.config
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.dll
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.dll
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.pdb

@@ -14,3 +14,17 @@ D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelatio
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.csprojResolveAssemblyReference.cache
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.exe
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Console.exe.config
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Console.exe
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Console.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\Autofac.dll
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Domain.dll
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Loaders.dll
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Mappers.dll
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Domain.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Loaders.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\SemanticRelationsResolver.Mappers.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\bin\Debug\Autofac.xml
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.csprojResolveAssemblyReference.cache
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.exe
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Console\obj\Debug\SemanticRelationsResolver.Console.pdb

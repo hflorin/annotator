@@ -4,3 +4,9 @@ D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelatio
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.csprojResolveAssemblyReference.cache
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.dll
 D:\Faxultate\Facultate\Dizertatie\Proiect\ProiectDizertatie\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Loader\bin\Debug\SemanticRelationsResolver.Loaders.dll.config
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Loader\bin\Debug\SemanticRelationsResolver.Loaders.dll
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Loader\bin\Debug\SemanticRelationsResolver.Loaders.pdb
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.csprojResolveAssemblyReference.cache
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.dll
+C:\Users\fhociung\Desktop\Dizertatie\Repository\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.pdb
