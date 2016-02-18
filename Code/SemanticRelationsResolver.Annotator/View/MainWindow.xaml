@@ -12,13 +12,16 @@
 
         <Menu x:Name="MainMenu" IsMainMenu="True">
             <MenuItem x:Name="FileMenu" Header="_FILE">
-                <MenuItem x:Name="New" Header="_New"></MenuItem>
-                <MenuItem x:Name="Open" Header="_Open"></MenuItem>
+                <MenuItem x:Name="New" Header="New">
+                    <MenuItem x:Name="Treebank" Header="_Treebank" Click="TreebankClick"></MenuItem>
+                    <MenuItem x:Name="TreebankFromExisting" Header="_Treebank from existing" Click="TreebankFromExistingClick"></MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="Open" Header="_Open" Click="OpenClick"></MenuItem>
                 <Separator/>
-                <MenuItem x:Name="Save" Header="Save"></MenuItem>
-                <MenuItem x:Name="SaveAs" Header="Save As"></MenuItem>
+                <MenuItem x:Name="Save" Header="Save" Click="SaveClick"></MenuItem>
+                <MenuItem x:Name="SaveAs" Header="Save As" Click="SaveAsClick"></MenuItem>
                 <Separator/>
-                <MenuItem x:Name="Exit" Header="_Exit"></MenuItem>
+                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick"></MenuItem>
             </MenuItem>
             <MenuItem x:Name="EditMenu" Header="_EDIT">
                 <MenuItem Header="_Undo"></MenuItem>
