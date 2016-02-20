@@ -95,7 +95,10 @@
     </Compile>
     <Compile Include="ViewModels\Observable.cs" />
     <Compile Include="ViewModels\SentenceViewModel.cs" />
+    <Compile Include="Wrapper\DocumentWrapper.cs" />
+    <Compile Include="Wrapper\ModelBaseWrapper.cs" />
     <Compile Include="Wrapper\ModelWrapper.cs" />
+    <Compile Include="Wrapper\WordWrapper.cs" />
     <Compile Include="Wrapper\SentenceWrapper.cs" />
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

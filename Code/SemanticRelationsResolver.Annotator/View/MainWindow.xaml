@@ -1,50 +1,122 @@
 ﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock" x:Class="SemanticRelationsResolver.Annotator.View.MainWindow"
-        Title="Annotator" Height="350" Width="525">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    x:Class="SemanticRelationsResolver.Annotator.View.MainWindow"
+    Title="Annotator" Height="350" Width="525">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="25" />
         </Grid.RowDefinitions>
 
         <Menu x:Name="MainMenu" IsMainMenu="True">
             <MenuItem x:Name="FileMenu" Header="_FILE">
                 <MenuItem x:Name="New" Header="New">
-                    <MenuItem x:Name="Treebank" Header="_Treebank" Click="TreebankClick"></MenuItem>
-                    <MenuItem x:Name="TreebankFromExisting" Header="_Treebank from existing" Click="TreebankFromExistingClick"></MenuItem>
+                    <MenuItem x:Name="Treebank" Header="_Treebank" Click="TreebankClick" />
+                    <MenuItem x:Name="TreebankFromExisting" Header="_Treebank from existing"
+                              Click="TreebankFromExistingClick" />
                 </MenuItem>
-                <MenuItem x:Name="Open" Header="_Open" Click="OpenClick"></MenuItem>
-                <Separator/>
-                <MenuItem x:Name="Save" Header="Save" Click="SaveClick"></MenuItem>
-                <MenuItem x:Name="SaveAs" Header="Save As" Click="SaveAsClick"></MenuItem>
-                <Separator/>
-                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick"></MenuItem>
+                <MenuItem x:Name="Open" Header="_Open" Click="OpenClick" />
+                <Separator />
+                <MenuItem x:Name="Save" Header="Save" Click="SaveClick" />
+                <MenuItem x:Name="SaveAs" Header="Save As" Click="SaveAsClick" />
+                <Separator />
+                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick" />
             </MenuItem>
             <MenuItem x:Name="EditMenu" Header="_EDIT">
-                <MenuItem Header="_Undo"></MenuItem>
-                <MenuItem Header="_Redo"></MenuItem>
-                <Separator/>
-                <MenuItem Header="_Cut"></MenuItem>
-                <MenuItem Header="_Copy"></MenuItem>
-                <MenuItem Header="_Paste"></MenuItem>
-                <MenuItem Header="_Delete"></MenuItem>
+                <MenuItem Header="_Undo" />
+                <MenuItem Header="_Redo" />
+                <Separator />
+                <MenuItem Header="_Cut" />
+                <MenuItem Header="_Copy" />
+                <MenuItem Header="_Paste" />
+                <MenuItem Header="_Delete" />
             </MenuItem>
             <MenuItem x:Name="ViewMenu" Header="_VIEW">
-                <MenuItem Header="_Tree Explorer"></MenuItem>
-                <MenuItem Header="_Sentence List"></MenuItem>
-                <Separator/>
-                <MenuItem Header="_Sentence Graph"></MenuItem>
+                <MenuItem Header="_Tree Explorer" />
+                <MenuItem Header="_Sentence List" />
+                <Separator />
+                <MenuItem Header="_Sentence Graph" />
             </MenuItem>
             <MenuItem x:Name="HelpMenu" Header="_HELP" />
         </Menu>
 
         <StatusBar x:Name="StatusBar" Grid.Row="2" Focusable="False" IsHitTestVisible="False" />
-        
-        <xcad:DockingManager Grid.Row="1">
-            
+
+        <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1">
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Content" />
+                    </StackPanel>
+                </DataTemplate>
+            </xcad:DockingManager.DocumentHeaderTemplate>
+            <xcad:LayoutRoot x:Name="LayoutRoot">
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutAnchorablePane DockWidth="200">
+                        <xcad:LayoutAnchorable ContentId="properties" Title="Properties" CanHide="False"
+                                               CanClose="False"
+                                               AutoHideWidth="240">
+                            <xctk:PropertyGrid NameColumnWidth="110"
+                                               SelectedObject="{Binding ElementName=LayoutRoot, Path=LastFocusedDocument.Content}" />
+                        </xcad:LayoutAnchorable>
+                    </xcad:LayoutAnchorablePane>
+                    <xcad:LayoutDocumentPaneGroup>
+                        <xcad:LayoutDocumentPane>
+                            <xcad:LayoutDocument ContentId="document1" Title="Document 1">
+                                <Button Content="Document 1 Content" HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
+                            </xcad:LayoutDocument>
+                            <xcad:LayoutDocument ContentId="document2" Title="Document 2">
+                                <TextBox Text="Document 2 Content" AcceptsReturn="True" />
+                            </xcad:LayoutDocument>
+                        </xcad:LayoutDocumentPane>
+                    </xcad:LayoutDocumentPaneGroup>
+                    <xcad:LayoutAnchorablePaneGroup DockWidth="125">
+                        <xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorable ContentId="alarms" Title="Alarms">
+                                <ListBox>
+                                    <system:String>Alarm 1</system:String>
+                                    <system:String>Alarm 2</system:String>
+                                    <system:String>Alarm 3</system:String>
+                                </ListBox>
+                            </xcad:LayoutAnchorable>
+                            <xcad:LayoutAnchorable ContentId="journal" Title="Journal">
+                                <RichTextBox>
+                                    <FlowDocument>
+                                        <Paragraph FontSize="14" FontFamily="Segoe">
+                                            This is the content of the Journal Pane.
+                                            <LineBreak />
+                                            A
+                                            <Bold>RichTextBox</Bold> has been added here
+                                        </Paragraph>
+                                    </FlowDocument>
+                                </RichTextBox>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorablePane>
+                    </xcad:LayoutAnchorablePaneGroup>
+                </xcad:LayoutPanel>
+
+                <xcad:LayoutRoot.LeftSide>
+                    <xcad:LayoutAnchorSide>
+                        <xcad:LayoutAnchorGroup>
+                            <xcad:LayoutAnchorable Title="Agenda" ContentId="agenda">
+                                <TextBlock Text="Agenda Content" Margin="10" FontSize="18" FontWeight="Black"
+                                           TextWrapping="Wrap" />
+                            </xcad:LayoutAnchorable>
+                            <xcad:LayoutAnchorable Title="Contacts" ContentId="contacts">
+                                <TextBlock Text="Contacts Content" Margin="10" FontSize="18" FontWeight="Black"
+                                           TextWrapping="Wrap" />
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorGroup>
+                    </xcad:LayoutAnchorSide>
+                </xcad:LayoutRoot.LeftSide>
+            </xcad:LayoutRoot>
+
         </xcad:DockingManager>
     </Grid>
 </Window>

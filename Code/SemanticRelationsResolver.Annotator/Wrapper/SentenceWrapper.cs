@@ -1,25 +1,47 @@
 ﻿namespace SemanticRelationsResolver.Annotator.Wrapper
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
     using Domain;
 
-    public class SentenceWrapper : ModelWrapper<Sentence>
+    public class SentenceWrapper : ModelBaseWrapper<Sentence>
     {
         public SentenceWrapper(Sentence model) : base(model)
         {
+            InitializeCollectionProperty(model);
         }
 
-        public Guid Id
+        public string Parser
         {
-            get { return GetValue<Guid>(); }
+            get { return GetValue<string>(); }
             set { SetValue(value); }
         }
 
-        public ICollection<Word> Words
+        public string User
         {
-            get { return GetValue<ICollection<Word>>(); }
+            get { return GetValue<string>(); }
             set { SetValue(value); }
+        }
+
+        public DateTime Date
+        {
+            get { return GetValue<DateTime>(); }
+            set { SetValue(value); }
+        }
+
+        public ObservableCollection<WordWrapper> Words { get; set; }
+
+        private void InitializeCollectionProperty(Sentence model)
+        {
+            if (model.Words == null)
+            {
+                throw new ArgumentException("Words cannot be null.");
+            }
+
+            Words = new ObservableCollection<WordWrapper>(model.Words.Select(word => new WordWrapper(word)));
+
+            RegisterCollection(Words, model.Words);
         }
     }
 }

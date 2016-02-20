@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using Annotator.Wrapper;
     using Domain;
@@ -15,19 +16,19 @@
         {
             _sentence = new Sentence
             {
-                Id = _sentenceId,
+                Id = SentenceId,
                 Words = new List<Word>
                 {
                     new Word
                     {
-                        Id = _wordId
+                        Id = WordId
                     }
                 }
             };
         }
 
-        private readonly Guid _sentenceId = Guid.NewGuid();
-        private readonly Guid _wordId = Guid.NewGuid();
+        private const int SentenceId = 0;
+        private const int WordId = 1;
 
         private Sentence _sentence;
 
@@ -43,14 +44,14 @@
         {
             var wrapper = new SentenceWrapper(_sentence);
 
-            var newWordId = Guid.NewGuid();
+            const int newWordId = 2;
 
-            wrapper.Words = new List<Word>
+            wrapper.Words = new ObservableCollection<WordWrapper>
             {
-                new Word
+                new WordWrapper(new Word
                 {
                     Id = newWordId
-                }
+                })
             };
 
             Assert.AreEqual(wrapper.Words.First().Id, newWordId);

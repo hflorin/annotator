@@ -1,6 +1,9 @@
 ﻿namespace SemanticRelationsResolver.Annotator.Wrapper
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Runtime.CompilerServices;
     using ViewModels;
 
@@ -45,6 +48,29 @@
 
             var property = Model.GetType().GetProperty(propertyName);
             return (TValue) property.GetValue(Model);
+        }
+
+        protected void RegisterCollection<TWrapper, TModel>(ObservableCollection<TWrapper> wrapperCollection,
+            ICollection<TModel> modelCollection) where TWrapper : ModelWrapper<TModel>
+        {
+            wrapperCollection.CollectionChanged += (sender, args) =>
+            {
+                if (args.OldItems != null)
+                {
+                    foreach (var oldItem in args.OldItems.Cast<TWrapper>())
+                    {
+                        modelCollection.Remove(oldItem.Model);
+                    }
+                }
+
+                if (args.NewItems != null)
+                {
+                    foreach (var newItem in args.NewItems.Cast<TWrapper>())
+                    {
+                        modelCollection.Add(newItem.Model);
+                    }
+                }
+            };
         }
     }
 }

@@ -48,7 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Wrapper\BasicTests.cs" />
-    <Compile Include="Wrapper\ChangeNotificationSimpleProperty.cs" />
+    <Compile Include="Wrapper\ChangeNotificationComplexCollectionPropertyTests.cs" />
+    <Compile Include="Wrapper\ChangeNotificationSimplePropertyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SemanticRelationsResolver.Annotator\SemanticRelationsResolver.Annotator.csproj">
