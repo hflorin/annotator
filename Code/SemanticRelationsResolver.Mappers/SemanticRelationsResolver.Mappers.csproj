@@ -30,13 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDocumentMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlDocumentMapper.cs" />
+    <Compile Include="TreebankMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SemanticRelationsResolver.Domain\SemanticRelationsResolver.Domain.csproj">

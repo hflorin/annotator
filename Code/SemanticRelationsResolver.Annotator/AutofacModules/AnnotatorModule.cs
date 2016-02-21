@@ -10,7 +10,7 @@
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<DynamicXmlLoader>().As<IResourceLoader>();
-            builder.RegisterType<XmlDocumentMapper>().As<IDocumentMapper>().PropertiesAutowired();
+            builder.RegisterType<TreebankMapper>().As<IDocumentMapper>().PropertiesAutowired();
             builder.RegisterType<MainViewModel>().AsSelf();
         }
     }

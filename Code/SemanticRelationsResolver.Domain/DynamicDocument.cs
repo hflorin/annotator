@@ -1,14 +1,24 @@
 ﻿namespace SemanticRelationsResolver.Domain
 {
+    using System;
     using System.Dynamic;
 
-    public class DynamicDocument : Document
+    public abstract class DynamicDocument : Document
     {
-        public DynamicDocument(ExpandoObject content)
+        protected DynamicDocument(ExpandoObject content)
         {
+            if (content == null)
+            {
+                throw new ArgumentNullException("content", "Must provide document content.");
+            }
+
             DocumentCotent = content;
+
+            Initialize();
         }
 
         public ExpandoObject DocumentCotent { get; set; }
+
+        protected abstract void Initialize();
     }
 }

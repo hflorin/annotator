@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.Loaders", "Code\SemanticRelationsResolver.Loader\SemanticRelationsResolver.Loaders.csproj", "{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.Console", "Code\SemanticRelationsResolver.Console\SemanticRelationsResolver.Console.csproj", "{1C1D8B67-5AFF-485D-B9F4-471ECAA28B17}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.Mappers", "Code\SemanticRelationsResolver.Mappers\SemanticRelationsResolver.Mappers.csproj", "{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.Annotator", "Code\SemanticRelationsResolver.Annotator\SemanticRelationsResolver.Annotator.csproj", "{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}"
@@ -33,10 +31,6 @@ Global
 		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C1D8B67-5AFF-485D-B9F4-471ECAA28B17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C1D8B67-5AFF-485D-B9F4-471ECAA28B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C1D8B67-5AFF-485D-B9F4-471ECAA28B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C1D8B67-5AFF-485D-B9F4-471ECAA28B17}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Release|Any CPU.ActiveCfg = Release|Any CPU

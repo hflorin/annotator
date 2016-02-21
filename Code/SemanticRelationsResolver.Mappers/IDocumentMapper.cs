@@ -1,11 +1,10 @@
 ﻿namespace SemanticRelationsResolver.Mappers
 {
     using System.Threading.Tasks;
-
-    using SemanticRelationsResolver.Domain;
+    using Domain;
 
     public interface IDocumentMapper
     {
-        Task<Document> Map(string filepath);
+        Task<Treebank> Map(string filepath);
     }
 }
