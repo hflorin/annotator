@@ -14,6 +14,16 @@
 
         public ObservableCollection<SentenceWrapper> Sentences { get; set; }
 
+        public ObservableCollection<SentenceWrapper> SentencesOriginalValue
+        {
+            get { return GetOriginalValue<ObservableCollection<SentenceWrapper>>("Sentences"); }
+        }
+
+        public bool SentencesIsChanged
+        {
+            get { return GetIsChanged("Sentences"); }
+        }
+
         private void InitializeCollectionProperty(Document model)
         {
             if (model.Sentences == null)

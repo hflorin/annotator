@@ -18,10 +18,30 @@
             set { SetValue(value); }
         }
 
+        public string ParserOriginalValue
+        {
+            get { return GetOriginalValue<string>("Parser"); }
+        }
+
+        public bool ParserIsChanged
+        {
+            get { return GetIsChanged("Parser"); }
+        }
+
         public string User
         {
             get { return GetValue<string>(); }
             set { SetValue(value); }
+        }
+
+        public string UserOriginalValue
+        {
+            get { return GetOriginalValue<string>("User"); }
+        }
+
+        public bool UserIsChanged
+        {
+            get { return GetIsChanged("User"); }
         }
 
         public DateTime Date
@@ -30,7 +50,27 @@
             set { SetValue(value); }
         }
 
+        public DateTime DateOriginalValue
+        {
+            get { return GetOriginalValue<DateTime>("Date"); }
+        }
+
+        public bool DateIsChanged
+        {
+            get { return GetIsChanged("Date"); }
+        }
+
         public ObservableCollection<WordWrapper> Words { get; set; }
+
+        public ObservableCollection<WordWrapper> WordsOriginalValue
+        {
+            get { return GetOriginalValue<ObservableCollection<WordWrapper>>("Words"); }
+        }
+
+        public bool WordsIsChanged
+        {
+            get { return GetIsChanged("Words"); }
+        }
 
         private void InitializeCollectionProperty(Sentence model)
         {
