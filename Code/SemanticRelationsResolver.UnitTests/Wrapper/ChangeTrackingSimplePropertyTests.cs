@@ -33,6 +33,26 @@
         private Sentence _sentence;
 
         [Test]
+        public void ShoudRaisePropertyChangedEventForIsChanged()
+        {
+            var wrapper = new SentenceWrapper(_sentence);
+
+            var fired = false;
+
+            wrapper.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "IsChanged")
+                {
+                    fired = true;
+                }
+            };
+
+            wrapper.Parser = "new parser";
+
+            Assert.IsTrue(fired);
+        }
+
+        [Test]
         public void ShoudRaisePropertyChangedEventForParserIsChanged()
         {
             var wrapper = new SentenceWrapper(_sentence);
@@ -53,23 +73,37 @@
         }
 
         [Test]
-        public void ShoudRaisePropertyChangedEventForIsChanged()
+        public void ShouldAcceptChanges()
         {
-            var wrapper = new SentenceWrapper(_sentence);
+            var wrapper = new SentenceWrapper(_sentence) {Parser = "new value"};
+            Assert.AreEqual("new value", wrapper.Parser);
+            Assert.AreEqual(_parserValue, wrapper.ParserOriginalValue);
+            Assert.IsTrue(wrapper.ParserIsChanged);
+            Assert.IsTrue(wrapper.IsChanged);
 
-            var fired = false;
+            wrapper.AcceptChanges();
 
-            wrapper.PropertyChanged += (sender, args) =>
-            {
-                if (args.PropertyName == "IsChanged")
-                {
-                    fired = true;
-                }
-            };
+            Assert.AreEqual("new value", wrapper.Parser);
+            Assert.AreEqual("new value", wrapper.ParserOriginalValue);
+            Assert.IsFalse(wrapper.ParserIsChanged);
+            Assert.IsFalse(wrapper.IsChanged);
+        }
 
-            wrapper.Parser = "new parser";
+        [Test]
+        public void ShouldRejectChanges()
+        {
+            var wrapper = new SentenceWrapper(_sentence) {Parser = "new value"};
+            Assert.AreEqual("new value", wrapper.Parser);
+            Assert.AreEqual(_parserValue, wrapper.ParserOriginalValue);
+            Assert.IsTrue(wrapper.ParserIsChanged);
+            Assert.IsTrue(wrapper.IsChanged);
 
-            Assert.IsTrue(fired);
+            wrapper.RejectChanges();
+
+            Assert.AreEqual(_parserValue, wrapper.Parser);
+            Assert.AreEqual(_parserValue, wrapper.ParserOriginalValue);
+            Assert.IsFalse(wrapper.ParserIsChanged);
+            Assert.IsFalse(wrapper.IsChanged);
         }
 
         [Test]
@@ -98,42 +132,6 @@
             wrapper.Parser = "new value";
 
             Assert.AreEqual(_parserValue, wrapper.ParserOriginalValue);
-        }
-
-        [Test]
-        public void ShouldAcceptChanges()
-        {
-            var wrapper = new SentenceWrapper(_sentence);
-            wrapper.Parser = "new value";
-            Assert.AreEqual("new value", wrapper.Parser);
-            Assert.AreEqual(_parserValue, wrapper.ParserOriginalValue);
-            Assert.IsTrue(wrapper.ParserIsChanged);
-            Assert.IsTrue(wrapper.IsChanged);
-
-            wrapper.AcceptChanges();
-
-            Assert.AreEqual("new value", wrapper.Parser);
-            Assert.AreEqual("new value", wrapper.ParserOriginalValue);
-            Assert.IsFalse(wrapper.ParserIsChanged);
-            Assert.IsFalse(wrapper.IsChanged);
-        }
-
-        [Test]
-        public void ShouldRejectChanges()
-        {
-            var wrapper = new SentenceWrapper(_sentence);
-            wrapper.Parser = "new value";
-            Assert.AreEqual("new value", wrapper.Parser);
-            Assert.AreEqual(_parserValue, wrapper.ParserOriginalValue);
-            Assert.IsTrue(wrapper.ParserIsChanged);
-            Assert.IsTrue(wrapper.IsChanged);
-
-            wrapper.RejectChanges();
-
-            Assert.AreEqual(_parserValue, wrapper.Parser);
-            Assert.AreEqual(_parserValue, wrapper.ParserOriginalValue);
-            Assert.IsFalse(wrapper.ParserIsChanged);
-            Assert.IsFalse(wrapper.IsChanged);
         }
     }
 }

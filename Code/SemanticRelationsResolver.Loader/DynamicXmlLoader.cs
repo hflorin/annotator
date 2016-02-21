@@ -9,6 +9,17 @@
 
     public class DynamicXmlLoader : IResourceLoader
     {
+        public async Task<dynamic> LoadAsync(string path)
+        {
+            var document = Task.Run(() => XDocument.Load(new StreamReader(path)));
+
+            dynamic root = new ExpandoObject();
+
+            Parse(root, (await document).Elements().First());
+
+            return root;
+        }
+
         public static void Parse(dynamic parent, XElement node)
         {
             if (node.HasAttributes)
@@ -50,17 +61,6 @@
             {
                 AddProperty(parent, node.Name.ToString(), node.Value.Trim());
             }
-        }
-
-        public async Task<dynamic> LoadAsync(string path)
-        {
-            var document = Task.Run(() => XDocument.Load(new StreamReader(path)));
-
-            dynamic root = new ExpandoObject();
-
-            Parse(root, (await document).Elements().First());
-
-            return root;
         }
 
         private static void ParseElement(dynamic parent, XElement node)
@@ -120,7 +120,7 @@
                         return;
                     }
 
-                    var newList = new List<dynamic> { dictionary[name], value };
+                    var newList = new List<dynamic> {dictionary[name], value};
                     dictionary[name] = newList;
                 }
                 else

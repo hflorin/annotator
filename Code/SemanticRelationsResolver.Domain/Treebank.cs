@@ -1,5 +1,6 @@
 ﻿namespace SemanticRelationsResolver.Domain
 {
+    using System;
     using System.Dynamic;
 
     public class Treebank : DynamicDocument
@@ -10,7 +11,7 @@
 
         protected override void Initialize()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

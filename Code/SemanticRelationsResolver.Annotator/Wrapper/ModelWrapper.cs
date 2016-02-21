@@ -33,7 +33,7 @@
         {
             foreach (var originalValue in _originalValues)
             {
-                typeof(T).GetProperty(originalValue.Key).SetValue(Model,originalValue.Value);
+                typeof (T).GetProperty(originalValue.Key).SetValue(Model, originalValue.Value);
             }
 
             _originalValues.Clear();
@@ -127,12 +127,14 @@
                     }
                 }
 
-                if (args.NewItems != null)
+                if (args.NewItems == null)
                 {
-                    foreach (var newItem in args.NewItems.Cast<TWrapper>())
-                    {
-                        modelCollection.Add(newItem.Model);
-                    }
+                    return;
+                }
+
+                foreach (var newItem in args.NewItems.Cast<TWrapper>())
+                {
+                    modelCollection.Add(newItem.Model);
                 }
             };
         }
