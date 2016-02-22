@@ -1,7 +1,6 @@
 ﻿namespace SemanticRelationsResolver.Annotator.Wrapper
 {
     using System;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using Domain;
 
@@ -60,17 +59,7 @@
             get { return GetIsChanged("Date"); }
         }
 
-        public ObservableCollection<WordWrapper> Words { get; set; }
-
-        public ObservableCollection<WordWrapper> WordsOriginalValue
-        {
-            get { return GetOriginalValue<ObservableCollection<WordWrapper>>("Words"); }
-        }
-
-        public bool WordsIsChanged
-        {
-            get { return GetIsChanged("Words"); }
-        }
+        public ChangeTrackingCollection<WordWrapper> Words { get; set; }
 
         private void InitializeCollectionProperty(Sentence model)
         {
@@ -79,7 +68,7 @@
                 throw new ArgumentException("Words cannot be null.");
             }
 
-            Words = new ObservableCollection<WordWrapper>(model.Words.Select(word => new WordWrapper(word)));
+            Words = new ChangeTrackingCollection<WordWrapper>(model.Words.Select(word => new WordWrapper(word)));
 
             RegisterCollection(Words, model.Words);
         }

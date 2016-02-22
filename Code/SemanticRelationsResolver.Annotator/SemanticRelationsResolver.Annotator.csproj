@@ -95,6 +95,7 @@
     </Compile>
     <Compile Include="ViewModels\Observable.cs" />
     <Compile Include="ViewModels\SentenceViewModel.cs" />
+    <Compile Include="Wrapper\ChangeTrackingCollection.cs" />
     <Compile Include="Wrapper\DocumentWrapper.cs" />
     <Compile Include="Wrapper\ModelBaseWrapper.cs" />
     <Compile Include="Wrapper\ModelWrapper.cs" />

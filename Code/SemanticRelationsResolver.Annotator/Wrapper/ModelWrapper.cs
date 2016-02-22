@@ -12,6 +12,8 @@
     {
         private readonly Dictionary<string, object> _originalValues;
 
+        private List<IRevertibleChangeTracking> _trackingObjects;
+
         public ModelWrapper(T model)
         {
             if (model == null)
@@ -19,6 +21,7 @@
                 throw new ArgumentNullException("model", @"Must provide a sentence model.");
             }
             Model = model;
+            _trackingObjects = new List<IRevertibleChangeTracking>();
             _originalValues = new Dictionary<string, object>();
         }
 
@@ -26,7 +29,7 @@
 
         public bool IsChanged
         {
-            get { return _originalValues.Count > 0; }
+            get { return _originalValues.Count > 0 || _trackingObjects.Any(o => o.IsChanged); }
         }
 
         public void RejectChanges()
@@ -35,14 +38,22 @@
             {
                 typeof (T).GetProperty(originalValue.Key).SetValue(Model, originalValue.Value);
             }
-
             _originalValues.Clear();
+
+            foreach (var trackingObject in _trackingObjects)
+            {
+                trackingObject.RejectChanges();
+            }
             OnPropertyChanged(string.Empty);
         }
 
         public void AcceptChanges()
         {
             _originalValues.Clear();
+            foreach (var trackingObject in _trackingObjects)
+            {
+                trackingObject.AcceptChanges();
+            }
             OnPropertyChanged(string.Empty);
         }
 
@@ -137,6 +148,23 @@
                     modelCollection.Add(newItem.Model);
                 }
             };
+        }
+
+        protected void RegisterComplex<TModel>(ModelWrapper<TModel> wrapper)
+        {
+            if (!_trackingObjects.Contains(wrapper))
+            {
+                _trackingObjects.Add(wrapper);
+                wrapper.PropertyChanged +=TrackingObjectPropertyChanged;
+            }
+        }
+
+        private void TrackingObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsChanged")
+            {
+                OnPropertyChanged("IsChanged");
+            }
         }
     }
 }

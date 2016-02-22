@@ -50,6 +50,8 @@
     <Compile Include="Wrapper\BasicTests.cs" />
     <Compile Include="Wrapper\ChangeNotificationComplexCollectionPropertyTests.cs" />
     <Compile Include="Wrapper\ChangeNotificationSimplePropertyTests.cs" />
+    <Compile Include="Wrapper\ChangeTrackingCollectionPropertyTests.cs" />
+    <Compile Include="Wrapper\ChangeTrackingComplexPropertyTests.cs" />
     <Compile Include="Wrapper\ChangeTrackingSimplePropertyTests.cs" />
   </ItemGroup>
   <ItemGroup>

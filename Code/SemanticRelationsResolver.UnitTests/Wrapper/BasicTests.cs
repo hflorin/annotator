@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using Annotator.Wrapper;
     using Domain;
@@ -46,13 +45,13 @@
 
             const int newWordId = 2;
 
-            wrapper.Words = new ObservableCollection<WordWrapper>
+            wrapper.Words = new ChangeTrackingCollection<WordWrapper>(new List<WordWrapper>
             {
                 new WordWrapper(new Word
                 {
                     Id = newWordId
                 })
-            };
+            });
 
             Assert.AreEqual(wrapper.Words.First().Id, newWordId);
         }
