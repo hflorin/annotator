@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
     using System.Runtime.CompilerServices;
@@ -12,7 +11,7 @@
     {
         private readonly Dictionary<string, object> _originalValues;
 
-        private List<IRevertibleChangeTracking> _trackingObjects;
+        private readonly List<IRevertibleChangeTracking> _trackingObjects;
 
         public ModelWrapper(T model)
         {
@@ -125,37 +124,33 @@
             return _originalValues.ContainsKey(propertyName);
         }
 
-        protected void RegisterCollection<TWrapper, TModel>(ObservableCollection<TWrapper> wrapperCollection,
+        protected void RegisterCollection<TWrapper, TModel>(ChangeTrackingCollection<TWrapper> wrapperCollection,
             ICollection<TModel> modelCollection) where TWrapper : ModelWrapper<TModel>
         {
             wrapperCollection.CollectionChanged += (sender, args) =>
             {
-                if (args.OldItems != null)
+                modelCollection.Clear();
+                foreach (var model in wrapperCollection)
                 {
-                    foreach (var oldItem in args.OldItems.Cast<TWrapper>())
-                    {
-                        modelCollection.Remove(oldItem.Model);
-                    }
-                }
-
-                if (args.NewItems == null)
-                {
-                    return;
-                }
-
-                foreach (var newItem in args.NewItems.Cast<TWrapper>())
-                {
-                    modelCollection.Add(newItem.Model);
+                    modelCollection.Add(model.Model);
                 }
             };
+
+            RegisterTrackingObject(wrapperCollection);
         }
 
         protected void RegisterComplex<TModel>(ModelWrapper<TModel> wrapper)
         {
-            if (!_trackingObjects.Contains(wrapper))
+            RegisterTrackingObject(wrapper);
+        }
+
+        private void RegisterTrackingObject<TTrackingObject>(TTrackingObject trackingObject)
+            where TTrackingObject : IRevertibleChangeTracking, INotifyPropertyChanged
+        {
+            if (!_trackingObjects.Contains(trackingObject))
             {
-                _trackingObjects.Add(wrapper);
-                wrapper.PropertyChanged +=TrackingObjectPropertyChanged;
+                _trackingObjects.Add(trackingObject);
+                trackingObject.PropertyChanged += TrackingObjectPropertyChanged;
             }
         }
 

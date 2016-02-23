@@ -73,6 +73,15 @@
         }
 
         [Test]
+        public void ShoudBeInSyncAfterClearingWords()
+        {
+            var wrapper = new SentenceWrapper(_sentence);
+            wrapper.Words.Clear();
+
+            CheckModelWordsCollectionIsInSync(wrapper);
+        }
+
+        [Test]
         public void ShoudInitializeWordsPropery()
         {
             var wrapper = new SentenceWrapper(_sentence);
