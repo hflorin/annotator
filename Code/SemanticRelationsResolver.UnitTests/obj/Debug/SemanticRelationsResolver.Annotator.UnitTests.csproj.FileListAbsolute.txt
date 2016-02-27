@@ -1,4 +1,3 @@
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.Annotator.UnitTests.csprojResolveAssemblyReference.cache
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.dll.config
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.pdb
@@ -25,5 +24,6 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.Annotator.UnitTests.csprojResolveAssemblyReference.cache
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.pdb

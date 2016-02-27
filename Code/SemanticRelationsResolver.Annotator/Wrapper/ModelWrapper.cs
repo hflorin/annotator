@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using ViewModels;
 
-    public class ModelWrapper<T> : Observable, IRevertibleChangeTracking
+    public class ModelWrapper<T> : NotifyDataErrorInfoBase, IRevertibleChangeTracking
     {
         private readonly Dictionary<string, object> _originalValues;
 
@@ -74,9 +74,35 @@
             UpdateOriginalValue(currentValue, newValue, propertyName);
 
             property.SetValue(Model, newValue);
+
+            ValidateProperty(propertyName, newValue);
+
             OnPropertyChanged(propertyName);
             OnPropertyChanged(propertyName + "IsChanged");
         }
+
+        private void ValidateProperty(string propertyName, object newValue)
+        {
+            var results = new List<ValidationResult>();
+            var context = new ValidationContext(this)
+            {
+                MemberName = propertyName
+            };
+
+            Validator.TryValidateProperty(newValue, context, results);
+
+            if (results.Any())
+            {
+                Errors[propertyName] = results.Select(r => r.ErrorMessage).Distinct().ToList();
+                OnErrorsChanged(propertyName);
+            }
+            else if (Errors.ContainsKey(propertyName))
+            {
+                Errors.Remove(propertyName);
+                OnErrorsChanged(propertyName);
+            }
+        }
+
 
         private void UpdateOriginalValue(object currentValue, object newValue, string propertyName)
         {

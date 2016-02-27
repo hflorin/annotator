@@ -53,6 +53,7 @@
     <Compile Include="Wrapper\ChangeTrackingCollectionPropertyTests.cs" />
     <Compile Include="Wrapper\ChangeTrackingComplexPropertyTests.cs" />
     <Compile Include="Wrapper\ChangeTrackingSimplePropertyTests.cs" />
+    <Compile Include="Wrapper\ValidationSimpleProperty.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SemanticRelationsResolver.Annotator\SemanticRelationsResolver.Annotator.csproj">

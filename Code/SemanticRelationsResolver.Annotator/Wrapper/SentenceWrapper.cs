@@ -1,6 +1,7 @@
 ﻿namespace SemanticRelationsResolver.Annotator.Wrapper
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using Domain;
 
@@ -11,6 +12,7 @@
             InitializeCollectionProperty(model);
         }
 
+        [Required(ErrorMessage = @"Parser is required.")]
         public string Parser
         {
             get { return GetValue<string>(); }

@@ -1,7 +1,6 @@
 ﻿namespace SemanticRelationsResolver.Annotator.Wrapper
 {
     using System;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using Domain;
 
