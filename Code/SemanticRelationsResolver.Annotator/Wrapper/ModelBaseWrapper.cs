@@ -1,5 +1,6 @@
-﻿namespace SemanticRelationsResolver.Annotator.Wrapper.Base
+﻿namespace SemanticRelationsResolver.Annotator.Wrapper
 {
+    using Base;
     using Domain;
 
     public class ModelBaseWrapper<T> : ModelWrapper<T>
