@@ -43,6 +43,7 @@
       <HintPath>..\..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -53,6 +54,8 @@
     <Compile Include="Wrapper\ChangeTrackingCollectionPropertyTests.cs" />
     <Compile Include="Wrapper\ChangeTrackingComplexPropertyTests.cs" />
     <Compile Include="Wrapper\ChangeTrackingSimplePropertyTests.cs" />
+    <Compile Include="Wrapper\ValidationCollectionProperty.cs" />
+    <Compile Include="Wrapper\ValidationComplexProperty.cs" />
     <Compile Include="Wrapper\ValidationSimpleProperty.cs" />
   </ItemGroup>
   <ItemGroup>

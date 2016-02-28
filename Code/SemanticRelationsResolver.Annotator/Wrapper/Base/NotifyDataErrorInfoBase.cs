@@ -1,4 +1,4 @@
-﻿namespace SemanticRelationsResolver.Annotator.Wrapper
+﻿namespace SemanticRelationsResolver.Annotator.Wrapper.Base
 {
     using System;
     using System.Collections;
@@ -35,6 +35,15 @@
             if (ErrorsChanged != null)
             {
                 ErrorsChanged.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+            }
+        }
+
+        protected void ClearErrors()
+        {
+            foreach (var propertyName in Errors.Keys.ToList())
+            {
+                Errors.Remove(propertyName);
+                OnErrorsChanged(propertyName);
             }
         }
     }

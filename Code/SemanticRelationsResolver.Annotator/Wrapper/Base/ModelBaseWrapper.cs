@@ -1,4 +1,4 @@
-﻿namespace SemanticRelationsResolver.Annotator.Wrapper
+﻿namespace SemanticRelationsResolver.Annotator.Wrapper.Base
 {
     using Domain;
 

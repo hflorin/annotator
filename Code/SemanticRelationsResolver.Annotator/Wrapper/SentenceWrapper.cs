@@ -3,13 +3,14 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Base;
     using Domain;
 
     public class SentenceWrapper : ModelBaseWrapper<Sentence>
     {
         public SentenceWrapper(Sentence model) : base(model)
         {
-            InitializeCollectionProperty(model);
+            InitializeCollectionProperties(model);
         }
 
         [Required(ErrorMessage = @"Parser is required.")]
@@ -63,7 +64,7 @@
 
         public ChangeTrackingCollection<WordWrapper> Words { get; set; }
 
-        private void InitializeCollectionProperty(Sentence model)
+        protected override void InitializeCollectionProperties(Sentence model)
         {
             if (model.Words == null)
             {

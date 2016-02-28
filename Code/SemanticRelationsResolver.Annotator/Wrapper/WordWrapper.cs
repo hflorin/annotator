@@ -1,5 +1,8 @@
 ﻿namespace SemanticRelationsResolver.Annotator.Wrapper
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using Base;
     using Domain;
 
     public class WordWrapper : ModelBaseWrapper<Word>
@@ -9,6 +12,7 @@
         {
         }
 
+        [Required(ErrorMessage = @"Form is required.")]
         public string Form
         {
             get { return GetValue<string>(); }
@@ -103,6 +107,15 @@
         public bool HeadWordIdIsChanged
         {
             get { return GetIsChanged("HeadWordId"); }
+        }
+
+        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (PartOfSpeech == null || Form == null)
+            {
+                yield return
+                    new ValidationResult("A word must have a part of speech and a form", new[] {"PartOfSpeech", "Form"});
+            }
         }
     }
 }

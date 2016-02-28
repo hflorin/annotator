@@ -1,4 +1,4 @@
-﻿namespace SemanticRelationsResolver.Annotator.Wrapper
+﻿namespace SemanticRelationsResolver.Annotator.Wrapper.Base
 {
     using System;
     using System.Collections.Generic;
@@ -7,11 +7,11 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
 
-    public class ModelWrapper<T> : NotifyDataErrorInfoBase, IRevertibleChangeTracking
+    public class ModelWrapper<T> : NotifyDataErrorInfoBase, IValidatableTrackingObject, IValidatableObject
     {
         private readonly Dictionary<string, object> _originalValues;
 
-        private readonly List<IRevertibleChangeTracking> _trackingObjects;
+        private readonly List<IValidatableTrackingObject> _trackingObjects;
 
         public ModelWrapper(T model)
         {
@@ -20,11 +20,27 @@
                 throw new ArgumentNullException("model", @"Must provide a sentence model.");
             }
             Model = model;
-            _trackingObjects = new List<IRevertibleChangeTracking>();
+            _trackingObjects = new List<IValidatableTrackingObject>();
             _originalValues = new Dictionary<string, object>();
+            InitializeComplexProperties(model);
+            InitializeCollectionProperties(model);
+            Validate();
+        }
+
+        protected virtual void InitializeComplexProperties(T model)
+        {
+        }
+
+        protected virtual void InitializeCollectionProperties(T model)
+        {
         }
 
         public T Model { get; private set; }
+
+        public bool IsValid
+        {
+            get { return !HasErrors && _trackingObjects.All(t => t.IsValid); }
+        }
 
         public bool IsChanged
         {
@@ -43,6 +59,7 @@
             {
                 trackingObject.RejectChanges();
             }
+            Validate();
             OnPropertyChanged(string.Empty);
         }
 
@@ -75,34 +92,36 @@
 
             property.SetValue(Model, newValue);
 
-            ValidateProperty(propertyName, newValue);
+            Validate();
 
             OnPropertyChanged(propertyName);
             OnPropertyChanged(propertyName + "IsChanged");
         }
 
-        private void ValidateProperty(string propertyName, object newValue)
+        private void Validate()
         {
-            var results = new List<ValidationResult>();
-            var context = new ValidationContext(this)
-            {
-                MemberName = propertyName
-            };
+            ClearErrors();
 
-            Validator.TryValidateProperty(newValue, context, results);
+            var results = new List<ValidationResult>();
+            var context = new ValidationContext(this);
+
+            Validator.TryValidateObject(this, context, results, true);
 
             if (results.Any())
             {
-                Errors[propertyName] = results.Select(r => r.ErrorMessage).Distinct().ToList();
-                OnErrorsChanged(propertyName);
+                var propertyNames = results.SelectMany(r => r.MemberNames).Distinct().ToList();
+                foreach (var propertyName in propertyNames)
+                {
+                    Errors[propertyName] =
+                        results.Where(r => r.MemberNames.Contains(propertyName))
+                            .Select(r => r.ErrorMessage)
+                            .Distinct()
+                            .ToList();
+                    OnErrorsChanged(propertyName);
+                }
             }
-            else if (Errors.ContainsKey(propertyName))
-            {
-                Errors.Remove(propertyName);
-                OnErrorsChanged(propertyName);
-            }
+            OnPropertyChanged("IsValid");
         }
-
 
         private void UpdateOriginalValue(object currentValue, object newValue, string propertyName)
         {
@@ -170,8 +189,7 @@
             RegisterTrackingObject(wrapper);
         }
 
-        private void RegisterTrackingObject<TTrackingObject>(TTrackingObject trackingObject)
-            where TTrackingObject : IRevertibleChangeTracking, INotifyPropertyChanged
+        private void RegisterTrackingObject(IValidatableTrackingObject trackingObject)
         {
             if (!_trackingObjects.Contains(trackingObject))
             {
@@ -186,6 +204,15 @@
             {
                 OnPropertyChanged("IsChanged");
             }
+            else if (e.PropertyName == "IsValid")
+            {
+                OnPropertyChanged("IsValid");
+            }
+        }
+
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            yield break;
         }
     }
 }

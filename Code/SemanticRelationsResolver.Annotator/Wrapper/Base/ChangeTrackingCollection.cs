@@ -1,4 +1,4 @@
-﻿namespace SemanticRelationsResolver.Annotator.Wrapper
+﻿namespace SemanticRelationsResolver.Annotator.Wrapper.Base
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -6,8 +6,8 @@
     using System.ComponentModel;
     using System.Linq;
 
-    public class ChangeTrackingCollection<T> : ObservableCollection<T>, IRevertibleChangeTracking
-        where T : class, IRevertibleChangeTracking, INotifyPropertyChanged
+    public class ChangeTrackingCollection<T> : ObservableCollection<T>, IValidatableTrackingObject
+        where T : class, IValidatableTrackingObject
     {
         private readonly ObservableCollection<T> _addedItems;
         private readonly ObservableCollection<T> _modifiedItems;
@@ -73,6 +73,11 @@
             OnPropertyChanged(new PropertyChangedEventArgs("IsChanged"));
         }
 
+        public bool IsValid
+        {
+            get { return this.All(t => t.IsValid); }
+        }
+
         private void AttachItemPropertyChangedHandler(IEnumerable<T> items)
         {
             foreach (var item in items)
@@ -83,27 +88,35 @@
 
         private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var item = (T) sender;
-            if (_addedItems.Contains(item))
+            if (e.PropertyName == "IsValid")
             {
-                return;
-            }
-
-            if (item.IsChanged)
-            {
-                if (!_modifiedItems.Contains(item))
-                {
-                    _modifiedItems.Add(item);
-                }
+                OnPropertyChanged(new PropertyChangedEventArgs("IsValid"));
             }
             else
             {
-                if (_modifiedItems.Contains(item))
+
+                var item = (T) sender;
+                if (_addedItems.Contains(item))
                 {
-                    _modifiedItems.Remove(item);
+                    return;
                 }
+
+                if (item.IsChanged)
+                {
+                    if (!_modifiedItems.Contains(item))
+                    {
+                        _modifiedItems.Add(item);
+                    }
+                }
+                else
+                {
+                    if (_modifiedItems.Contains(item))
+                    {
+                        _modifiedItems.Remove(item);
+                    }
+                }
+                OnPropertyChanged(new PropertyChangedEventArgs("IsChanged"));
             }
-            OnPropertyChanged(new PropertyChangedEventArgs("IsChanged"));
         }
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
@@ -122,6 +135,7 @@
 
             base.OnCollectionChanged(e);
             OnPropertyChanged(new PropertyChangedEventArgs("IsChanged"));
+            OnPropertyChanged(new PropertyChangedEventArgs("IsValid"));
         }
 
         private void UpdateObservableCollection(ObservableCollection<T> collection, IEnumerable<T> items)

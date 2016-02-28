@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Annotator.Wrapper;
+    using Annotator.Wrapper.Base;
     using Domain;
     using NUnit.Framework;
 

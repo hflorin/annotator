@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using Base;
     using Domain;
 
     public class DocumentWrapper : ModelBaseWrapper<Document>
