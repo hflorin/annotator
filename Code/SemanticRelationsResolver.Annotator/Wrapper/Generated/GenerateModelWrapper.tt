@@ -12,15 +12,9 @@
 <#
 	foreach(var modelType in GetModelTypes())
 	{
-
-		if(modelType == typeof(ModelBase))
-        {
-			continue;
-        }
-
-		var simpleProperties = modelType.GetProperties().Where(p => p.PropertyType.IsValueType || p.PropertyType == typeof(string)).ToList();
-		var complexProperties = modelType.GetProperties().Except(simpleProperties).Where(p => p.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(p.PropertyType)).ToList();
-		var collectionProperties = modelType.GetProperties().Except(simpleProperties).Except(complexProperties).Where(p => p.PropertyType.IsGenericType).ToList();
+		var simpleProperties = modelType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly).Where(p => p.PropertyType.IsValueType || p.PropertyType == typeof(string)).ToList();
+		var complexProperties = modelType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly).Except(simpleProperties).Where(p => p.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(p.PropertyType)).ToList();
+		var collectionProperties = modelType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly).Except(simpleProperties).Except(complexProperties).Where(p => p.PropertyType.IsGenericType).ToList();
 #>
 namespace SemanticRelationsResolver.Annotator.Wrapper
 {
@@ -29,11 +23,29 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	using Base;
 	using SemanticRelationsResolver.Domain;
 
+<#
+		if(modelType.Name != "ModelBase")
+		{
+#>
 	public class <#=modelType.Name#>Wrapper : ModelBaseWrapper<<#=modelType.Name#>>
 	{
 		public <#=modelType.Name#>Wrapper(<#=modelType.Name#> model) : base(model)
 		{
 		}
+<#
+		}
+		else
+		{
+#>
+	public class ModelBaseWrapper<T> : ModelWrapper<T>
+	where T : ModelBase
+	{
+		public ModelBaseWrapper(T model) : base(model)
+		{
+        }
+<#
+		}
+#>
 <#
 		GenerateSimpleProperties(simpleProperties);
 		GenerateComplexProperties(complexProperties);
