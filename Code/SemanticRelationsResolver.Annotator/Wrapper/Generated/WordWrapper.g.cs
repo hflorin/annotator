@@ -5,7 +5,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	using Base;
 	using SemanticRelationsResolver.Domain;
 
-	public class WordWrapper : ModelBaseWrapper<Word>
+	public partial class WordWrapper : ModelBaseWrapper<Word>
 	{
 		public WordWrapper(Word model) : base(model)
 		{

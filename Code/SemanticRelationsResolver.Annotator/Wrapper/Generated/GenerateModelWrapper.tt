@@ -12,9 +12,9 @@
 <#
 	foreach(var modelType in GetModelTypes())
 	{
-		var simpleProperties = modelType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly).Where(p => p.PropertyType.IsValueType || p.PropertyType == typeof(string)).ToList();
-		var complexProperties = modelType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly).Except(simpleProperties).Where(p => p.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(p.PropertyType)).ToList();
-		var collectionProperties = modelType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.DeclaredOnly).Except(simpleProperties).Except(complexProperties).Where(p => p.PropertyType.IsGenericType).ToList();
+		var simpleProperties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(p => p.PropertyType.IsValueType || p.PropertyType == typeof(string)).ToList();
+		var complexProperties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Except(simpleProperties).Where(p => p.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(p.PropertyType)).ToList();
+		var collectionProperties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Except(simpleProperties).Except(complexProperties).Where(p => p.PropertyType.IsGenericType).ToList();
 #>
 namespace SemanticRelationsResolver.Annotator.Wrapper
 {
@@ -27,7 +27,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 		if(modelType.Name != "ModelBase")
 		{
 #>
-	public class <#=modelType.Name#>Wrapper : ModelBaseWrapper<<#=modelType.Name#>>
+	public partial class <#=modelType.Name#>Wrapper : ModelBaseWrapper<<#=modelType.Name#>>
 	{
 		public <#=modelType.Name#>Wrapper(<#=modelType.Name#> model) : base(model)
 		{

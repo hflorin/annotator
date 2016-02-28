@@ -5,7 +5,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	using Base;
 	using SemanticRelationsResolver.Domain;
 
-	public class DynamicDocumentWrapper : ModelBaseWrapper<DynamicDocument>
+	public partial class DynamicDocumentWrapper : ModelBaseWrapper<DynamicDocument>
 	{
 		public DynamicDocumentWrapper(DynamicDocument model) : base(model)
 		{

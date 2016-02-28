@@ -103,16 +103,29 @@
     <Compile Include="Wrapper\Base\IValidatableTrackingObject.cs" />
     <Compile Include="Wrapper\Base\ModelWrapper.cs" />
     <Compile Include="Wrapper\Base\NotifyDataErrorInfoBase.cs" />
-    <Compile Include="Wrapper\DocumentWrapper.cs">
+    <Compile Include="Wrapper\Custom\WordWrapper.cs" />
+    <Compile Include="Wrapper\Generated\DocumentWrapper.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Wrapper\ModelBaseWrapper.cs">
+    <Compile Include="Wrapper\Generated\DynamicDocumentWrapper.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Wrapper\SentenceWrapper.cs">
+    <Compile Include="Wrapper\Generated\GenerateModelWrapper.cs">
+      <DependentUpon>GenerateModelWrapper.tt</DependentUpon>
+      <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Wrapper\Generated\ModelBaseWrapper.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Wrapper\WordWrapper.cs">
+    <Compile Include="Wrapper\Generated\SentenceWrapper.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Wrapper\Generated\TreebankWrapper.g.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Wrapper\Generated\WordWrapper.g.cs">
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\MainWindow.xaml">
@@ -147,6 +160,10 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Wrapper\Generated\GenerateModelWrapper.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GenerateModelWrapper.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SemanticRelationsResolver.Domain\SemanticRelationsResolver.Domain.csproj">
