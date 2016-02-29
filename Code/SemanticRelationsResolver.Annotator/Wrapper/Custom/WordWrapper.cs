@@ -7,11 +7,15 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
     {
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            if (string.IsNullOrWhiteSpace(Form))
+            {
+                yield return new ValidationResult("Form is required.", new[] { "Form" });
+            }
+
             if (PartOfSpeech == null || Form == null)
             {
                 yield return
-                    new ValidationResult("A word must have a part of speech and a form", new[] {"PartOfSpeech", "Form"})
-                    ;
+                    new ValidationResult("A word must have a part of speech and a form", new[] { "PartOfSpeech", "Form" });
             }
         }
     }

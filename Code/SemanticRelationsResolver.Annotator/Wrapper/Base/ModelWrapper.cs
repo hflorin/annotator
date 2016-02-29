@@ -179,6 +179,7 @@
                 {
                     modelCollection.Add(model.Model);
                 }
+                Validate();
             };
 
             RegisterTrackingObject(wrapperCollection);
