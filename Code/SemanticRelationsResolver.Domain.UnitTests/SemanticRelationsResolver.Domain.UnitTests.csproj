@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}</ProjectGuid>
+    <ProjectGuid>{7F223342-0C61-426D-BFF2-6B316C08517F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SemanticRelationsResolver.Domain</RootNamespace>
-    <AssemblyName>SemanticRelationsResolver.Domain</AssemblyName>
+    <RootNamespace>SemanticRelationsResolver.Domain.UnitTests</RootNamespace>
+    <AssemblyName>SemanticRelationsResolver.Domain.UnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,23 +29,24 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DynamicDocument.cs" />
-    <Compile Include="Document.cs" />
-    <Compile Include="ModelBase.cs" />
-    <Compile Include="Sentence.cs" />
-    <Compile Include="Treebank.cs" />
-    <Compile Include="Word.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TreebankTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

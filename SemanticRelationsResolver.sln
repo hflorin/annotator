@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.Annotator", "Code\SemanticRelationsResolver.Annotator\SemanticRelationsResolver.Annotator.csproj", "{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticRelationsResolver.Domain.UnitTests", "Code\SemanticRelationsResolver.Domain.UnitTests\SemanticRelationsResolver.Domain.UnitTests.csproj", "{7F223342-0C61-426D-BFF2-6B316C08517F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F223342-0C61-426D-BFF2-6B316C08517F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F223342-0C61-426D-BFF2-6B316C08517F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F223342-0C61-426D-BFF2-6B316C08517F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F223342-0C61-426D-BFF2-6B316C08517F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

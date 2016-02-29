@@ -6,6 +6,9 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     x:Class="SemanticRelationsResolver.Annotator.View.MainWindow"
     Title="Annotator" Height="350" Width="525">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.New" Executed="NewCommand_Executed" CanExecute="NewCommand_CanExecute"/>
+    </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

@@ -148,3 +148,4 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.csproj.GenerateResource.Cache
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.exe
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.pdb
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.lref

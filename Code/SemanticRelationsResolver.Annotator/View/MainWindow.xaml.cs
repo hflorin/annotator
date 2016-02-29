@@ -1,7 +1,7 @@
 ﻿namespace SemanticRelationsResolver.Annotator.View
 {
     using System.Windows;
-
+    using System.Windows.Input;
     using Microsoft.Win32;
 
     public partial class MainWindow : Window
@@ -10,7 +10,7 @@
 
         private const string AllFilesFilter = "All files (*.*)|*.*";
 
-        private static string currentTreebankFilepath = string.Empty;
+        private static string _currentTreebankFilepath = string.Empty;
 
         public MainWindow()
         {
@@ -40,9 +40,9 @@
 
         private void TreebankClick(object sender, RoutedEventArgs e)
         {
-            currentTreebankFilepath = GetSaveFileLocation();
+            _currentTreebankFilepath = GetSaveFileLocation();
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(_currentTreebankFilepath))
             {
                 return;
             }
@@ -50,9 +50,9 @@
 
         private void TreebankFromExistingClick(object sender, RoutedEventArgs e)
         {
-            currentTreebankFilepath = GetFileLocation();
+            _currentTreebankFilepath = GetFileLocation();
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(_currentTreebankFilepath))
             {
                 return;
             }
@@ -60,12 +60,12 @@
 
         private void SaveClick(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(_currentTreebankFilepath))
             {
-                currentTreebankFilepath = GetSaveFileLocation();
+                _currentTreebankFilepath = GetSaveFileLocation();
             }
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(_currentTreebankFilepath))
             {
                 return;
             }
@@ -73,9 +73,9 @@
 
         private void SaveAsClick(object sender, RoutedEventArgs e)
         {
-            currentTreebankFilepath = GetSaveFileLocationAllFiles();
+            _currentTreebankFilepath = GetSaveFileLocationAllFiles();
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(_currentTreebankFilepath))
             {
                 return;
             }
@@ -83,9 +83,9 @@
 
         private void OpenClick(object sender, RoutedEventArgs e)
         {
-            currentTreebankFilepath = GetFileLocation();
+            _currentTreebankFilepath = GetFileLocation();
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(_currentTreebankFilepath))
             {
                 return;
             }
@@ -95,6 +95,16 @@
         {
             // todo:check if there are any unsaved changes, show popup to allow the user to decide, handle his response and then exit the app
             this.Close();
+        }
+
+        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
