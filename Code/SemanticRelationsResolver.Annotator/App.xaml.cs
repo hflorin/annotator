@@ -17,11 +17,9 @@
 
             var viewModel = container.Resolve<MainViewModel>();
 
-            MainWindow = new MainWindow(/*viewModel*/);
+            MainWindow = new MainWindow(viewModel);
 
             MainWindow.Show();
-
-            //viewModel.Load();
         }
     }
 }

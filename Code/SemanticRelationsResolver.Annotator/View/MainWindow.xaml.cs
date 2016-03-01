@@ -1,20 +1,33 @@
 ﻿namespace SemanticRelationsResolver.Annotator.View
 {
+    using System.ComponentModel;
     using System.Windows;
-    using System.Windows.Input;
+
     using Microsoft.Win32;
+
+    using SemanticRelationsResolver.Annotator.ViewModels;
 
     public partial class MainWindow : Window
     {
+        private readonly MainViewModel viewModel;
+
         private const string AllowedTreebankFileFormatsFilter = "XML files (*.xml)|*.xml";
 
         private const string AllFilesFilter = "All files (*.*)|*.*";
 
         private static string _currentTreebankFilepath = string.Empty;
 
-        public MainWindow()
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
+            this.viewModel = viewModel;
+            DataContext = this.viewModel;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            viewModel.OnClosing(e);
         }
 
         private static string GetSaveFileLocation()
@@ -37,6 +50,8 @@
 
             return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : string.Empty;
         }
+
+
 
         private void TreebankClick(object sender, RoutedEventArgs e)
         {
@@ -94,17 +109,7 @@
         private void ExitClick(object sender, RoutedEventArgs e)
         {
             // todo:check if there are any unsaved changes, show popup to allow the user to decide, handle his response and then exit the app
-            this.Close();
-        }
-
-        private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private void NewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            throw new System.NotImplementedException();
+            Close();
         }
     }
 }

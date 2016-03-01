@@ -3,12 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     x:Class="SemanticRelationsResolver.Annotator.View.MainWindow"
-    Title="Annotator" Height="350" Width="525">
-    <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.New" Executed="NewCommand_Executed" CanExecute="NewCommand_CanExecute"/>
-    </Window.CommandBindings>
+    Title="Annotator" Height="350" Width="525" d:DataContext="{d:DesignData MainViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,8 +18,6 @@
             <MenuItem x:Name="FileMenu" Header="_FILE">
                 <MenuItem x:Name="New" Header="New">
                     <MenuItem x:Name="Treebank" Header="_Treebank" Click="TreebankClick" />
-                    <MenuItem x:Name="TreebankFromExisting" Header="_Treebank from existing"
-                              Click="TreebankFromExistingClick" />
                 </MenuItem>
                 <MenuItem x:Name="Open" Header="_Open" Click="OpenClick" />
                 <Separator />
