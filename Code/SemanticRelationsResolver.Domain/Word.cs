@@ -8,7 +8,7 @@
 
         public string PartOfSpeech { get; set; }
 
-        public int HeadWordId { get; set; }
+        public string HeadWordId { get; set; }
 
         public string Chunk { get; set; }
 

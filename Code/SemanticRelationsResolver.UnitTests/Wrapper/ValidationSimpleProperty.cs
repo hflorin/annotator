@@ -17,7 +17,7 @@
             {
                 Content = "content",
                 Date = DateTime.Now,
-                Id = 0,
+                Id = "0",
                 Parser = "parser",
                 User = "user",
                 Words = new List<Word>()

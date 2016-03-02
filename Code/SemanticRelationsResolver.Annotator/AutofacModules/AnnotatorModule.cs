@@ -3,11 +3,8 @@
     using Autofac;
     using Loaders;
     using Mappers;
-
     using Prism.Events;
-
-    using SemanticRelationsResolver.Annotator.View.Services;
-
+    using View.Services;
     using ViewModels;
 
     public class AnnotatorModule : Module

@@ -27,8 +27,8 @@
             };
         }
 
-        private const int SentenceId = 0;
-        private const int WordId = 1;
+        private const string SentenceId ="0";
+        private const string WordId = "1";
 
         private Sentence _sentence;
 
@@ -44,7 +44,7 @@
         {
             var wrapper = new SentenceWrapper(_sentence);
 
-            const int newWordId = 2;
+            const string newWordId = "2";
 
             wrapper.Words = new ChangeTrackingCollection<WordWrapper>(new List<WordWrapper>
             {

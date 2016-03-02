@@ -27,7 +27,7 @@
         private readonly string _contentValue = "content";
         private readonly string _userValue = "user";
         private readonly DateTime _dateValue = DateTime.Now;
-        private readonly int _idValue = 0;
+        private readonly string _idValue = "0";
         private readonly ICollection<Word> _wordsValue = new List<Word>();
 
         private Sentence _sentence;

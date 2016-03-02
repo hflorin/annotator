@@ -2,8 +2,7 @@
 {
     using System.ComponentModel;
     using System.Windows;
-
-    using SemanticRelationsResolver.Annotator.ViewModels;
+    using ViewModels;
 
     public partial class MainWindow : Window
     {

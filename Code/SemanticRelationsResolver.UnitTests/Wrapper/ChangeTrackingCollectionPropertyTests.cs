@@ -15,8 +15,8 @@
         {
             _words = new List<WordWrapper>
             {
-                new WordWrapper(new Word {Id = 0}),
-                new WordWrapper(new Word {Id = 1})
+                new WordWrapper(new Word {Id = "0"}),
+                new WordWrapper(new Word {Id = "1"})
             };
         }
 

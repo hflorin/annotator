@@ -1,17 +1,21 @@
 ﻿namespace SemanticRelationsResolver.Annotator.ViewModels
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows.Input;
-
+    using Commands;
+    using Mappers;
     using Prism.Events;
-
-    using SemanticRelationsResolver.Annotator.Commands;
-    using SemanticRelationsResolver.Annotator.View.Services;
+    using View.Services;
+    using Wrapper;
 
     public class MainViewModel : Observable
     {
-        private static string currentTreebankFilepath = string.Empty;
+        private static string currentTreebankFilePath = string.Empty;
+
+        private readonly IDocumentMapper documentMapper;
 
         private readonly IEventAggregator eventAggregator;
 
@@ -19,16 +23,67 @@
 
         private readonly ISaveDialogService saveDialogService;
 
+        private readonly Dictionary<string, TreebankWrapper> treebankWrappers;
+
+        private string currentTreebankWrapperId;
+
         public MainViewModel(
-            IEventAggregator eventAggregator, 
-            ISaveDialogService saveDialogService, 
-            IOpenFileDialogService openFileDialogService)
+            IEventAggregator eventAggregator,
+            ISaveDialogService saveDialogService,
+            IOpenFileDialogService openFileDialogService,
+            IDocumentMapper documentMapper)
+        {
+            InitializeCommands();
+
+            CheckArgumentsForNull(eventAggregator, saveDialogService, openFileDialogService, documentMapper);
+
+            this.saveDialogService = saveDialogService;
+            this.openFileDialogService = openFileDialogService;
+            this.eventAggregator = eventAggregator;
+            this.documentMapper = documentMapper;
+
+            treebankWrappers = new Dictionary<string, TreebankWrapper>();
+        }
+
+        public List<string> TreebankIds
+        {
+            get
+            {
+                return treebankWrappers == null
+                    ? new List<string>()
+                    : treebankWrappers.Select(t => t.Key.ToString()).ToList();
+            }
+        }
+
+        public TreebankWrapper CurrentTreebankWrapper
+        {
+            get { return treebankWrappers[currentTreebankWrapperId]; }
+            set
+            {
+                treebankWrappers[currentTreebankWrapperId] = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand NewTreeBankCommand { get; set; }
+
+        public ICommand OpenCommand { get; set; }
+
+        public ICommand SaveCommand { get; set; }
+
+        public ICommand SaveAsCommand { get; set; }
+
+        private void InitializeCommands()
         {
             NewTreeBankCommand = new DelegateCommand(NewTreeBankCommandExecute, NewTreeBankCommandCanExecute);
             OpenCommand = new DelegateCommand(OpenCommandExecute, OpenCommandCanExecute);
             SaveCommand = new DelegateCommand(SaveCommandExecute, SaveCommandCanExecute);
             SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
+        }
 
+        private static void CheckArgumentsForNull(IEventAggregator eventAggregator, ISaveDialogService saveDialogService,
+            IOpenFileDialogService openFileDialogService, IDocumentMapper documentMapper)
+        {
             if (eventAggregator == null)
             {
                 throw new ArgumentNullException("eventAggregator");
@@ -44,18 +99,11 @@
                 throw new ArgumentNullException("openFileDialogService");
             }
 
-            this.saveDialogService = saveDialogService;
-            this.openFileDialogService = openFileDialogService;
-            this.eventAggregator = eventAggregator;
+            if (documentMapper == null)
+            {
+                throw new ArgumentNullException("documentMapper");
+            }
         }
-
-        public ICommand NewTreeBankCommand { get; set; }
-
-        public ICommand OpenCommand { get; set; }
-
-        public ICommand SaveCommand { get; set; }
-
-        public ICommand SaveAsCommand { get; set; }
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
         {
@@ -79,26 +127,37 @@
             return true;
         }
 
-        private void OpenCommandExecute(object obj)
+        private async void OpenCommandExecute(object obj)
         {
-            currentTreebankFilepath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
+            currentTreebankFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(currentTreebankFilePath))
             {
                 return;
             }
+
+            var treebankModel = await documentMapper.Map(currentTreebankFilePath);
+
+            if (treebankWrappers.ContainsKey(treebankModel.Id))
+            {
+                return;
+            }
+
+            treebankWrappers[treebankModel.Id] = new TreebankWrapper(treebankModel);
+
+            currentTreebankWrapperId = treebankModel.Id;
+            CurrentTreebankWrapper = treebankWrappers[currentTreebankWrapperId];
         }
 
         private void SaveCommandExecute(object obj)
         {
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(currentTreebankFilePath))
             {
-                currentTreebankFilepath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+                currentTreebankFilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
             }
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(currentTreebankFilePath))
             {
-                return;
             }
 
             // todo: save logic
@@ -116,11 +175,10 @@
 
         private void SaveAsCommandExecute(object obj)
         {
-            currentTreebankFilepath = saveDialogService.GetSaveFileLocation(FileFilters.AllFilesFilter);
+            currentTreebankFilePath = saveDialogService.GetSaveFileLocation(FileFilters.AllFilesFilter);
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilepath))
+            if (string.IsNullOrWhiteSpace(currentTreebankFilePath))
             {
-                return;
             }
 
             // todo: save as logic

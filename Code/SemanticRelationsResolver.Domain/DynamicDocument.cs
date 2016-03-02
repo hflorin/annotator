@@ -11,12 +11,12 @@
                 throw new ArgumentNullException("content", "Must provide document content.");
             }
 
-            DocumentContent = content;
+            DynamicContent = content;
 
             Initialize();
         }
 
-        public dynamic DocumentContent { get; set; }
+        public dynamic DynamicContent { get; set; }
 
         protected abstract void Initialize();
     }
