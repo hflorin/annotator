@@ -4,6 +4,8 @@
     using System.ComponentModel;
     using System.Windows.Input;
 
+    using Prism.Events;
+
     using SemanticRelationsResolver.Annotator.Commands;
     using SemanticRelationsResolver.Annotator.View.Services;
 
@@ -11,19 +13,49 @@
     {
         private static string currentTreebankFilepath = string.Empty;
 
+        private readonly IEventAggregator eventAggregator;
+
         private readonly IOpenFileDialogService openFileDialogService;
 
         private readonly ISaveDialogService saveDialogService;
 
-        public MainViewModel(ISaveDialogService saveDialogService, IOpenFileDialogService openFileDialogService)
+        public MainViewModel(
+            IEventAggregator eventAggregator, 
+            ISaveDialogService saveDialogService, 
+            IOpenFileDialogService openFileDialogService)
         {
             NewTreeBankCommand = new DelegateCommand(NewTreeBankCommandExecute, NewTreeBankCommandCanExecute);
             OpenCommand = new DelegateCommand(OpenCommandExecute, OpenCommandCanExecute);
             SaveCommand = new DelegateCommand(SaveCommandExecute, SaveCommandCanExecute);
             SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
+
+            if (eventAggregator == null)
+            {
+                throw new ArgumentNullException("eventAggregator");
+            }
+
+            if (saveDialogService == null)
+            {
+                throw new ArgumentNullException("saveDialogService");
+            }
+
+            if (openFileDialogService == null)
+            {
+                throw new ArgumentNullException("openFileDialogService");
+            }
+
             this.saveDialogService = saveDialogService;
             this.openFileDialogService = openFileDialogService;
+            this.eventAggregator = eventAggregator;
         }
+
+        public ICommand NewTreeBankCommand { get; set; }
+
+        public ICommand OpenCommand { get; set; }
+
+        public ICommand SaveCommand { get; set; }
+
+        public ICommand SaveAsCommand { get; set; }
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
         {
@@ -31,10 +63,6 @@
 
             // todo:check if there are any unsaved changes, show popup to allow the user to decide, handle his response and then exit the app
         }
-
-        #region Commands handlers
-
-        #region File
 
         private bool NewTreeBankCommandCanExecute(object arg)
         {
@@ -97,25 +125,5 @@
 
             // todo: save as logic
         }
-
-        #endregion
-
-        #endregion
-
-        #region Commands properties
-
-        #region File
-
-        public ICommand NewTreeBankCommand { get; set; }
-
-        public ICommand OpenCommand { get; set; }
-
-        public ICommand SaveCommand { get; set; }
-
-        public ICommand SaveAsCommand { get; set; }
-
-        #endregion
-
-        #endregion
     }
 }

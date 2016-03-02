@@ -4,6 +4,8 @@
     using Loaders;
     using Mappers;
 
+    using Prism.Events;
+
     using SemanticRelationsResolver.Annotator.View.Services;
 
     using ViewModels;
@@ -12,6 +14,7 @@
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
             builder.RegisterType<DynamicXmlLoader>().As<IResourceLoader>();
             builder.RegisterType<TreebankMapper>().As<IDocumentMapper>().PropertiesAutowired();
             builder.RegisterType<SaveDialogService>().As<ISaveDialogService>();
