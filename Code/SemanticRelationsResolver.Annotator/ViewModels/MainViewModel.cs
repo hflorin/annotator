@@ -2,14 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Linq;
     using System.Windows.Input;
-    using Commands;
-    using Mappers;
+
     using Prism.Events;
-    using View.Services;
-    using Wrapper;
+
+    using SemanticRelationsResolver.Annotator.Commands;
+    using SemanticRelationsResolver.Annotator.View.Services;
+    using SemanticRelationsResolver.Annotator.Wrapper;
+    using SemanticRelationsResolver.Mappers;
 
     public class MainViewModel : Observable
     {
@@ -43,21 +45,17 @@
             this.documentMapper = documentMapper;
 
             treebankWrappers = new Dictionary<string, TreebankWrapper>();
+            TreebankIds = new ObservableCollection<string>();
         }
 
-        public List<string> TreebankIds
-        {
-            get
-            {
-                return treebankWrappers == null
-                    ? new List<string>()
-                    : treebankWrappers.Select(t => t.Key.ToString()).ToList();
-            }
-        }
+        public ObservableCollection<string> TreebankIds { get; set; }
 
         public TreebankWrapper CurrentTreebankWrapper
         {
-            get { return treebankWrappers[currentTreebankWrapperId]; }
+            get
+            {
+                return treebankWrappers[currentTreebankWrapperId];
+            }
             set
             {
                 treebankWrappers[currentTreebankWrapperId] = value;
@@ -73,16 +71,13 @@
 
         public ICommand SaveAsCommand { get; set; }
 
-        private void InitializeCommands()
-        {
-            NewTreeBankCommand = new DelegateCommand(NewTreeBankCommandExecute, NewTreeBankCommandCanExecute);
-            OpenCommand = new DelegateCommand(OpenCommandExecute, OpenCommandCanExecute);
-            SaveCommand = new DelegateCommand(SaveCommandExecute, SaveCommandCanExecute);
-            SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
-        }
+        public ICommand CloseCommand { get; set; }
 
-        private static void CheckArgumentsForNull(IEventAggregator eventAggregator, ISaveDialogService saveDialogService,
-            IOpenFileDialogService openFileDialogService, IDocumentMapper documentMapper)
+        private static void CheckArgumentsForNull(
+            IEventAggregator eventAggregator,
+            ISaveDialogService saveDialogService,
+            IOpenFileDialogService openFileDialogService,
+            IDocumentMapper documentMapper)
         {
             if (eventAggregator == null)
             {
@@ -103,6 +98,31 @@
             {
                 throw new ArgumentNullException("documentMapper");
             }
+        }
+
+        private void InitializeCommands()
+        {
+            NewTreeBankCommand = new DelegateCommand(NewTreeBankCommandExecute, NewTreeBankCommandCanExecute);
+            OpenCommand = new DelegateCommand(OpenCommandExecute, OpenCommandCanExecute);
+            SaveCommand = new DelegateCommand(SaveCommandExecute, SaveCommandCanExecute);
+            SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
+            CloseCommand = new DelegateCommand(CloseCommandExecute, CloseCommandCanExecute);
+        }
+
+        private bool CloseCommandCanExecute(object arg)
+        {
+            return !string.IsNullOrWhiteSpace(currentTreebankWrapperId);
+        }
+
+        private void CloseCommandExecute(object obj)
+        {
+            if (treebankWrappers.ContainsKey(currentTreebankWrapperId))
+            {
+                treebankWrappers.Remove(currentTreebankWrapperId);
+                TreebankIds.Remove(currentTreebankWrapperId);
+            }
+
+            currentTreebankWrapperId = string.Empty;
         }
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
@@ -144,9 +164,9 @@
             }
 
             treebankWrappers[treebankModel.Id] = new TreebankWrapper(treebankModel);
-
             currentTreebankWrapperId = treebankModel.Id;
             CurrentTreebankWrapper = treebankWrappers[currentTreebankWrapperId];
+            TreebankIds.Add(treebankModel.Id);
         }
 
         private void SaveCommandExecute(object obj)
