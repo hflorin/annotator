@@ -5,13 +5,11 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Windows.Input;
-
+    using Commands;
+    using Mappers;
     using Prism.Events;
-
-    using SemanticRelationsResolver.Annotator.Commands;
-    using SemanticRelationsResolver.Annotator.View.Services;
-    using SemanticRelationsResolver.Annotator.Wrapper;
-    using SemanticRelationsResolver.Mappers;
+    using View.Services;
+    using Wrapper;
 
     public class MainViewModel : Observable
     {
@@ -50,12 +48,9 @@
 
         public ObservableCollection<string> TreebankIds { get; set; }
 
-        public TreebankWrapper CurrentTreebankWrapper
+        public TreebankWrapper CurrentTreebank
         {
-            get
-            {
-                return treebankWrappers[currentTreebankWrapperId];
-            }
+            get { return treebankWrappers[currentTreebankWrapperId]; }
             set
             {
                 treebankWrappers[currentTreebankWrapperId] = value;
@@ -165,7 +160,7 @@
 
             treebankWrappers[treebankModel.Id] = new TreebankWrapper(treebankModel);
             currentTreebankWrapperId = treebankModel.Id;
-            CurrentTreebankWrapper = treebankWrappers[currentTreebankWrapperId];
+            CurrentTreebank = treebankWrappers[currentTreebankWrapperId];
             TreebankIds.Add(treebankModel.Id);
         }
 

@@ -6,7 +6,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     x:Class="SemanticRelationsResolver.Annotator.View.MainWindow"
-    Title="Annotator" Height="350" Width="525" d:DataContext="{d:DesignData MainViewModel}">
+    Title="Annotator" Height="600" Width="600" d:DataContext="{d:DesignData MainViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -49,17 +49,19 @@
 
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1">
             <xcad:LayoutRoot x:Name="LayoutRoot">
-                <xcad:LayoutRoot.LeftSide>
-                    <xcad:LayoutAnchorSide>
-                        <xcad:LayoutAnchorGroup>
-                            <xcad:LayoutAnchorable ContentId="treebanks" Title="Treebank Explorer">
-                                <ListBox ItemsSource="{Binding TreebankIds}" />
-                            </xcad:LayoutAnchorable>
-                        </xcad:LayoutAnchorGroup>
-                    </xcad:LayoutAnchorSide>
-                </xcad:LayoutRoot.LeftSide>
-
                 <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutAnchorablePane DockWidth="200">
+                        <xcad:LayoutAnchorable ContentId="treebanks" Title="Treebank Explorer" CanHide="False" CanClose="False"
+                                            AutoHideWidth="240">
+                            <ListBox x:Name="TreebankExplorerList" ItemsSource="{Binding TreebankIds}" ToolTip="The list of currently loaded treebanks" />
+                        </xcad:LayoutAnchorable>
+                    </xcad:LayoutAnchorablePane>
+                    <xcad:LayoutAnchorablePane DockWidth="200">
+                        <xcad:LayoutAnchorable ContentId="sentences" Title="Sentences" CanHide="False" CanClose="False"
+                                            AutoHideWidth="240">
+                            <ListBox x:Name="SentenceList" ItemsSource="{Binding TreebankIds}" ToolTip="The list of sentences for the currently selected treebank" />
+                        </xcad:LayoutAnchorable>
+                    </xcad:LayoutAnchorablePane>
                     <xcad:LayoutDocumentPaneGroup>
                         <xcad:LayoutDocumentPane>
                             <xcad:LayoutDocument ContentId="document1" Title="Document 1">
@@ -73,7 +75,6 @@
                     </xcad:LayoutDocumentPaneGroup>
                 </xcad:LayoutPanel>
             </xcad:LayoutRoot>
-
         </xcad:DockingManager>
     </Grid>
 </Window>
