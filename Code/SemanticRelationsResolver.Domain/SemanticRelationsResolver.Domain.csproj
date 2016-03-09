@@ -38,11 +38,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DynamicDocument.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="Sentence.cs" />
-    <Compile Include="Treebank.cs" />
     <Compile Include="Word.cs" />
   </ItemGroup>
   <ItemGroup>

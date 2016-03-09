@@ -114,9 +114,6 @@
     <Compile Include="Wrapper\Generated\DocumentWrapper.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Wrapper\Generated\DynamicDocumentWrapper.g.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Wrapper\Generated\GenerateModelWrapper.cs">
       <DependentUpon>GenerateModelWrapper.tt</DependentUpon>
       <SubType>Code</SubType>
@@ -127,9 +124,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Wrapper\Generated\SentenceWrapper.g.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Wrapper\Generated\TreebankWrapper.g.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Wrapper\Generated\WordWrapper.g.cs">

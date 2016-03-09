@@ -15,7 +15,7 @@
 	foreach(var modelType in GetModelTypes())
 	{
 		var simpleProperties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(p => p.PropertyType.IsValueType || p.PropertyType == typeof(string)).ToList();
-		var complexProperties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Except(simpleProperties).Where(p => p.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(p.PropertyType)).ToList();
+		var complexProperties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Except(simpleProperties).Where(p => p.PropertyType.IsClass && !typeof(IEnumerable).IsAssignableFrom(p.PropertyType) && !p.Name.Equals("DynamicContent")).ToList();
 		var collectionProperties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Except(simpleProperties).Except(complexProperties).Where(p => p.PropertyType.IsGenericType).ToList();
 #>
 namespace SemanticRelationsResolver.Annotator.Wrapper

@@ -5,6 +5,6 @@
 
     public interface IDocumentMapper
     {
-        Task<Treebank> Map(string filepath);
+        Task<Document> Map(string filepath);
     }
 }

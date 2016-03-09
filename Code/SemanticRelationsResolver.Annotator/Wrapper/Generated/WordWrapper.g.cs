@@ -59,15 +59,15 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
             get { return GetIsChanged("PartOfSpeech"); }
         }
 
-		public System.Int32 HeadWordId
+		public System.String HeadWordId
         {
-            get { return GetValue<System.Int32>(); }
+            get { return GetValue<System.String>(); }
             set { SetValue(value); }
         }
 
-        public System.Int32 HeadWordIdOriginalValue
+        public System.String HeadWordIdOriginalValue
         {
-            get { return GetOriginalValue<System.Int32>("HeadWordId"); }
+            get { return GetOriginalValue<System.String>("HeadWordId"); }
         }
 
         public bool HeadWordIdIsChanged

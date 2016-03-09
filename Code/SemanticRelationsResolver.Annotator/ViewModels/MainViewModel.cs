@@ -23,7 +23,7 @@
 
         private readonly ISaveDialogService saveDialogService;
 
-        private readonly Dictionary<string, TreebankWrapper> treebankWrappers;
+        private readonly Dictionary<string, DocumentWrapper> treebankWrappers;
 
         private string currentTreebankWrapperId;
 
@@ -42,13 +42,13 @@
             this.eventAggregator = eventAggregator;
             this.documentMapper = documentMapper;
 
-            treebankWrappers = new Dictionary<string, TreebankWrapper>();
+            treebankWrappers = new Dictionary<string, DocumentWrapper>();
             TreebankIds = new ObservableCollection<string>();
         }
 
         public ObservableCollection<string> TreebankIds { get; set; }
 
-        public TreebankWrapper CurrentTreebank
+        public DocumentWrapper CurrentTreebank
         {
             get { return treebankWrappers[currentTreebankWrapperId]; }
             set
@@ -158,7 +158,7 @@
                 return;
             }
 
-            treebankWrappers[treebankModel.Id] = new TreebankWrapper(treebankModel);
+            treebankWrappers[treebankModel.Id] = new DocumentWrapper(treebankModel);
             currentTreebankWrapperId = treebankModel.Id;
             CurrentTreebank = treebankWrappers[currentTreebankWrapperId];
             TreebankIds.Add(treebankModel.Id);

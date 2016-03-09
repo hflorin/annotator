@@ -8,11 +8,11 @@
     {
         public IResourceLoader ResourceLoader { get; set; }
 
-        public async Task<Treebank> Map(string filepath)
+        public async Task<Document> Map(string filepath)
         {
             var documentContent = await ResourceLoader.LoadAsync(filepath);
 
-            return new Treebank(documentContent);
+            return new Document(documentContent);
         }
     }
 }
