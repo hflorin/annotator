@@ -1,6 +1,7 @@
 ﻿namespace SemanticRelationsResolver.Annotator.AutofacModules
 {
     using Autofac;
+    using Domain;
     using Loaders;
     using Mappers;
     using Prism.Events;

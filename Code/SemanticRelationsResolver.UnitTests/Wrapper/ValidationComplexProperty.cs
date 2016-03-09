@@ -17,7 +17,7 @@
             {
                 Content = "content",
                 Date = DateTime.Now,
-                Id = "0",
+                Id = 0,
                 Parser = "parser",
                 User = "user",
                 Words = new List<Word>
@@ -26,10 +26,10 @@
                     {
                         Chunk = "chunk",
                         Content = "content",
-                        Id = "0",
+                        Id = 0,
                         DependencyRelation = "relaion",
                         Form = "form",
-                        HeadWordId = "0",
+                        HeadWordId = 0,
                         Lemma = "lemma",
                         PartOfSpeech = "verb"
                     }

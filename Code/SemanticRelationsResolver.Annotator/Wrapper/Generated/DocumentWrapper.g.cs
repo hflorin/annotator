@@ -11,6 +11,22 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 		{
 		}
 
+		public System.String Identifier
+        {
+            get { return GetValue<System.String>(); }
+            set { SetValue(value); }
+        }
+
+        public System.String IdentifierOriginalValue
+        {
+            get { return GetOriginalValue<System.String>("Identifier"); }
+        }
+
+        public bool IdentifierIsChanged
+        {
+            get { return GetIsChanged("Identifier"); }
+        }
+
 		public ChangeTrackingCollection<SentenceWrapper> Sentences { get; set; }
 
 		protected override void InitializeCollectionProperties(Document model)

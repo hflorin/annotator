@@ -50,47 +50,74 @@
 
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1">
             <xcad:LayoutRoot x:Name="LayoutRoot">
-                <xcad:LayoutPanel Orientation="Horizontal">
-                    <xcad:LayoutAnchorablePane DockWidth="200">
-                        <xcad:LayoutAnchorable ContentId="treebanks" Title="Treebank Explorer" CanHide="False" CanClose="False"
-                                            AutoHideWidth="240">
-                            <ListBox x:Name="TreebankExplorerList" ItemsSource="{Binding TreebankIds}" ToolTip="The list of currently loaded treebanks">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding LoadSentencesCommand}" 
-                                CommandParameter="{Binding CurrentTreebank}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </ListBox>
-                        </xcad:LayoutAnchorable>
-                    </xcad:LayoutAnchorablePane>
-                    <xcad:LayoutAnchorablePane DockWidth="200">
-                        <xcad:LayoutAnchorable ContentId="sentences" Title="Sentences">
-
-                            <DataGrid ItemsSource="{Binding CurrentTreebank.Sentences}" SelectedItem="{Binding SeletedSentence,Mode=TwoWay}" Margin="0 5 0 0">
-                                <!--<DataGrid.Columns>
-                                    <DataGridTextColumn Header="Id" Binding="{Binding Id,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="Auto"/>
-                                    <DataGridTextColumn Header="Parser" Binding="{Binding Parser,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*"/>
-                                    <DataGridTextColumn Header="User" Binding="{Binding User,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*"/>
-                                    <DataGridTextColumn Header="Date" Binding="{Binding Date,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*"/>
-                                </DataGrid.Columns>-->
-                            </DataGrid>
-
-                            <!--<ListBox x:Name="SentenceList" ItemsSource="{Binding CurrentTreebank.Sentences}" ToolTip="The list of sentences for the currently selected treebank" />-->
-                        </xcad:LayoutAnchorable>
-                    </xcad:LayoutAnchorablePane>
-                    <xcad:LayoutDocumentPaneGroup>
-                        <xcad:LayoutDocumentPane>
-                            <xcad:LayoutDocument ContentId="document1" Title="Document 1">
-                                <Button Content="Document 1 Content" HorizontalAlignment="Center"
-                                        VerticalAlignment="Center" />
-                            </xcad:LayoutDocument>
-                            <xcad:LayoutDocument ContentId="document2" Title="Document 2">
-                                <TextBox Text="Document 2 Content" AcceptsReturn="True" />
-                            </xcad:LayoutDocument>
-                        </xcad:LayoutDocumentPane>
-                    </xcad:LayoutDocumentPaneGroup>
+                <xcad:LayoutPanel Orientation="Vertical">
+                    <xcad:LayoutPanel Orientation="Horizontal">
+                        <xcad:LayoutAnchorablePane DockWidth="200">
+                            <xcad:LayoutAnchorable ContentId="treebanks" Title="Treebank Explorer" CanHide="False"
+                                                   CanClose="False"
+                                                   AutoHideWidth="240">
+                                <ListBox x:Name="TreebankExplorerList" ItemsSource="{Binding TreebankIds}"
+                                         ToolTip="The list of currently loaded treebanks">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding LoadSentencesCommand}"
+                                                                   CommandParameter="{Binding CurrentTreebank}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ListBox>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorablePane>
+                        <xcad:LayoutDocumentPaneGroup>
+                            <xcad:LayoutDocumentPane>
+                                <xcad:LayoutDocument ContentId="document1" Title="Document 1">
+                                    <Button Content="Document 1 Content" HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                                </xcad:LayoutDocument>
+                                <xcad:LayoutDocument ContentId="document2" Title="Document 2">
+                                    <TextBox Text="Document 2 Content" AcceptsReturn="True" />
+                                </xcad:LayoutDocument>
+                            </xcad:LayoutDocumentPane>
+                        </xcad:LayoutDocumentPaneGroup>
+                    </xcad:LayoutPanel>
+                    <xcad:LayoutPanel Orientation="Horizontal" DockHeight="*" DockMinHeight="200">
+                        <xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False"
+                                                   CanClose="False">
+                                <DataGrid ItemsSource="{Binding CurrentTreebank.Sentences}"
+                                          SelectedItem="{Binding SeletedSentence,Mode=TwoWay}" Margin="0 5 0 0"
+                                          AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Id"
+                                                            Binding="{Binding Id,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Width="Auto" />
+                                        <DataGridTextColumn Header="Content"
+                                                            Binding="{Binding Content,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Width="*" />
+                                        <DataGridTextColumn Header="Parser"
+                                                            Binding="{Binding Parser,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Width="Auto" />
+                                        <DataGridTextColumn Header="User"
+                                                            Binding="{Binding User,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Width="Auto" />
+                                        <DataGridTextColumn Header="Date"
+                                                            Binding="{Binding Date,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Width="Auto" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorablePane>
+                    </xcad:LayoutPanel>
                 </xcad:LayoutPanel>
+
+                <xcad:LayoutRoot.BottomSide>
+                    <xcad:LayoutAnchorSide>
+                        <xcad:LayoutAnchorGroup>
+                            <xcad:LayoutAnchorable Title="Output" ContentId="output">
+                                <ListBox ItemsSource="{Binding DocumentLoadExceptions}"></ListBox>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorGroup>
+                    </xcad:LayoutAnchorSide>
+                </xcad:LayoutRoot.BottomSide>
             </xcad:LayoutRoot>
         </xcad:DockingManager>
     </Grid>

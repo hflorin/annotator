@@ -12,15 +12,15 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 		{
         }
 
-		public System.String Id
+		public System.Int32 Id
         {
-            get { return GetValue<System.String>(); }
+            get { return GetValue<System.Int32>(); }
             set { SetValue(value); }
         }
 
-        public System.String IdOriginalValue
+        public System.Int32 IdOriginalValue
         {
-            get { return GetOriginalValue<System.String>("Id"); }
+            get { return GetOriginalValue<System.Int32>("Id"); }
         }
 
         public bool IdIsChanged

@@ -6,11 +6,10 @@
     using System.ComponentModel;
     using System.Windows.Input;
     using Commands;
+    using Domain;
+    using Events;
     using Mappers;
     using Prism.Events;
-
-    using SemanticRelationsResolver.Domain;
-
     using View.Services;
     using Wrapper;
 
@@ -45,9 +44,23 @@
             this.eventAggregator = eventAggregator;
             this.documentMapper = documentMapper;
 
+            SubscribeToEvents();
+
             treebankWrappers = new Dictionary<string, DocumentWrapper>();
             TreebankIds = new ObservableCollection<string>();
         }
+
+        private void SubscribeToEvents()
+        {
+            eventAggregator.GetEvent<DocumentLoadExceptionEvent>().Subscribe(OnDocumentLoadException);
+        }
+
+        private void OnDocumentLoadException(string exceptionMessage)
+        {
+            DocumentLoadExceptions.Add(exceptionMessage);
+        }
+
+        public ObservableCollection<string> DocumentLoadExceptions { get; set; }
 
         public SentenceWrapper SelectedSentence { get; set; }
 
@@ -55,7 +68,12 @@
 
         public DocumentWrapper CurrentTreebank
         {
-            get { return treebankWrappers.ContainsKey(currentTreebankWrapperId) ? treebankWrappers[currentTreebankWrapperId] : new DocumentWrapper(new Document()); }
+            get
+            {
+                return treebankWrappers.ContainsKey(currentTreebankWrapperId)
+                    ? treebankWrappers[currentTreebankWrapperId]
+                    : new DocumentWrapper(new Document());
+            }
             set
             {
                 treebankWrappers[currentTreebankWrapperId] = value;
@@ -171,15 +189,15 @@
 
             var treebankModel = await documentMapper.Map(currentTreebankFilePath);
 
-            if (treebankWrappers.ContainsKey(treebankModel.Id))
+            if (treebankWrappers.ContainsKey(treebankModel.Identifier))
             {
                 return;
             }
 
-            treebankWrappers[treebankModel.Id] = new DocumentWrapper(treebankModel);
-            currentTreebankWrapperId = treebankModel.Id;
+            treebankWrappers[treebankModel.Identifier] = new DocumentWrapper(treebankModel);
+            currentTreebankWrapperId = treebankModel.Identifier;
             CurrentTreebank = treebankWrappers[currentTreebankWrapperId];
-            TreebankIds.Add(treebankModel.Id);
+            TreebankIds.Add(treebankModel.Identifier);
         }
 
         private void SaveCommandExecute(object obj)
