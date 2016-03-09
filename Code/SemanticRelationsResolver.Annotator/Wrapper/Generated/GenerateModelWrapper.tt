@@ -1,6 +1,8 @@
 ﻿<#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ assembly name="System.Core" #>
+<#@ assembly name="System.Runtime" #>
 <#@ assembly name="$(SolutionDir)\Code\SemanticRelationsResolver.Domain\bin\Debug\SemanticRelationsResolver.Domain.dll" #>
+<#@ import namespace="System.Runtime.CompilerServices"#>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.IO" #>
@@ -61,7 +63,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 #>
 <#+ 
 	private IEnumerable<Type> GetModelTypes(){
-		return typeof(ModelBase).Assembly.GetTypes();
+		return typeof(ModelBase).Assembly.GetTypes().Where(t => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) == null);
 	} 
 
 	private void SaveGeneratedCodeAsFile(string filename)
