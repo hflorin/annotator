@@ -8,6 +8,9 @@
     using Commands;
     using Mappers;
     using Prism.Events;
+
+    using SemanticRelationsResolver.Domain;
+
     using View.Services;
     using Wrapper;
 
@@ -25,7 +28,7 @@
 
         private readonly Dictionary<string, DocumentWrapper> treebankWrappers;
 
-        private string currentTreebankWrapperId;
+        private string currentTreebankWrapperId = string.Empty;
 
         public MainViewModel(
             IEventAggregator eventAggregator,
@@ -46,11 +49,13 @@
             TreebankIds = new ObservableCollection<string>();
         }
 
+        public SentenceWrapper SelectedSentence { get; set; }
+
         public ObservableCollection<string> TreebankIds { get; set; }
 
         public DocumentWrapper CurrentTreebank
         {
-            get { return treebankWrappers[currentTreebankWrapperId]; }
+            get { return treebankWrappers.ContainsKey(currentTreebankWrapperId) ? treebankWrappers[currentTreebankWrapperId] : new DocumentWrapper(new Document()); }
             set
             {
                 treebankWrappers[currentTreebankWrapperId] = value;
@@ -67,6 +72,8 @@
         public ICommand SaveAsCommand { get; set; }
 
         public ICommand CloseCommand { get; set; }
+
+        public ICommand LoadSentencesCommand { get; set; }
 
         private static void CheckArgumentsForNull(
             IEventAggregator eventAggregator,
@@ -102,6 +109,17 @@
             SaveCommand = new DelegateCommand(SaveCommandExecute, SaveCommandCanExecute);
             SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
             CloseCommand = new DelegateCommand(CloseCommandExecute, CloseCommandCanExecute);
+            LoadSentencesCommand = new DelegateCommand(LoadSentencesCommandCanExecute, LoadSentencesCommandExecute);
+        }
+
+        private void LoadSentencesCommandCanExecute(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool LoadSentencesCommandExecute(object arg)
+        {
+            throw new NotImplementedException();
         }
 
         private bool CloseCommandCanExecute(object arg)

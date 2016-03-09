@@ -6,6 +6,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
     x:Class="SemanticRelationsResolver.Annotator.View.MainWindow"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     Title="Annotator" Height="600" Width="600" d:DataContext="{d:DesignData MainViewModel}">
     <Grid>
         <Grid.RowDefinitions>
@@ -53,13 +54,29 @@
                     <xcad:LayoutAnchorablePane DockWidth="200">
                         <xcad:LayoutAnchorable ContentId="treebanks" Title="Treebank Explorer" CanHide="False" CanClose="False"
                                             AutoHideWidth="240">
-                            <ListBox x:Name="TreebankExplorerList" ItemsSource="{Binding TreebankIds}" ToolTip="The list of currently loaded treebanks" />
+                            <ListBox x:Name="TreebankExplorerList" ItemsSource="{Binding TreebankIds}" ToolTip="The list of currently loaded treebanks">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding LoadSentencesCommand}" 
+                                CommandParameter="{Binding CurrentTreebank}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ListBox>
                         </xcad:LayoutAnchorable>
                     </xcad:LayoutAnchorablePane>
                     <xcad:LayoutAnchorablePane DockWidth="200">
-                        <xcad:LayoutAnchorable ContentId="sentences" Title="Sentences" CanHide="False" CanClose="False"
-                                            AutoHideWidth="240">
-                            <ListBox x:Name="SentenceList" ItemsSource="{Binding TreebankIds}" ToolTip="The list of sentences for the currently selected treebank" />
+                        <xcad:LayoutAnchorable ContentId="sentences" Title="Sentences">
+
+                            <DataGrid ItemsSource="{Binding CurrentTreebank.Sentences}" SelectedItem="{Binding SeletedSentence,Mode=TwoWay}" Margin="0 5 0 0">
+                                <!--<DataGrid.Columns>
+                                    <DataGridTextColumn Header="Id" Binding="{Binding Id,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Parser" Binding="{Binding Parser,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                                    <DataGridTextColumn Header="User" Binding="{Binding User,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                                    <DataGridTextColumn Header="Date" Binding="{Binding Date,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="*"/>
+                                </DataGrid.Columns>-->
+                            </DataGrid>
+
+                            <!--<ListBox x:Name="SentenceList" ItemsSource="{Binding CurrentTreebank.Sentences}" ToolTip="The list of sentences for the currently selected treebank" />-->
                         </xcad:LayoutAnchorable>
                     </xcad:LayoutAnchorablePane>
                     <xcad:LayoutDocumentPaneGroup>
