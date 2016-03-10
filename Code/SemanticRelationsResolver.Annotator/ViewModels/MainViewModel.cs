@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows.Input;
     using Commands;
     using Domain;
@@ -17,17 +18,15 @@
     {
         private static string currentTreebankFilePath = string.Empty;
 
-        private readonly IDocumentMapper documentMapper;
+        private IDocumentMapper documentMapper;
 
-        private readonly IEventAggregator eventAggregator;
+        private Dictionary<string, DocumentWrapper> documentsWrappers;
 
-        private readonly IOpenFileDialogService openFileDialogService;
+        private IEventAggregator eventAggregator;
 
-        private readonly ISaveDialogService saveDialogService;
+        private IOpenFileDialogService openFileDialogService;
 
-        private readonly Dictionary<string, DocumentWrapper> treebankWrappers;
-
-        private string currentTreebankWrapperId = string.Empty;
+        private ISaveDialogService saveDialogService;
 
         public MainViewModel(
             IEventAggregator eventAggregator,
@@ -37,46 +36,30 @@
         {
             InitializeCommands();
 
-            CheckArgumentsForNull(eventAggregator, saveDialogService, openFileDialogService, documentMapper);
-
-            this.saveDialogService = saveDialogService;
-            this.openFileDialogService = openFileDialogService;
-            this.eventAggregator = eventAggregator;
-            this.documentMapper = documentMapper;
+            InitializeServices(eventAggregator, saveDialogService, openFileDialogService, documentMapper);
 
             SubscribeToEvents();
 
-            treebankWrappers = new Dictionary<string, DocumentWrapper>();
-            TreebankIds = new ObservableCollection<string>();
+            InitializeMembers();
         }
 
-        private void SubscribeToEvents()
-        {
-            eventAggregator.GetEvent<DocumentLoadExceptionEvent>().Subscribe(OnDocumentLoadException);
-        }
-
-        private void OnDocumentLoadException(string exceptionMessage)
-        {
-            DocumentLoadExceptions.Add(exceptionMessage);
-        }
+        public ObservableCollection<DocumentWrapper> Documents { get; set; }
 
         public ObservableCollection<string> DocumentLoadExceptions { get; set; }
 
         public SentenceWrapper SelectedSentence { get; set; }
 
-        public ObservableCollection<string> TreebankIds { get; set; }
-
         public DocumentWrapper CurrentTreebank
         {
             get
             {
-                return treebankWrappers.ContainsKey(currentTreebankWrapperId)
-                    ? treebankWrappers[currentTreebankWrapperId]
+                return documentsWrappers.ContainsKey(currentTreebankFilePath)
+                    ? documentsWrappers[currentTreebankFilePath]
                     : new DocumentWrapper(new Document());
             }
             set
             {
-                treebankWrappers[currentTreebankWrapperId] = value;
+                documentsWrappers[currentTreebankFilePath] = value;
                 OnPropertyChanged();
             }
         }
@@ -93,31 +76,53 @@
 
         public ICommand LoadSentencesCommand { get; set; }
 
-        private static void CheckArgumentsForNull(
-            IEventAggregator eventAggregator,
-            ISaveDialogService saveDialogService,
-            IOpenFileDialogService openFileDialogService,
-            IDocumentMapper documentMapper)
+        private void InitializeMembers()
         {
-            if (eventAggregator == null)
+            documentsWrappers = new Dictionary<string, DocumentWrapper>();
+            DocumentLoadExceptions = new ObservableCollection<string>();
+            Documents = new ObservableCollection<DocumentWrapper>();
+        }
+
+        private void SubscribeToEvents()
+        {
+            eventAggregator.GetEvent<DocumentLoadExceptionEvent>().Subscribe(OnDocumentLoadException);
+        }
+
+        private void OnDocumentLoadException(string exceptionMessage)
+        {
+            DocumentLoadExceptions.Add(exceptionMessage);
+        }
+
+        private void InitializeServices(
+            IEventAggregator eventAggregatorArg,
+            ISaveDialogService saveDialogServiceArg,
+            IOpenFileDialogService openFileDialogServiceArg,
+            IDocumentMapper documentMapperArg)
+        {
+            if (eventAggregatorArg == null)
             {
-                throw new ArgumentNullException("eventAggregator");
+                throw new ArgumentNullException("eventAggregatorArg");
             }
 
-            if (saveDialogService == null)
+            if (saveDialogServiceArg == null)
             {
-                throw new ArgumentNullException("saveDialogService");
+                throw new ArgumentNullException("saveDialogServiceArg");
             }
 
-            if (openFileDialogService == null)
+            if (openFileDialogServiceArg == null)
             {
-                throw new ArgumentNullException("openFileDialogService");
+                throw new ArgumentNullException("openFileDialogServiceArg");
             }
 
-            if (documentMapper == null)
+            if (documentMapperArg == null)
             {
-                throw new ArgumentNullException("documentMapper");
+                throw new ArgumentNullException("documentMapperArg");
             }
+
+            saveDialogService = saveDialogServiceArg;
+            openFileDialogService = openFileDialogServiceArg;
+            eventAggregator = eventAggregatorArg;
+            documentMapper = documentMapperArg;
         }
 
         private void InitializeCommands()
@@ -142,18 +147,26 @@
 
         private bool CloseCommandCanExecute(object arg)
         {
-            return !string.IsNullOrWhiteSpace(currentTreebankWrapperId);
+            return !string.IsNullOrWhiteSpace(currentTreebankFilePath);
         }
 
         private void CloseCommandExecute(object obj)
         {
-            if (treebankWrappers.ContainsKey(currentTreebankWrapperId))
+            if (!documentsWrappers.ContainsKey(currentTreebankFilePath))
             {
-                treebankWrappers.Remove(currentTreebankWrapperId);
-                TreebankIds.Remove(currentTreebankWrapperId);
+                return;
             }
 
-            currentTreebankWrapperId = string.Empty;
+            documentsWrappers.Remove(currentTreebankFilePath);
+
+            if (documentsWrappers.Any())
+            {
+                CurrentTreebank = documentsWrappers.First().Value;
+
+                currentTreebankFilePath = CurrentTreebank.Model.FilePath;
+            }
+
+            RefreshDocumentsExplorerList();
         }
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
@@ -187,17 +200,26 @@
                 return;
             }
 
-            var treebankModel = await documentMapper.Map(currentTreebankFilePath);
+            DocumentLoadExceptions.Clear();
 
-            if (treebankWrappers.ContainsKey(treebankModel.Identifier))
+            var documentModel = await documentMapper.Map(currentTreebankFilePath);
+
+            //must check if the file is alredy loaded and has changes offer to save if so
+
+            documentsWrappers[currentTreebankFilePath] = new DocumentWrapper(documentModel);
+            CurrentTreebank = documentsWrappers[currentTreebankFilePath];
+
+            RefreshDocumentsExplorerList();
+        }
+
+        private void RefreshDocumentsExplorerList()
+        {
+            Documents.Clear();
+
+            foreach (var documentWrapper in documentsWrappers)
             {
-                return;
+                Documents.Add(documentWrapper.Value);
             }
-
-            treebankWrappers[treebankModel.Identifier] = new DocumentWrapper(treebankModel);
-            currentTreebankWrapperId = treebankModel.Identifier;
-            CurrentTreebank = treebankWrappers[currentTreebankWrapperId];
-            TreebankIds.Add(treebankModel.Identifier);
         }
 
         private void SaveCommandExecute(object obj)

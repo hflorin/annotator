@@ -48,6 +48,10 @@
       <Project>{34c8855b-c3ba-4e0e-a4f2-68c5406f1382}</Project>
       <Name>SemanticRelationsResolver.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SemanticRelationsResolver.Events\SemanticRelationsResolver.Events.csproj">
+      <Project>{2d54bbe5-f2df-4ca2-96e5-e33b1757d2ad}</Project>
+      <Name>SemanticRelationsResolver.Events</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SemanticRelationsResolver.Loader\SemanticRelationsResolver.Loaders.csproj">
       <Project>{0a14e08c-bbfb-4e62-86e2-6211f9b475f5}</Project>
       <Name>SemanticRelationsResolver.Loaders</Name>

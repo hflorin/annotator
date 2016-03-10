@@ -56,7 +56,7 @@
                             <xcad:LayoutAnchorable ContentId="treebanks" Title="Treebank Explorer" CanHide="False"
                                                    CanClose="False"
                                                    AutoHideWidth="240">
-                                <ListBox x:Name="TreebankExplorerList" ItemsSource="{Binding TreebankIds}"
+                                <ListBox x:Name="TreebankExplorerList" ItemsSource="{Binding Documents}" DisplayMemberPath="Identifier"
                                          ToolTip="The list of currently loaded treebanks">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
@@ -79,7 +79,7 @@
                             </xcad:LayoutDocumentPane>
                         </xcad:LayoutDocumentPaneGroup>
                     </xcad:LayoutPanel>
-                    <xcad:LayoutPanel Orientation="Horizontal" DockHeight="*" DockMinHeight="200">
+                    <xcad:LayoutPanel Orientation="Horizontal" DockHeight="*">
                         <xcad:LayoutAnchorablePane>
                             <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False"
                                                    CanClose="False">
