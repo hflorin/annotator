@@ -51,6 +51,12 @@
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SemanticRelationsResolver.Events\SemanticRelationsResolver.Events.csproj">
+      <Project>{2d54bbe5-f2df-4ca2-96e5-e33b1757d2ad}</Project>
+      <Name>SemanticRelationsResolver.Events</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
