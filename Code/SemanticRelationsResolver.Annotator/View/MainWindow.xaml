@@ -53,28 +53,20 @@
                 <xcad:LayoutPanel Orientation="Vertical">
                     <xcad:LayoutPanel Orientation="Horizontal">
                         <xcad:LayoutAnchorablePane DockWidth="200">
-                            <xcad:LayoutAnchorable ContentId="treebanks" Title="Treebank Explorer" CanHide="False"
+                            <xcad:LayoutAnchorable ContentId="documents" Title="Document Explorer" CanHide="False"
                                                    CanClose="False"
                                                    AutoHideWidth="240">
-                                <ListBox x:Name="TreebankExplorerList" ItemsSource="{Binding Documents}" DisplayMemberPath="Identifier"
-                                         ToolTip="The list of currently loaded treebanks">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectionChanged">
-                                            <i:InvokeCommandAction Command="{Binding LoadSentencesCommand}"
-                                                                   CommandParameter="{Binding CurrentTreebank}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
+                                <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}" DisplayMemberPath="Identifier"
+                                         ToolTip="Currently loaded documents"
+                                         SelectedItem="{Binding SelectedDocument}">
                                 </ListBox>
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorablePane>
                         <xcad:LayoutDocumentPaneGroup>
                             <xcad:LayoutDocumentPane>
                                 <xcad:LayoutDocument ContentId="document1" Title="Document 1">
-                                    <Button Content="Document 1 Content" HorizontalAlignment="Center"
-                                            VerticalAlignment="Center" />
                                 </xcad:LayoutDocument>
                                 <xcad:LayoutDocument ContentId="document2" Title="Document 2">
-                                    <TextBox Text="Document 2 Content" AcceptsReturn="True" />
                                 </xcad:LayoutDocument>
                             </xcad:LayoutDocumentPane>
                         </xcad:LayoutDocumentPaneGroup>
@@ -83,7 +75,7 @@
                         <xcad:LayoutAnchorablePane>
                             <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False"
                                                    CanClose="False">
-                                <DataGrid ItemsSource="{Binding CurrentTreebank.Sentences}"
+                                <DataGrid ItemsSource="{Binding SelectedDocument.Sentences}"
                                           SelectedItem="{Binding SeletedSentence,Mode=TwoWay}" Margin="0 5 0 0"
                                           AutoGenerateColumns="False">
                                     <DataGrid.Columns>

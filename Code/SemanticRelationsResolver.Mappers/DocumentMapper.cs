@@ -17,7 +17,7 @@
 
         public async Task<Document> Map(string filepath)
         {
-            var documentContent = await ResourceLoader.LoadAsync(filepath);
+            var documentContent = await ResourceLoader.LoadAsync(filepath).ConfigureAwait(false);
 
             var document = CreateDocument(documentContent);
 

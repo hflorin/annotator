@@ -6,20 +6,16 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Windows.Input;
-
+    using Commands;
+    using Domain;
+    using Events;
+    using Mappers;
     using Prism.Events;
-
-    using SemanticRelationsResolver.Annotator.Commands;
-    using SemanticRelationsResolver.Annotator.View.Services;
-    using SemanticRelationsResolver.Annotator.Wrapper;
-    using SemanticRelationsResolver.Domain;
-    using SemanticRelationsResolver.Events;
-    using SemanticRelationsResolver.Mappers;
+    using View.Services;
+    using Wrapper;
 
     public class MainViewModel : Observable
     {
-        private static string currentTreebankFilePath = string.Empty;
-
         private IDocumentMapper documentMapper;
 
         private Dictionary<string, DocumentWrapper> documentsWrappers;
@@ -29,6 +25,8 @@
         private IOpenFileDialogService openFileDialogService;
 
         private ISaveDialogService saveDialogService;
+
+        private DocumentWrapper selectedDocument;
 
         public MainViewModel(
             IEventAggregator eventAggregator,
@@ -51,17 +49,12 @@
 
         public SentenceWrapper SelectedSentence { get; set; }
 
-        public DocumentWrapper CurrentTreebank
+        public DocumentWrapper SelectedDocument
         {
-            get
-            {
-                return documentsWrappers.ContainsKey(currentTreebankFilePath)
-                           ? documentsWrappers[currentTreebankFilePath]
-                           : new DocumentWrapper(new Document());
-            }
+            get { return selectedDocument; }
             set
             {
-                documentsWrappers[currentTreebankFilePath] = value;
+                selectedDocument = value;
                 OnPropertyChanged();
             }
         }
@@ -75,8 +68,6 @@
         public ICommand SaveAsCommand { get; set; }
 
         public ICommand CloseCommand { get; set; }
-
-        public ICommand LoadSentencesCommand { get; set; }
 
         private void InitializeMembers()
         {
@@ -134,50 +125,35 @@
             SaveCommand = new DelegateCommand(SaveCommandExecute, SaveCommandCanExecute);
             SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
             CloseCommand = new DelegateCommand(CloseCommandExecute, CloseCommandCanExecute);
-            LoadSentencesCommand = new DelegateCommand(LoadSentencesCommandExecute, LoadSentencesCommandCanExecute);
         }
 
         private void InvalidateCommands()
         {
-            ((DelegateCommand)NewTreeBankCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)OpenCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)SaveAsCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)CloseCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)LoadSentencesCommand).RaiseCanExecuteChanged();
-        }
-
-        private bool LoadSentencesCommandCanExecute(object arg)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void LoadSentencesCommandExecute(object obj)
-        {
-            throw new NotImplementedException();
+            ((DelegateCommand) NewTreeBankCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) OpenCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) SaveAsCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) CloseCommand).RaiseCanExecuteChanged();
         }
 
         private bool CloseCommandCanExecute(object arg)
         {
-            return documentsWrappers.ContainsKey(currentTreebankFilePath);
+            return SelectedDocument != null;
         }
 
         private void CloseCommandExecute(object obj)
         {
-            if (!documentsWrappers.ContainsKey(currentTreebankFilePath))
+            if (SelectedDocument == null)
             {
                 return;
             }
 
-            documentsWrappers.Remove(currentTreebankFilePath);
-            CurrentTreebank = null;
-            currentTreebankFilePath = string.Empty;
+            documentsWrappers.Remove(SelectedDocument.Model.FilePath);
+            SelectedDocument = null;
 
             if (documentsWrappers.Any())
             {
-                CurrentTreebank = documentsWrappers.First().Value;
-
-                currentTreebankFilePath = CurrentTreebank.Model.FilePath;
+                SelectedDocument = documentsWrappers.First().Value;
             }
 
             RefreshDocumentsExplorerList();
@@ -198,7 +174,10 @@
 
         private void NewTreeBankCommandExecute(object obj)
         {
-            throw new NotImplementedException();
+            Documents.Add(new DocumentWrapper(new Document
+            {
+                Identifier = "Treebank" + Documents.Count
+            }));
         }
 
         private bool OpenCommandCanExecute(object arg)
@@ -208,21 +187,20 @@
 
         private async void OpenCommandExecute(object obj)
         {
-            currentTreebankFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
+            var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilePath))
+            if (string.IsNullOrWhiteSpace(documentFilePath))
             {
                 return;
             }
 
             DocumentLoadExceptions.Clear();
 
-            var documentModel = await documentMapper.Map(currentTreebankFilePath);
+            var documentModel = await documentMapper.Map(documentFilePath);
 
             //must check if the file is alredy loaded and has changes offer to save if so
 
-            documentsWrappers[currentTreebankFilePath] = new DocumentWrapper(documentModel);
-            CurrentTreebank = documentsWrappers[currentTreebankFilePath];
+            documentsWrappers[documentFilePath] = new DocumentWrapper(documentModel);
 
             RefreshDocumentsExplorerList();
             InvalidateCommands();
@@ -240,13 +218,11 @@
 
         private void SaveCommandExecute(object obj)
         {
-            if (string.IsNullOrWhiteSpace(currentTreebankFilePath))
-            {
-                currentTreebankFilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
-            }
+            var documentFilePath = selectedDocument !=null? selectedDocument.Model.FilePath:saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilePath))
+            if (string.IsNullOrWhiteSpace(documentFilePath))
             {
+                return;
             }
 
             // todo: save logic
@@ -264,10 +240,11 @@
 
         private void SaveAsCommandExecute(object obj)
         {
-            currentTreebankFilePath = saveDialogService.GetSaveFileLocation(FileFilters.AllFilesFilter);
+            var documentFilePath = saveDialogService.GetSaveFileLocation(FileFilters.AllFilesFilter);
 
-            if (string.IsNullOrWhiteSpace(currentTreebankFilePath))
+            if (string.IsNullOrWhiteSpace(documentFilePath))
             {
+                return;
             }
 
             // todo: save as logic
