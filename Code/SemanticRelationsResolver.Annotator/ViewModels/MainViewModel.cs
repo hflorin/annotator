@@ -6,13 +6,15 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Windows.Input;
-    using Commands;
-    using Domain;
-    using Events;
-    using Mappers;
+
     using Prism.Events;
-    using View.Services;
-    using Wrapper;
+
+    using SemanticRelationsResolver.Annotator.Commands;
+    using SemanticRelationsResolver.Annotator.View.Services;
+    using SemanticRelationsResolver.Annotator.Wrapper;
+    using SemanticRelationsResolver.Domain;
+    using SemanticRelationsResolver.Events;
+    using SemanticRelationsResolver.Mappers;
 
     public class MainViewModel : Observable
     {
@@ -54,8 +56,8 @@
             get
             {
                 return documentsWrappers.ContainsKey(currentTreebankFilePath)
-                    ? documentsWrappers[currentTreebankFilePath]
-                    : new DocumentWrapper(new Document());
+                           ? documentsWrappers[currentTreebankFilePath]
+                           : new DocumentWrapper(new Document());
             }
             set
             {
@@ -132,22 +134,32 @@
             SaveCommand = new DelegateCommand(SaveCommandExecute, SaveCommandCanExecute);
             SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
             CloseCommand = new DelegateCommand(CloseCommandExecute, CloseCommandCanExecute);
-            LoadSentencesCommand = new DelegateCommand(LoadSentencesCommandCanExecute, LoadSentencesCommandExecute);
+            LoadSentencesCommand = new DelegateCommand(LoadSentencesCommandExecute, LoadSentencesCommandCanExecute);
         }
 
-        private void LoadSentencesCommandCanExecute(object obj)
+        private void InvalidateCommands()
+        {
+            ((DelegateCommand)NewTreeBankCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)OpenCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)SaveAsCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)CloseCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)LoadSentencesCommand).RaiseCanExecuteChanged();
+        }
+
+        private bool LoadSentencesCommandCanExecute(object arg)
         {
             throw new NotImplementedException();
         }
 
-        private bool LoadSentencesCommandExecute(object arg)
+        private void LoadSentencesCommandExecute(object obj)
         {
             throw new NotImplementedException();
         }
 
         private bool CloseCommandCanExecute(object arg)
         {
-            return !string.IsNullOrWhiteSpace(currentTreebankFilePath);
+            return documentsWrappers.ContainsKey(currentTreebankFilePath);
         }
 
         private void CloseCommandExecute(object obj)
@@ -158,6 +170,8 @@
             }
 
             documentsWrappers.Remove(currentTreebankFilePath);
+            CurrentTreebank = null;
+            currentTreebankFilePath = string.Empty;
 
             if (documentsWrappers.Any())
             {
@@ -167,6 +181,7 @@
             }
 
             RefreshDocumentsExplorerList();
+            InvalidateCommands();
         }
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
@@ -210,6 +225,7 @@
             CurrentTreebank = documentsWrappers[currentTreebankFilePath];
 
             RefreshDocumentsExplorerList();
+            InvalidateCommands();
         }
 
         private void RefreshDocumentsExplorerList()
