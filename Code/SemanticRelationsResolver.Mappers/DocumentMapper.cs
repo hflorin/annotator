@@ -4,12 +4,10 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
-
+    using Domain;
+    using Events;
+    using Loaders;
     using Prism.Events;
-
-    using SemanticRelationsResolver.Domain;
-    using SemanticRelationsResolver.Events;
-    using SemanticRelationsResolver.Loaders;
 
     public class DocumentMapper : IDocumentMapper
     {
@@ -30,9 +28,8 @@
 
         private Document CreateDocument(dynamic documentContent)
         {
-            var document = new Document();
+            var document = new Document {Identifier = documentContent.treebank.id};
 
-            document.Identifier = documentContent.treebank.id;
 
             foreach (var sentence in documentContent.treebank.sentence)
             {
@@ -60,17 +57,17 @@
                     }
 
                     words.Add(
-                        new Word 
-                            {
-                                Id = wordId,
-                                Chunk = word.chunk,
-                                Content = word.form,
-                                DependencyRelation = headWordId == 0 ? string.Empty : word.deprel,
-                                Form = word.form,
-                                HeadWordId = headWordId,
-                                Lemma = word.lemma,
-                                PartOfSpeech = word.postag
-                            });
+                        new Word
+                        {
+                            Id = wordId,
+                            Chunk = word.chunk,
+                            Content = word.form,
+                            DependencyRelation = headWordId == 0 ? string.Empty : word.deprel,
+                            Form = word.form,
+                            HeadWordId = headWordId,
+                            Lemma = word.lemma,
+                            PartOfSpeech = word.postag
+                        });
                 }
 
                 int sentenceId;
@@ -91,14 +88,14 @@
 
                 document.Sentences.Add(
                     new Sentence
-                        {
-                            Date = date,
-                            Id = sentenceId,
-                            User = sentence.user,
-                            Parser = sentence.parser,
-                            Content = sentenceBody.ToString(0, sentenceBody.Length - 1),
-                            Words = words
-                        });
+                    {
+                        Date = date,
+                        Id = sentenceId,
+                        User = sentence.user,
+                        Parser = sentence.parser,
+                        Content = sentenceBody.ToString(0, sentenceBody.Length - 1),
+                        Words = words
+                    });
             }
             return document;
         }
