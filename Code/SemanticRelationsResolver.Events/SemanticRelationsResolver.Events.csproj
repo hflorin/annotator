@@ -42,8 +42,9 @@
     <Compile Include="DocumentLoadExceptionEvent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Prism">
+    <Reference Include="Prism, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Prism.Core.6.1.0\lib\net45\Prism.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
