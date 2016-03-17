@@ -16,6 +16,5 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain.UnitTests\bin\Debug\SemanticRelationsResolver.Domain.UnitTests.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain.UnitTests\bin\Debug\nunit.framework.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain.UnitTests\bin\Debug\nunit.framework.xml
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain.UnitTests\obj\Debug\SemanticRelationsResolver.Domain.UnitTests.csprojResolveAssemblyReference.cache
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain.UnitTests\obj\Debug\SemanticRelationsResolver.Domain.UnitTests.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain.UnitTests\obj\Debug\SemanticRelationsResolver.Domain.UnitTests.pdb
