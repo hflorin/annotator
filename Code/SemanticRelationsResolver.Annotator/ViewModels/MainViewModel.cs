@@ -13,6 +13,7 @@
     using Prism.Events;
     using View.Services;
     using Wrapper;
+    using Xceed.Wpf.AvalonDock.Layout;
 
     public class MainViewModel : Observable
     {
@@ -41,6 +42,14 @@
             SubscribeToEvents();
 
             InitializeMembers();
+
+            Docs = new ObservableCollection<LayoutDocument>
+            {
+                new LayoutDocument(),
+                new LayoutDocument(),
+                new LayoutDocument(),
+                new LayoutDocument()
+            };
         }
 
         public ObservableCollection<DocumentWrapper> Documents { get; set; }
@@ -58,6 +67,8 @@
                 OnPropertyChanged();
             }
         }
+
+        public ObservableCollection<LayoutDocument> Docs { get; set; }
 
         public ICommand NewTreeBankCommand { get; set; }
 

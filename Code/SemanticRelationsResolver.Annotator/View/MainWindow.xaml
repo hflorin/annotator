@@ -48,7 +48,7 @@
 
         <StatusBar x:Name="StatusBar" Grid.Row="2" Focusable="False" IsHitTestVisible="False" />
 
-        <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1">
+        <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1" DocumentsSource="{Binding Docs}">
             <xcad:LayoutRoot x:Name="LayoutRoot">
                 <xcad:LayoutPanel Orientation="Vertical">
                     <xcad:LayoutPanel Orientation="Horizontal">

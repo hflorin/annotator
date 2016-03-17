@@ -280,3 +280,17 @@ D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\De
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\Controls\SentenceEditorControl.g.cs
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.lref
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\Controls\SentenceEditorControl.baml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.Controls.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.PCL.Common.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.PCL.Logic.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Data.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Graphviz.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Serialization.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.xml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Data.xml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Graphviz.xml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Serialization.xml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\Controls\SentenceEditorControl.g.cs
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.lref
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\Controls\SentenceEditorControl.baml
