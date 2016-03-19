@@ -11,12 +11,13 @@
     using Events;
     using Mappers;
     using Prism.Events;
+    using View;
     using View.Services;
     using Wrapper;
-    using Xceed.Wpf.AvalonDock.Layout;
 
     public class MainViewModel : Observable
     {
+        private string currentStatus;
         private IDocumentMapper documentMapper;
 
         private Dictionary<string, DocumentWrapper> documentsWrappers;
@@ -28,6 +29,8 @@
         private ISaveDialogService saveDialogService;
 
         private DocumentWrapper selectedDocument;
+
+        private ObservableCollection<SentenceEditorView> sentenceEditViewModels;
 
         public MainViewModel(
             IEventAggregator eventAggregator,
@@ -42,21 +45,27 @@
             SubscribeToEvents();
 
             InitializeMembers();
-
-            Docs = new ObservableCollection<LayoutDocument>
-            {
-                new LayoutDocument(),
-                new LayoutDocument(),
-                new LayoutDocument(),
-                new LayoutDocument()
-            };
         }
 
         public ObservableCollection<DocumentWrapper> Documents { get; set; }
 
         public ObservableCollection<string> DocumentLoadExceptions { get; set; }
 
-        public SentenceWrapper SelectedSentence { get; set; }
+        public string CurrentStatus
+        {
+            get { return currentStatus; }
+            set
+            {
+                currentStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private SentenceWrapper sentence;
+        public SentenceWrapper SelectedSentence {
+            get { return sentence; }
+            set { sentence = value; OnPropertyChanged(); }
+        }
 
         public DocumentWrapper SelectedDocument
         {
@@ -68,7 +77,15 @@
             }
         }
 
-        public ObservableCollection<LayoutDocument> Docs { get; set; }
+        public ObservableCollection<SentenceEditorView> SentenceEditViewModels
+        {
+            get { return sentenceEditViewModels; }
+            set
+            {
+                sentenceEditViewModels = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand NewTreeBankCommand { get; set; }
 
@@ -80,16 +97,25 @@
 
         public ICommand CloseCommand { get; set; }
 
+        public ICommand EditSentenceCommand { get; set; }
+
         private void InitializeMembers()
         {
             documentsWrappers = new Dictionary<string, DocumentWrapper>();
             DocumentLoadExceptions = new ObservableCollection<string>();
             Documents = new ObservableCollection<DocumentWrapper>();
+            sentenceEditViewModels = new ObservableCollection<SentenceEditorView>();
         }
 
         private void SubscribeToEvents()
         {
             eventAggregator.GetEvent<DocumentLoadExceptionEvent>().Subscribe(OnDocumentLoadException);
+            eventAggregator.GetEvent<StatusNotificationEvent>().Subscribe(OnStatusNotification);
+        }
+
+        private void OnStatusNotification(string statusNotification)
+        {
+            CurrentStatus = statusNotification;
         }
 
         private void OnDocumentLoadException(string exceptionMessage)
@@ -136,6 +162,23 @@
             SaveCommand = new DelegateCommand(SaveCommandExecute, SaveCommandCanExecute);
             SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
             CloseCommand = new DelegateCommand(CloseCommandExecute, CloseCommandCanExecute);
+            EditSentenceCommand = new DelegateCommand(EditSentenceCommandExecute, EditSentenceCommandCanExecute);
+        }
+
+        private void EditSentenceCommandExecute(object obj)
+        {
+            SentenceEditViewModels.Add(new SentenceEditorView(new SentenceEditorViewModel(eventAggregator, SelectedSentence)));
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}", SelectedSentence.Id, SelectedDocument.Identifier));
+        }
+
+        private bool EditSentenceCommandCanExecute(object arg)
+        {
+            if (SelectedSentence != null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private void InvalidateCommands()
@@ -159,7 +202,9 @@
                 return;
             }
 
-            documentsWrappers.Remove(SelectedDocument.Model.FilePath);
+            var closedDocumentFilepath = SelectedDocument.Model.FilePath;
+
+            documentsWrappers.Remove(closedDocumentFilepath);
             SelectedDocument = null;
 
             if (documentsWrappers.Any())
@@ -169,6 +214,8 @@
 
             RefreshDocumentsExplorerList();
             InvalidateCommands();
+
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Document closed: {0}", closedDocumentFilepath));
         }
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
@@ -189,6 +236,8 @@
             {
                 Identifier = "Treebank" + Documents.Count
             }));
+
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Treebank created");
         }
 
         private bool OpenCommandCanExecute(object arg)
@@ -199,6 +248,8 @@
         private async void OpenCommandExecute(object obj)
         {
             var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
+
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Loading document: {0}", documentFilePath));
 
             if (string.IsNullOrWhiteSpace(documentFilePath))
             {
@@ -215,6 +266,7 @@
 
             RefreshDocumentsExplorerList();
             InvalidateCommands();
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Document loaded: {0}", documentFilePath));
         }
 
         private void RefreshDocumentsExplorerList()
@@ -229,14 +281,19 @@
 
         private void SaveCommandExecute(object obj)
         {
-            var documentFilePath = selectedDocument !=null? selectedDocument.Model.FilePath:saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+            var documentFilePath = selectedDocument != null
+                ? selectedDocument.Model.FilePath
+                : saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Saving document");
 
             if (string.IsNullOrWhiteSpace(documentFilePath))
             {
-                return;
             }
 
             // todo: save logic
+
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Document saved: {0}", documentFilePath));
         }
 
         private bool SaveCommandCanExecute(object arg)
@@ -251,14 +308,16 @@
 
         private void SaveAsCommandExecute(object obj)
         {
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Saving document");
+
             var documentFilePath = saveDialogService.GetSaveFileLocation(FileFilters.AllFilesFilter);
 
             if (string.IsNullOrWhiteSpace(documentFilePath))
             {
-                return;
             }
 
             // todo: save as logic
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Document saved: {0}", documentFilePath));
         }
     }
 }

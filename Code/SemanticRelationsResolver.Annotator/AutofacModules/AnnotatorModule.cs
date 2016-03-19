@@ -1,7 +1,6 @@
 ﻿namespace SemanticRelationsResolver.Annotator.AutofacModules
 {
     using Autofac;
-    using Domain;
     using Loaders;
     using Mappers;
     using Prism.Events;
@@ -17,6 +16,7 @@
             builder.RegisterType<DocumentMapper>().As<IDocumentMapper>().PropertiesAutowired();
             builder.RegisterType<SaveDialogService>().As<ISaveDialogService>();
             builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>();
+            builder.RegisterType<SentenceEditorViewModel>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
         }
     }

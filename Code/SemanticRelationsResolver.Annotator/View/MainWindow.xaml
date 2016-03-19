@@ -2,16 +2,18 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
-    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-    xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:SemanticRelationsResolver.Annotator.View"
+    xmlns:viewModel="clr-namespace:SemanticRelationsResolver.Annotator.ViewModels"
+    mc:Ignorable="d"
     x:Class="SemanticRelationsResolver.Annotator.View.MainWindow"
-    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     Title="Annotator" Height="600" Width="600" d:DataContext="{d:DesignData MainViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="25" />
             <RowDefinition Height="25" />
         </Grid.RowDefinitions>
 
@@ -41,14 +43,24 @@
                 <MenuItem Header="_Tree Explorer" />
                 <MenuItem Header="_Sentence List" />
                 <Separator />
-                <MenuItem Header="_Sentence Graph" />
+                <MenuItem x:Name="EditSentence"  Header="_Edit Sentence" Command="{Binding EditSentenceCommand}"/>
             </MenuItem>
             <MenuItem x:Name="HelpMenu" Header="_HELP" />
         </Menu>
 
-        <StatusBar x:Name="StatusBar" Grid.Row="2" Focusable="False" IsHitTestVisible="False" />
-
-        <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1" DocumentsSource="{Binding Docs}">
+        <StatusBar x:Name="StatusBar" Grid.Row="2" Focusable="False" IsHitTestVisible="False">
+            <StatusBarItem>
+                <TextBlock Name="CurrentStatus" Text="{Binding CurrentStatus}" />
+            </StatusBarItem>
+        </StatusBar>
+        <TextBlock Grid.Row="3" Text="{Binding Path=SelectedSentence.Content,UpdateSourceTrigger=PropertyChanged}"/>
+        <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"
+                             DocumentsSource="{Binding SentenceEditViewModels}">
+            <xcad:DockingManager.Resources>
+                <DataTemplate DataType="{x:Type viewModel:SentenceEditorViewModel}">
+                    <view:SentenceEditorView />
+                </DataTemplate>
+            </xcad:DockingManager.Resources>
             <xcad:LayoutRoot x:Name="LayoutRoot">
                 <xcad:LayoutPanel Orientation="Vertical">
                     <xcad:LayoutPanel Orientation="Horizontal">
@@ -56,19 +68,14 @@
                             <xcad:LayoutAnchorable ContentId="documents" Title="Document Explorer" CanHide="False"
                                                    CanClose="False"
                                                    AutoHideWidth="240">
-                                <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}" DisplayMemberPath="Identifier"
+                                <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
+                                         DisplayMemberPath="Identifier"
                                          ToolTip="Currently loaded documents"
-                                         SelectedItem="{Binding SelectedDocument}">
-                                </ListBox>
+                                         SelectedItem="{Binding SelectedDocument}" />
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorablePane>
                         <xcad:LayoutDocumentPaneGroup>
-                            <xcad:LayoutDocumentPane>
-                                <xcad:LayoutDocument ContentId="document1" Title="Document 1">
-                                </xcad:LayoutDocument>
-                                <xcad:LayoutDocument ContentId="document2" Title="Document 2">
-                                </xcad:LayoutDocument>
-                            </xcad:LayoutDocumentPane>
+                            <xcad:LayoutDocumentPane x:Name="SentenceEditors" />
                         </xcad:LayoutDocumentPaneGroup>
                     </xcad:LayoutPanel>
                     <xcad:LayoutPanel Orientation="Horizontal" DockHeight="*">
@@ -105,7 +112,7 @@
                     <xcad:LayoutAnchorSide>
                         <xcad:LayoutAnchorGroup>
                             <xcad:LayoutAnchorable Title="Output" ContentId="output">
-                                <ListBox ItemsSource="{Binding DocumentLoadExceptions}"></ListBox>
+                                <ListBox ItemsSource="{Binding DocumentLoadExceptions}" />
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorGroup>
                     </xcad:LayoutAnchorSide>

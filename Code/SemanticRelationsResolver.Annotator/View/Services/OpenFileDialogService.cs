@@ -6,7 +6,7 @@
     {
         public string GetFileLocation(string fileFilters)
         {
-            var openFileDialog = new OpenFileDialog { Filter = fileFilters };
+            var openFileDialog = new OpenFileDialog {Filter = fileFilters};
 
             return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : string.Empty;
         }

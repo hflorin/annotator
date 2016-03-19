@@ -69,8 +69,8 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Annotator.exe
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Domain.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Autofac.dll
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Mappers.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Prism.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Mappers.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Xceed.Wpf.AvalonDock.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Loaders.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Events.dll
@@ -78,8 +78,8 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Domain.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\nunit.framework.xml
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Autofac.xml
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Mappers.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Prism.xml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Mappers.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Loaders.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Events.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\de\Xceed.Wpf.AvalonDock.resources.dll

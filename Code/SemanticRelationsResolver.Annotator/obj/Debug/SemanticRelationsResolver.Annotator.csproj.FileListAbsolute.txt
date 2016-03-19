@@ -221,21 +221,21 @@ D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\De
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\Controls\SentenceEditorControl.g.cs
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.lref
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\Controls\SentenceEditorControl.baml
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.Controls.dll
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.PCL.Common.dll
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.PCL.Logic.dll
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Data.dll
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.dll
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Graphviz.dll
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Serialization.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Annotator.exe.config
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Annotator.exe
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Annotator.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\Autofac.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.Controls.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.PCL.Common.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\GraphX.PCL.Logic.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\Microsoft.Practices.ServiceLocation.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\Prism.Autofac.Wpf.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\Prism.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\Prism.Wpf.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Data.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Graphviz.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\QuickGraph.Serialization.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Domain.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Events.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Loaders.dll
@@ -282,13 +282,14 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.csprojResolveAssemblyReference.cache
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\MainWindow.baml
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\Controls\SentenceEditorControl.g.cs
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\SentenceEditorView.baml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\SentenceEditorView.g.cs
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\MainWindow.g.cs
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\App.g.cs
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\GeneratedInternalTypeHelper.g.cs
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.cache
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.lref
-D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\Controls\SentenceEditorControl.baml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\MainWindow.baml
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.g.resources
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.Properties.Resources.resources
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.csproj.GenerateResource.Cache

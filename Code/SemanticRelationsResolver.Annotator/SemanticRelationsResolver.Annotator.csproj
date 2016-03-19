@@ -127,9 +127,9 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="ViewModels\Observable.cs" />
-    <Compile Include="ViewModels\SentenceViewModel.cs" />
-    <Compile Include="View\Controls\SentenceEditorControl.xaml.cs">
-      <DependentUpon>SentenceEditorControl.xaml</DependentUpon>
+    <Compile Include="ViewModels\SentenceEditorViewModel.cs" />
+    <Compile Include="View\SentenceEditorView.xaml.cs">
+      <DependentUpon>SentenceEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Services\FileFilters.cs" />
     <Compile Include="View\Services\IOpenFileDialogService.cs" />
@@ -160,7 +160,7 @@
     <Compile Include="Wrapper\Generated\WordWrapper.g.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\Controls\SentenceEditorControl.xaml">
+    <Page Include="View\SentenceEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
