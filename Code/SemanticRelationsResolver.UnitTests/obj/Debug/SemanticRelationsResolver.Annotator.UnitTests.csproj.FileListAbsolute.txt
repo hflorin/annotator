@@ -68,6 +68,10 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\nunit.framework.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Annotator.exe
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Domain.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\GraphX.PCL.Common.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\QuickGraph.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\GraphX.Controls.dll
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\GraphX.PCL.Logic.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Autofac.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Prism.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Mappers.dll
@@ -77,6 +81,7 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Annotator.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Domain.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\nunit.framework.xml
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\QuickGraph.xml
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Autofac.xml
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Prism.xml
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Mappers.pdb

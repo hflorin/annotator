@@ -14,7 +14,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="25" />
-            <RowDefinition Height="25" />
         </Grid.RowDefinitions>
 
         <Menu x:Name="MainMenu" IsMainMenu="True">
@@ -53,7 +52,6 @@
                 <TextBlock Name="CurrentStatus" Text="{Binding CurrentStatus}" />
             </StatusBarItem>
         </StatusBar>
-        <TextBlock Grid.Row="3" Text="{Binding Path=SelectedSentence.Content,UpdateSourceTrigger=PropertyChanged}"/>
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"
                              DocumentsSource="{Binding SentenceEditViewModels}">
             <xcad:DockingManager.Resources>

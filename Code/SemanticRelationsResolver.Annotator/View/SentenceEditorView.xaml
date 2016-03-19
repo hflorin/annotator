@@ -3,9 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:SemanticRelationsResolver.Annotator.Graph"
+             xmlns:graphx="http://schemas.panthernet.ru/graphx/"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData SentenceEditorViewModel}">
     <Grid>
-        <TextBlock Text="{Binding Sentence.Content}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <graphx:ZoomControl x:Name="GgZoomctrl" Grid.Row="0">
+            <local:SentenceGraphArea LogicCore="{Binding Graph}" x:Name="GgArea"/>
+        </graphx:ZoomControl>
+        <TextBlock Text="{Binding Sentence.Content}" Grid.Row="1"/>
+        <Button Grid.Row="1" Content="Generate Graph"  Click="ButtonBase_OnClick"></Button>
     </Grid>
 </UserControl>
