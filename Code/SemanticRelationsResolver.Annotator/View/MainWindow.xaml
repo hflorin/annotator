@@ -76,7 +76,7 @@
                             <xcad:LayoutDocumentPane x:Name="SentenceEditors" />
                         </xcad:LayoutDocumentPaneGroup>
                     </xcad:LayoutPanel>
-                    <xcad:LayoutPanel Orientation="Horizontal" DockHeight="*">
+                    <xcad:LayoutPanel Orientation="Horizontal" DockHeight="150">
                         <xcad:LayoutAnchorablePane>
                             <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False"
                                                    CanClose="False">

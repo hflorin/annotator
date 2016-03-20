@@ -1,24 +1,35 @@
 ﻿namespace SemanticRelationsResolver.Annotator.View
 {
+    using System;
     using System.Windows;
     using System.Windows.Controls;
     using ViewModels;
 
-    public partial class SentenceEditorView : UserControl
+    public partial class SentenceEditorView : UserControl,IDisposable
     {
-        private readonly SentenceEditorViewModel viewModel;
-
         public SentenceEditorView(SentenceEditorViewModel sentenceEditorViewModel)
         {
             InitializeComponent();
-            viewModel = sentenceEditorViewModel;
+
+            var viewModel = sentenceEditorViewModel;
             DataContext = viewModel;
+
+
+            viewModel.Initialize();
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        void viewModel_SentenceGraphChanged(object sender, EventArgs e)
         {
-            GgArea.RelayoutGraph(true);
             GgArea.GenerateGraph();
+            GgArea.RelayoutGraph(true);
+        }
+
+        public void Dispose()
+        {
+            if (GgArea != null)
+            {
+                GgArea.Dispose();
+            }
         }
     }
 }

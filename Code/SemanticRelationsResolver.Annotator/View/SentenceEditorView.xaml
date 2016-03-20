@@ -13,10 +13,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <graphx:ZoomControl x:Name="GgZoomctrl" Grid.Row="0">
-            <local:SentenceGraphArea LogicCore="{Binding Graph}" x:Name="GgArea"/>
+        <graphx:ZoomControl x:Name="GgZoomCtrl" Grid.Row="0">
+            <local:SentenceGraphArea LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}" GraphLogicCoreData="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}" x:Name="GgArea"/>
         </graphx:ZoomControl>
         <TextBlock Text="{Binding Sentence.Content}" Grid.Row="1"/>
-        <Button Grid.Row="1" Content="Generate Graph"  Click="ButtonBase_OnClick"></Button>
+        <Button Click="viewModel_SentenceGraphChanged" Content="Generate" Grid.Row="1"></Button>
     </Grid>
 </UserControl>
