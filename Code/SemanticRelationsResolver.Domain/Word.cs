@@ -1,17 +1,6 @@
 ﻿namespace SemanticRelationsResolver.Domain
 {
-    public class Word : ModelBase
+    public class Word : Element
     {
-        public string Form { get; set; }
-
-        public string Lemma { get; set; }
-
-        public string PartOfSpeech { get; set; }
-
-        public int HeadWordId { get; set; }
-
-        public string Chunk { get; set; }
-
-        public string DependencyRelation { get; set; }
     }
 }

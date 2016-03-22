@@ -15,6 +15,8 @@
     using View.Services;
     using Wrapper;
 
+    using Attribute = SemanticRelationsResolver.Domain.Attribute;
+
     public class MainViewModel : Observable
     {
         private string currentStatus;
@@ -232,10 +234,11 @@
 
         private void NewTreeBankCommandExecute(object obj)
         {
-            Documents.Add(new DocumentWrapper(new Document
-            {
-                Identifier = "Treebank" + Documents.Count
-            }));
+            var document = new Document();
+
+            document.Attributes.Add(new Attribute { Name = "id", DisplayName = "Id", Value = "Treebank"+Documents.Count });
+
+            Documents.Add(new DocumentWrapper(document));
 
             eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Treebank created");
         }

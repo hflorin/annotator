@@ -6,7 +6,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	using SemanticRelationsResolver.Domain;
 
 	public class ModelBaseWrapper<T> : ModelWrapper<T>
-	where T : ModelBase
+	where T : Element
 	{
 		public ModelBaseWrapper(T model) : base(model)
 		{

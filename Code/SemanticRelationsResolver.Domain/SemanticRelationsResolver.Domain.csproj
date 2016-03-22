@@ -39,7 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Document.cs" />
-    <Compile Include="ModelBase.cs" />
+    <Compile Include="Element.cs" />
+    <Compile Include="Attribute.cs" />
     <Compile Include="Sentence.cs" />
     <Compile Include="Word.cs" />
   </ItemGroup>
