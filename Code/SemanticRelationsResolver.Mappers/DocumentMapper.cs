@@ -72,14 +72,14 @@
                     {
                         Name = "head",
                         DisplayName = "Head Word Id",
-                        Value = word.headWordId
+                        Value = word.head
                     });
                     newWord.Attributes.Add(new Attribute {Name = "chunk", DisplayName = "Chunk", Value = word.chunk});
                     newWord.Attributes.Add(new Attribute
                     {
                         Name = "deprel",
                         DisplayName = "Dependency Relation",
-                        Value = word.id == "0" ? string.Empty : word.deprel
+                        Value = word.head == "0" ? string.Empty : word.deprel
                     });
                     newWord.Attributes.Add(new Attribute {Name = "content", DisplayName = "Content", Value = word.form});
 
