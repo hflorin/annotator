@@ -52,6 +52,7 @@
                 <TextBlock Name="CurrentStatus" Text="{Binding CurrentStatus}" />
             </StatusBarItem>
         </StatusBar>
+        
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"
                              DocumentsSource="{Binding SentenceEditViewModels}">
             <xcad:DockingManager.Resources>

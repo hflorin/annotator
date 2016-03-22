@@ -72,6 +72,7 @@
 
         private void BuildSentenceGraph()
         {
+            Sentence.Words.First().Form = "ceva";
             sentenceGraph = new SentenceGraph();
 
             foreach (var word in Sentence.Words)

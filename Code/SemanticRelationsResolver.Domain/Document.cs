@@ -1,7 +1,6 @@
 ﻿namespace SemanticRelationsResolver.Domain
 {
     using System.Collections.Generic;
-    using Prism.Events;
 
     public class Document : ModelBase
     {
@@ -9,8 +8,6 @@
         {
             Sentences = new List<Sentence>();
         }
-
-        public IEventAggregator EventAggregator { get; set; }
 
         public string Identifier { get; set; }
 
