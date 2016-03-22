@@ -1,11 +1,11 @@
 ﻿namespace SemanticRelationsResolver.UnitTests.Wrapper
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Annotator.Wrapper;
     using Domain;
     using NUnit.Framework;
+    using Repository;
 
     [TestFixture]
     public class ValidationComplexProperty
@@ -13,36 +13,15 @@
         [SetUp]
         public void Setup()
         {
-            _sentence = new Sentence
-            {
-                Content = "content",
-                Date = DateTime.Now,
-                Id = 0,
-                Parser = "parser",
-                User = "user",
-                Words = new List<Word>
-                {
-                    new Word
-                    {
-                        Chunk = "chunk",
-                        Content = "content",
-                        Id = 0,
-                        DependencyRelation = "relaion",
-                        Form = "form",
-                        HeadWordId = 0,
-                        Lemma = "lemma",
-                        PartOfSpeech = "verb"
-                    }
-                }
-            };
+            sentence = DomainMother.Sentence;
         }
 
-        private Sentence _sentence;
+        private Sentence sentence;
 
         [Test]
         public void ShouldRaisePropertyChangedEventForIsValid()
         {
-            var wrapper = new SentenceWrapper(_sentence);
+            var wrapper = new SentenceWrapper(sentence);
 
             var fired = false;
 
@@ -65,7 +44,7 @@
         [Test]
         public void ShouldRefreshErrorsAndIsValidWhenRejectingChanges()
         {
-            var wrapper = new SentenceWrapper(_sentence);
+            var wrapper = new SentenceWrapper(sentence);
 
             Assert.IsTrue(wrapper.IsValid);
             Assert.IsFalse(wrapper.HasErrors);
@@ -83,7 +62,7 @@
         [Test]
         public void ShouldReturnValidationErrorWhenParserIsSetToEmptyAnd()
         {
-            var wrapper = new SentenceWrapper(_sentence);
+            var wrapper = new SentenceWrapper(sentence);
 
             Assert.IsFalse(wrapper.HasErrors);
 
@@ -104,8 +83,8 @@
         [Test]
         public void ShouldSetErrorsAndIsValidAfterInitialization()
         {
-            _sentence.Parser = string.Empty;
-            var wrapper = new SentenceWrapper(_sentence);
+            sentence.Attributes.Single(a => a.DisplayName == "Parser").Value = string.Empty;
+            var wrapper = new SentenceWrapper(sentence);
 
             Assert.IsFalse(wrapper.IsValid);
             Assert.IsTrue(wrapper.HasErrors);
@@ -118,7 +97,7 @@
         [Test]
         public void ShouldSetIsValid()
         {
-            var wrapper = new SentenceWrapper(_sentence);
+            var wrapper = new SentenceWrapper(sentence);
 
             Assert.IsTrue(wrapper.IsValid);
 

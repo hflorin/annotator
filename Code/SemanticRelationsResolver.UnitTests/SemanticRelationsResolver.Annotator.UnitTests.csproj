@@ -48,6 +48,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repository\DomainMother.cs" />
     <Compile Include="Wrapper\BasicTests.cs" />
     <Compile Include="Wrapper\ChangeNotificationComplexCollectionPropertyTests.cs" />
     <Compile Include="Wrapper\ChangeNotificationSimplePropertyTests.cs" />

@@ -7,6 +7,7 @@
     using Annotator.Wrapper.Base;
     using Domain;
     using NUnit.Framework;
+    using Repository;
 
     [TestFixture]
     public class BasicTests
@@ -14,44 +15,31 @@
         [SetUp]
         public void Initialize()
         {
-            _sentence = new Sentence
-            {
-                Id = SentenceId,
-                Words = new List<Word>
-                {
-                    new Word
-                    {
-                        Id = WordId
-                    }
-                }
-            };
+            sentence = DomainMother.Sentence;
         }
 
-        private const int SentenceId =0;
-        private const int WordId = 1;
-
-        private Sentence _sentence;
+        private Sentence sentence;
 
         [Test]
         public void ShouldContainModelInModelProperty()
         {
-            var wrapper = new SentenceWrapper(_sentence);
-            Assert.AreEqual(_sentence, wrapper.Model);
+            var wrapper = new SentenceWrapper(sentence);
+            Assert.AreEqual(sentence, wrapper.Model);
         }
 
         [Test]
         public void ShouldSetValueOfUnderlyingModelProperty()
         {
-            var wrapper = new SentenceWrapper(_sentence);
+            var wrapper = new SentenceWrapper(sentence);
 
-            const int newWordId = 2;
+            const string newWordId = "2";
+
+            var newWord = DomainMother.Word;
+            newWord.Attributes.Single(a => a.Name == "Id").Value = newWordId;
 
             wrapper.Words = new ChangeTrackingCollection<WordWrapper>(new List<WordWrapper>
             {
-                new WordWrapper(new Word
-                {
-                    Id = newWordId
-                })
+                new WordWrapper(newWord)
             });
 
             Assert.AreEqual(wrapper.Words.First().Id, newWordId);
