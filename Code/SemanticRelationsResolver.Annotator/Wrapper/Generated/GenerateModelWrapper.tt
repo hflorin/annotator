@@ -62,7 +62,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 		GenerateComplexProperties(complexProperties);
 		GenerateCollectionProperties(collectionProperties);
 		GenerateInitializeComplexProperties(modelType.Name, complexProperties);
-		GenerateInitializeCollectionProperties(modelType.Name, collectionProperties);
+		GenerateInitializeCollectionProperties(excludedGenericClasses, modelType.Name, collectionProperties);
 #>
 	}
 }
@@ -168,13 +168,15 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	}
 #>
 <#+
-	private void GenerateInitializeCollectionProperties(string modelTypeName, IEnumerable<PropertyInfo> properties)
+	private void GenerateInitializeCollectionProperties(List<string>excludedGenericClasses, string modelTypeName, IEnumerable<PropertyInfo> properties)
 	{
 		if(properties.Any())
 		{
+
+			var typeString = excludedGenericClasses.Contains(modelTypeName)? "T" : "Domain."+modelTypeName;
 #>
 
-		protected override void InitializeCollectionProperties(Domain.<#= modelTypeName #> model)
+		protected override void InitializeCollectionProperties(<#= typeString #> model)
 		{
 <#+
 			foreach(var property in properties)
@@ -182,6 +184,13 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 				var propertyType = property.PropertyType.GenericTypeArguments.First().Name;
 				var propertyName = property.Name;
 #>
+			if(model == null)
+			{
+				throw new ArgumentException("<#= typeString #> model instance cannot be null.");
+			}
+
+			base.InitializeCollectionProperties(model);
+
 			if(model.<#= propertyName #> == null)
 			{
 				throw new ArgumentException("<#= propertyName #> cannot be null.");

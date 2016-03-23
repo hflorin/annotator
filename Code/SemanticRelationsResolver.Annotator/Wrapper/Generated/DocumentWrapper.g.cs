@@ -31,6 +31,13 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 
 		protected override void InitializeCollectionProperties(Domain.Document model)
 		{
+			if(model == null)
+			{
+				throw new ArgumentException("Domain.Document model instance cannot be null.");
+			}
+
+			base.InitializeCollectionProperties(model);
+
 			if(model.Sentences == null)
 			{
 				throw new ArgumentException("Sentences cannot be null.");

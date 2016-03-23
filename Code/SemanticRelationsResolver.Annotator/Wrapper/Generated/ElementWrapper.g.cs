@@ -5,7 +5,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	using Base;
 	using SemanticRelationsResolver.Domain;
 
-	public partial class ElementWrapper<T> : ModelWrapper<T>
+	public class ElementWrapper<T> : ModelWrapper<T>
 	where T : Domain.Element
 	{
 		public ElementWrapper(T model) : base(model)
@@ -80,6 +80,13 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 
 		protected override void InitializeCollectionProperties(T model)
 		{
+			if(model == null)
+			{
+				throw new ArgumentException("T model instance cannot be null.");
+			}
+
+			base.InitializeCollectionProperties(model);
+
 			if(model.Attributes == null)
 			{
 				throw new ArgumentException("Attributes cannot be null.");

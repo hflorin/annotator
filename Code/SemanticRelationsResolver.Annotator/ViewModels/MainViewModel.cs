@@ -14,8 +14,7 @@
     using View;
     using View.Services;
     using Wrapper;
-
-    using Attribute = SemanticRelationsResolver.Domain.Attribute;
+    using Attribute = Domain.Attribute;
 
     public class MainViewModel : Observable
     {
@@ -31,6 +30,8 @@
         private ISaveDialogService saveDialogService;
 
         private DocumentWrapper selectedDocument;
+
+        private SentenceWrapper sentence;
 
         private ObservableCollection<SentenceEditorView> sentenceEditViewModels;
 
@@ -63,10 +64,14 @@
             }
         }
 
-        private SentenceWrapper sentence;
-        public SentenceWrapper SelectedSentence {
+        public SentenceWrapper SelectedSentence
+        {
             get { return sentence; }
-            set { sentence = value; OnPropertyChanged(); }
+            set
+            {
+                sentence = value;
+                OnPropertyChanged();
+            }
         }
 
         public DocumentWrapper SelectedDocument
@@ -169,8 +174,12 @@
 
         private void EditSentenceCommandExecute(object obj)
         {
-            SentenceEditViewModels.Add(new SentenceEditorView(new SentenceEditorViewModel(eventAggregator, SelectedSentence)));
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}", SelectedSentence.Attributes.Single(a=>a.DisplayName=="Id").Value, SelectedDocument.Attributes.Single(a => a.DisplayName == "Id").Value));
+            SentenceEditViewModels.Add(
+                new SentenceEditorView(new SentenceEditorViewModel(eventAggregator, SelectedSentence)));
+            eventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}",
+                    SelectedSentence.Attributes.Single(a => a.DisplayName == "Id").Value,
+                    SelectedDocument.Attributes.Single(a => a.DisplayName == "Id").Value));
         }
 
         private bool EditSentenceCommandCanExecute(object arg)
@@ -217,7 +226,8 @@
             RefreshDocumentsExplorerList();
             InvalidateCommands();
 
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Document closed: {0}", closedDocumentFilepath));
+            eventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(string.Format("Document closed: {0}", closedDocumentFilepath));
         }
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
@@ -236,7 +246,12 @@
         {
             var document = new Document();
 
-            document.Attributes.Add(new Attribute { Name = "id", DisplayName = "Id", Value = "Treebank"+Documents.Count });
+            document.Attributes.Add(new Attribute
+            {
+                Name = "id",
+                DisplayName = "Id",
+                Value = "Treebank" + Documents.Count
+            });
 
             Documents.Add(new DocumentWrapper(document));
 
@@ -252,7 +267,8 @@
         {
             var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
 
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Loading document: {0}", documentFilePath));
+            eventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(string.Format("Loading document: {0}", documentFilePath));
 
             if (string.IsNullOrWhiteSpace(documentFilePath))
             {
@@ -269,7 +285,8 @@
 
             RefreshDocumentsExplorerList();
             InvalidateCommands();
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Document loaded: {0}", documentFilePath));
+            eventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(string.Format("Document loaded: {0}", documentFilePath));
         }
 
         private void RefreshDocumentsExplorerList()
@@ -296,7 +313,8 @@
 
             // todo: save logic
 
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Document saved: {0}", documentFilePath));
+            eventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(string.Format("Document saved: {0}", documentFilePath));
         }
 
         private bool SaveCommandCanExecute(object arg)
@@ -320,7 +338,8 @@
             }
 
             // todo: save as logic
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Document saved: {0}", documentFilePath));
+            eventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(string.Format("Document saved: {0}", documentFilePath));
         }
     }
 }

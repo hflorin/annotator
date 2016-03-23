@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<treebank id="test1">
+ <sentence id="111" parser="" user="Ugla" date="2016-03-02">
+  <word id="1" form="Holul" lemma="hol" postag="Ncmsry" head="3" chunk="" deprel="sbj."/>
+  <word id="2" form="blocului" lemma="bloc" postag="Ncmsoy" head="1" chunk="" deprel="a.subst."/>
+  <word id="3" form="mirosea" lemma="mirosi" postag="Vmii3s" head="0" chunk=""/>
+  <word id="4" form="a" lemma="a" postag="Spsa" head="3" chunk="" deprel="c.prep."/>
+  <word id="5" form="varză" lemma="varză" postag="Ncfsrn" head="4" chunk="" deprel="prep."/>
+  <word id="6" form="călită" lemma="călit" postag="Afpfsrn" head="5" chunk="" deprel="a.adj."/>
+  <word id="7" form="şi" lemma="şi" postag="Crssp" head="4" chunk="" deprel="coord."/>
+  <word id="8" form="a" lemma="a" postag="Spsa" head="7" chunk="" deprel="coord."/>
+  <word id="9" form="preşuri" lemma="preş" postag="Ncfp-n" head="8" chunk="" deprel="prep."/>
+  <word id="10" form="vechi" lemma="vechi" postag="Afp-p-n" head="9" chunk="" deprel="a.adj."/>
+  <word id="11" form="." lemma="." postag="punct" head="3" chunk="" deprel="punct."/>
+ </sentence>
+ <sentence id="211" parser="" user="Ugla" date="2016-03-02">
+  <word id="1" form="Winston" lemma="Winston" postag="Np" head="3" chunk="" deprel="sbj."/>
+  <word id="2" form="se" lemma="sine" postag="Px3--a--------w" head="3" chunk="" deprel="refl."/>
+  <word id="3" form="îndreptă" lemma="îndrepta" postag="Vmis3s" head="0" chunk=""/>
+  <word id="4" form="către" lemma="către" postag="Spsa" head="3" chunk="" deprel="c.c.l."/>
+  <word id="5" form="scări" lemma="scară" postag="Ncfp-n" head="4" chunk="" deprel="prep."/>
+  <word id="6" form="." lemma="." postag="punct" head="3" chunk="" deprel="punct."/>
+ </sentence>
+ <sentence id="311" parser="" user="Ugla" date="2016-03-02">
+  <word id="1" form="Nu" lemma="nu" postag="Qz" head="2" chunk="" deprel="neg."/>
+  <word id="2" form="avea" lemma="avea" postag="Vmii3s" head="0" chunk=""/>
+  <word id="3" form="nici un" lemma="nici_un" postag="Dz3msr---e" head="4" chunk="" deprel="a.adj."/>
+  <word id="4" form="rost" lemma="rost" postag="Ncms-n" head="2" chunk="" deprel="c.d."/>
+  <word id="5" form="să" lemma="să" postag="Qs" head="2" chunk="" deprel="sbj."/>
+  <word id="6" form="încerce" lemma="încerca" postag="Vmsp3" head="5" chunk="" deprel="subord."/>
+  <word id="7" form="la" lemma="la" postag="Spsa" head="6" chunk="" deprel="c.c.l."/>
+  <word id="8" form="lift" lemma="lift" postag="Ncms-n" head="7" chunk="" deprel="prep."/>
+  <word id="9" form="." lemma="." postag="punct" head="2" chunk="" deprel="punct."/>
+ </sentence>
+ <sentence id="411" parser="" user="Ugla" date="2016-03-02">
+  <word id="1" form="Pe" lemma="pe" postag="Spsa" head="15" chunk="" deprel="c.c.l."/>
+  <word id="2" form="fiecare" lemma="fiecare" postag="Di3-sr---e" head="3" chunk="" deprel="a.adj."/>
+  <word id="3" form="palier" lemma="palier" postag="Ncms-n" head="1" chunk="" deprel="prep."/>
+  <word id="4" form="," lemma="," postag="punct" head="1" chunk="" deprel="punct."/>
+  <word id="5" form="aşezată" lemma="aşezat" postag="Afpfsrn" head="15" chunk="" deprel="el.pred."/>
+  <word id="6" form="faţă în faţă" lemma="faţă_în_faţă" postag="Rgp" head="5" chunk="" deprel="c.c.m."/>
+  <word id="7" form="cu" lemma="cu" postag="Spsa" head="6" chunk="" deprel="c.prep."/>
+  <word id="8" form="uşa" lemma="uşă" postag="Ncfsry" head="7" chunk="" deprel="prep."/>
+  <word id="9" form="liftului" lemma="lift" postag="Ncmsoy" head="8" chunk="" deprel="a.subst."/>
+  <word id="10" form="," lemma="," postag="punct" head="5" chunk="" deprel="punct."/>
+  <word id="11" form="figura" lemma="figură" postag="Ncfsry" head="15" chunk="" deprel="sbj."/>
+  <word id="12" form="cea" lemma="cel" postag="Tdfsr" head="13" chunk="" deprel="det."/>
+  <word id="13" form="enormă" lemma="enorm" postag="Afpfsrn" head="11" chunk="" deprel="a.adj."/>
+  <word id="14" form="îl" lemma="el" postag="Pp3msa--------w" head="15" chunk="" deprel="c.d."/>
+  <word id="15" form="privea" lemma="privi" postag="Vmii3s" head="0" chunk=""/>
+  <word id="16" form="fix" lemma="fix" postag="Rgp" head="15" chunk="" deprel="c.c.m."/>
+  <word id="17" form="de" lemma="de" postag="Spsa" head="15" chunk="" deprel="c.c.l."/>
+  <word id="18" form="perete" lemma="perete" postag="Ncms-n" head="17" chunk="" deprel="prep."/>
+  <word id="19" form="." lemma="." postag="punct" head="15" chunk="" deprel="punct."/>
+ </sentence>
+ <sentence id="511" parser="" user="Ugla" date="2016-03-02">
+  <word id="1" form="Era" lemma="fi" postag="Vmii3s" head="0" chunk=""/>
+  <word id="2" form="una" lemma="unul" postag="Pi3fsr" head="1" chunk="" deprel="n.pred."/>
+  <word id="3" form="din" lemma="din" postag="Spsa" head="2" chunk="" deprel="a.subst."/>
+  <word id="4" form="acele" lemma="acel" postag="Dd3fpr---e" head="5" chunk="" deprel="a.adj."/>
+  <word id="5" form="poze" lemma="poză" postag="Ncfp-n" head="3" chunk="" deprel="prep."/>
+  <word id="6" form="în" lemma="în" postag="Spsa" head="9" chunk="" deprel="c.c.m."/>
+  <word id="7" form="aşa" lemma="aşa" postag="Afp" head="8" chunk="" deprel="a.adv."/>
+  <word id="8" form="fel" lemma="fel" postag="Ncms-n" head="6" chunk="" deprel="prep."/>
+  <word id="9" form="realizate" lemma="realizat" postag="Afpfp-n" head="5" chunk="" deprel="a.adj."/>
+  <word id="10" form="," lemma="," postag="punct" head="11" chunk="" deprel="punct."/>
+  <word id="11" form="încât" lemma="încât" postag="Csssp" head="9" chunk="" deprel="c.c.cons."/>
+  <word id="12" form="ochii" lemma="ochi" postag="Ncmpry" head="14" chunk="" deprel="sbj."/>
+  <word id="13" form="te" lemma="tu" postag="Pp2-sa--------w" head="14" chunk="" deprel="c.d."/>
+  <word id="14" form="urmăresc" lemma="urmări" postag="Vmip3p" head="11" chunk="" deprel="subord."/>
+  <word id="15" form="din" lemma="din" postag="Spsa" head="14" chunk="" deprel="c.c.l."/>
+  <word id="16" form="orice" lemma="orice" postag="Di3--r---e" head="17" chunk="" deprel="a.adj."/>
+  <word id="17" form="unghi" lemma="unghi" postag="Ncms-n" head="15" chunk="" deprel="prep."/>
+  <word id="18" form="." lemma="." postag="punct" head="1" chunk="" deprel="punct."/>
+ </sentence>
+ <sentence id="611" parser="" user="Ugla" date="2016-03-02">
+  <word id="1" form="Textul" lemma="text" postag="Ncmsry" head="4" chunk="" deprel="sbj."/>
+  <word id="2" form="de" lemma="de" postag="Spsa" head="1" chunk="" deprel="a.adv."/>
+  <word id="3" form="dedesubt" lemma="dedesubt" postag="Rgp" head="2" chunk="" deprel="prep."/>
+  <word id="4" form="suna" lemma="suna" postag="Vmii3s" head="0" chunk=""/>
+  <word id="5" form=":" lemma=":" postag="punct" head="9" chunk="" deprel="punct."/>
+  <word id="6" form="FRATELE" lemma="frate" postag="Ncmsry" head="9" chunk="" deprel="sbj."/>
+  <word id="7" form="CEL" lemma="cel" postag="Tdmsr" head="8" chunk="" deprel="det."/>
+  <word id="8" form="MARE" lemma="mare" postag="Afpms-n" head="6" chunk="" deprel="a.adj."/>
+  <word id="9" form="ESTE" lemma="fi" postag="Vmip3s" head="4" chunk="" deprel="incid."/>
+  <word id="10" form="CU" lemma="cu" postag="Spsa" head="9" chunk="" deprel="n.pred."/>
+  <word id="11" form="OCHII" lemma="ochi" postag="Ncmpry" head="10" chunk="" deprel="prep."/>
+  <word id="12" form="PE" lemma="pe" postag="Spsa" head="11" chunk="" deprel="a.subst"/>
+  <word id="13" form="TINE" lemma="tu" postag="Pp2-sa--------s" head="12" chunk="" deprel="prep."/>
+  <word id="14" form="." lemma="." postag="punct" head="4" chunk="" deprel="punct."/>
+ </sentence>
+ <sentence id="711" parser="" user="Ugla" date="2016-03-02">
+  <word id="1" form="Înăuntru" lemma="înăuntru" postag="Rgp" head="9" chunk="" deprel="c.c.l."/>
+  <word id="2" form="," lemma="," postag="punct" head="1" chunk="" deprel="coord."/>
+  <word id="3" form="în" lemma="în" postag="Spsa" head="2" chunk="" deprel="coord."/>
+  <word id="4" form="apartament" lemma="apartament" postag="Ncms-n" head="3" chunk="" deprel="prep."/>
+  <word id="5" form="," lemma="," postag="punct" head="1" chunk="" deprel="punct."/>
+  <word id="6" form="o" lemma="un" postag="Tifsr" head="7" chunk="" deprel="det."/>
+  <word id="7" form="voce" lemma="voce" postag="Ncfsrn" head="9" chunk="" deprel="sbj."/>
+  <word id="8" form="melodioasă" lemma="melodios" postag="Afpfsrn" head="7" chunk="" deprel="a.adj."/>
+  <word id="9" form="citea" lemma="citi" postag="Vmii3s" head="0" chunk=""/>
+  <word id="10" form="o" lemma="un" postag="Tifsr" head="11" chunk="" deprel="det."/>
+  <word id="11" form="listă" lemma="listă" postag="Ncfsrn" head="9" chunk="" deprel="c.d."/>
+  <word id="12" form="de" lemma="de" postag="Spsa" head="11" chunk="" deprel="a.subst."/>
+  <word id="13" form="cifre" lemma="cifră" postag="Ncfp-n" head="12" chunk="" deprel="prep."/>
+  <word id="14" form="legate" lemma="legat" postag="Afpfp-n" head="13" chunk="" deprel="a.adj."/>
+  <word id="15" form="de" lemma="de" postag="Spsa" head="14" chunk="" deprel="c.prep."/>
+  <word id="16" form="producţia" lemma="producţie" postag="Ncfsry" head="15" chunk="" deprel="prep."/>
+  <word id="17" form="de" lemma="de" postag="Spsa" head="16" chunk="" deprel="a.subst."/>
+  <word id="18" form="fontă" lemma="fontă" postag="Ncfsrn" head="17" chunk="" deprel="prep."/>
+  <word id="19" form="." lemma="." postag="punct" head="9" chunk="" deprel="punct."/>
+ </sentence>
+</treebank>

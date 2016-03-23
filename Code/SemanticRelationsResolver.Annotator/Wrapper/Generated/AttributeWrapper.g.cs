@@ -95,6 +95,13 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 
 		protected override void InitializeCollectionProperties(Domain.Attribute model)
 		{
+			if(model == null)
+			{
+				throw new ArgumentException("Domain.Attribute model instance cannot be null.");
+			}
+
+			base.InitializeCollectionProperties(model);
+
 			if(model.AllowedValuesSet == null)
 			{
 				throw new ArgumentException("AllowedValuesSet cannot be null.");

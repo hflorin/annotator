@@ -120,6 +120,8 @@
                     Value = sentenceBody.ToString(0, sentenceBody.Length - 1)
                 });
 
+                newSentence.Words = words;
+
                 document.Sentences.Add(newSentence);
             }
             return document;
