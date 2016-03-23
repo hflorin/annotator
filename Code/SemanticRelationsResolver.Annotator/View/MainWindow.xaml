@@ -68,8 +68,7 @@
                                                    CanClose="False"
                                                    AutoHideWidth="240">
                                 <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
-                                         DisplayMemberPath="Identifier"
-                                         ToolTip="Currently loaded documents"
+                                         DisplayMemberPath="IdValue"
                                          SelectedItem="{Binding SelectedDocument}" />
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorablePane>
@@ -86,19 +85,19 @@
                                           AutoGenerateColumns="False">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Id"
-                                                            Binding="{Binding Id,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding IdValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="Auto" />
                                         <DataGridTextColumn Header="Content"
-                                                            Binding="{Binding Content,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding ContentValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="*" />
                                         <DataGridTextColumn Header="Parser"
-                                                            Binding="{Binding Parser,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding ParserValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="Auto" />
                                         <DataGridTextColumn Header="User"
-                                                            Binding="{Binding User,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding UserValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="Auto" />
                                         <DataGridTextColumn Header="Date"
-                                                            Binding="{Binding Date,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding DateValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="Auto" />
                                     </DataGrid.Columns>
                                 </DataGrid>

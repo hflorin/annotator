@@ -147,6 +147,7 @@
     <Compile Include="Wrapper\Base\ModelWrapper.cs" />
     <Compile Include="Wrapper\Base\NotifyDataErrorInfoBase.cs" />
     <Compile Include="Wrapper\Base\StringWrapper.cs" />
+    <Compile Include="Wrapper\Custom\DocumentWrapper.cs" />
     <Compile Include="Wrapper\Custom\SentenceWrapper.cs" />
     <Compile Include="Wrapper\Custom\WordWrapper.cs" />
     <Compile Include="Wrapper\Generated\AttributeWrapper.g.cs" />
