@@ -11,6 +11,8 @@
 
         public bool IsEditable { get; set; }
 
+        public bool IsOptional { get; set; }
+
         public string Name { get; set; }
 
         public string DisplayName { get; set; }

@@ -15,6 +15,8 @@
 
         public string Value { get; set; }
 
+        public bool IsOptional { get; set; }
+
         public ICollection<Attribute> Attributes { get; set; }
     }
 }
