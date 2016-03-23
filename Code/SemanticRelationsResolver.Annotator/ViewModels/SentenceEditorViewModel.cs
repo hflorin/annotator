@@ -1,22 +1,25 @@
 ﻿namespace SemanticRelationsResolver.Annotator.ViewModels
 {
+    using System;
     using System.Linq;
-    using Graph;
+
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.OverlapRemoval;
+
     using Prism.Events;
-    using Wrapper;
+
+    using SemanticRelationsResolver.Annotator.Graph;
+    using SemanticRelationsResolver.Annotator.Wrapper;
 
     public class SentenceEditorViewModel : Observable
     {
         private IEventAggregator eventAggregator;
+
         private SentenceGraph sentenceGraph;
 
         private SentenceGxLogicCore sentenceLogicCore;
 
-        public SentenceEditorViewModel(
-            IEventAggregator eventAggregator,
-            SentenceWrapper sentence)
+        public SentenceEditorViewModel(IEventAggregator eventAggregator, SentenceWrapper sentence)
         {
             this.eventAggregator = eventAggregator;
             Sentence = sentence;
@@ -29,7 +32,10 @@
 
         public SentenceGxLogicCore SentenceGraphLogicCore
         {
-            get { return sentenceLogicCore; }
+            get
+            {
+                return sentenceLogicCore;
+            }
             set
             {
                 sentenceLogicCore = value;
@@ -46,10 +52,9 @@
         private void SetupGraphLogic()
         {
             var logicCore = new SentenceGxLogicCore
-            {
-                DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.EfficientSugiyama
-            };
-
+                                {
+                                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.EfficientSugiyama
+                                };
 
             logicCore.DefaultLayoutAlgorithmParams =
                 logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.EfficientSugiyama);
@@ -58,8 +63,8 @@
 
             logicCore.DefaultOverlapRemovalAlgorithmParams =
                 logicCore.AlgorithmFactory.CreateOverlapRemovalParameters(OverlapRemovalAlgorithmTypeEnum.FSA);
-            ((OverlapRemovalParameters) logicCore.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
-            ((OverlapRemovalParameters) logicCore.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
+            ((OverlapRemovalParameters)logicCore.DefaultOverlapRemovalAlgorithmParams).HorizontalGap = 50;
+            ((OverlapRemovalParameters)logicCore.DefaultOverlapRemovalAlgorithmParams).VerticalGap = 50;
 
             logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER;
 
@@ -72,27 +77,44 @@
 
         private void BuildSentenceGraph()
         {
-            Sentence.Words.First().Form = "ceva";
             sentenceGraph = new SentenceGraph();
+
+            int id, headId;
 
             foreach (var word in Sentence.Words)
             {
-                sentenceGraph.AddVertex(new WordVertex {ID = word.Id, Text = word.Form});
+                id = Int32.Parse(word.Attributes.Single(a => a.Name.Equals("id")).Value);
+                sentenceGraph.AddVertex(
+                    new WordVertex { ID = id, Text = word.Attributes.Single(a => a.Name.Equals("form")).Value });
             }
 
             var vlist = sentenceGraph.Vertices.ToList();
 
             foreach (var word in Sentence.Words)
             {
-                if (word.HeadWordId == 0)
+                if (int.TryParse(word.Attributes.Single(a => a.Name.Equals("head")).Value, out headId))
                 {
-                    continue;
+                    if (headId == 0)
+                    {
+                        continue;
+                    }
+
+                    if (int.TryParse(word.Attributes.Single(a => a.Name.Equals("id")).Value, out id))
+                    {
+                        id = int.Parse(word.Attributes.Single(a => a.Name.Equals("id")).Value);
+
+                        var wordVertex = vlist.Single(v => v.ID == id);
+                        var headWordVertex = vlist.Single(v => v.ID == headId);
+
+                        sentenceGraph.AddEdge(
+                            new WordEdge(headWordVertex, wordVertex)
+                                {
+                                    Text =
+                                        word.Attributes.Single(
+                                            a => a.Name.Equals("deprel")).Value
+                                });
+                    }
                 }
-
-                var wordVertex = vlist.Single(v => v.ID == word.Id);
-                var headWordVertex = vlist.Single(v => v.ID == word.HeadWordId);
-
-                sentenceGraph.AddEdge(new WordEdge(headWordVertex, wordVertex) {Text = word.DependencyRelation});
             }
         }
     }

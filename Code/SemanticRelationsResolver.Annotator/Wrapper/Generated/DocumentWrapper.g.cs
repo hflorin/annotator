@@ -5,31 +5,31 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	using Base;
 	using SemanticRelationsResolver.Domain;
 
-	public partial class DocumentWrapper : ModelBaseWrapper<Document>
+	public partial class DocumentWrapper : ElementWrapper<Domain.Document>
 	{
-		public DocumentWrapper(Document model) : base(model)
+		public DocumentWrapper(Domain.Document model) : base(model)
 		{
 		}
 
-		public System.String Identifier
+		public System.String FilePath
         {
             get { return GetValue<System.String>(); }
             set { SetValue(value); }
         }
 
-        public System.String IdentifierOriginalValue
+        public System.String FilePathOriginalValue
         {
-            get { return GetOriginalValue<System.String>("Identifier"); }
+            get { return GetOriginalValue<System.String>("FilePath"); }
         }
 
-        public bool IdentifierIsChanged
+        public bool FilePathIsChanged
         {
-            get { return GetIsChanged("Identifier"); }
+            get { return GetIsChanged("FilePath"); }
         }
 
 		public ChangeTrackingCollection<SentenceWrapper> Sentences { get; set; }
 
-		protected override void InitializeCollectionProperties(Document model)
+		protected override void InitializeCollectionProperties(Domain.Document model)
 		{
 			if(model.Sentences == null)
 			{

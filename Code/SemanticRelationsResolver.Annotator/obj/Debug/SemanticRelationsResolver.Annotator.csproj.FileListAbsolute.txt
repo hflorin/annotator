@@ -148,13 +148,6 @@ D:\Desktop stuff\Dizertatie\Repository\Code\SemanticRelationsResolver.Annotator\
 D:\Desktop stuff\Dizertatie\Repository\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.csproj.GenerateResource.Cache
 D:\Desktop stuff\Dizertatie\Repository\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.exe
 D:\Desktop stuff\Dizertatie\Repository\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.pdb
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.csprojResolveAssemblyReference.cache
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\SentenceEditorView.g.cs
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\MainWindow.g.cs
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\App.g.cs
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\GeneratedInternalTypeHelper.g.cs
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.cache
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.lref
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Annotator.exe.config
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Annotator.exe
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Annotator.pdb
@@ -289,6 +282,13 @@ D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\bin\De
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.csprojResolveAssemblyReference.cache
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\SentenceEditorView.g.cs
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\MainWindow.g.cs
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\App.g.cs
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\GeneratedInternalTypeHelper.g.cs
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.cache
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.lref
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\SentenceEditorView.baml
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\MainWindow.baml
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.g.resources

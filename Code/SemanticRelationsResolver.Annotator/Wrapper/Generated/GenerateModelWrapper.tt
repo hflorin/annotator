@@ -12,6 +12,8 @@
 <#@ import namespace="SemanticRelationsResolver.Domain" #>
 <#@ output extension=".cs" #>
 <#
+	var excludedGenericClasses = new List<string>{"Element"};
+	var excludedNonGenericClasses = new List<string>{"Attribute"};
 	foreach(var modelType in GetModelTypes())
 	{
 		var simpleProperties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(p => p.PropertyType.IsValueType || p.PropertyType == typeof(string)).ToList();
@@ -26,28 +28,35 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	using SemanticRelationsResolver.Domain;
 
 <#
-		if(modelType.Name != "ModelBase")
+		if(!excludedGenericClasses.Contains(modelType.Name) && !excludedNonGenericClasses.Contains(modelType.Name))
 		{
 #>
-	public partial class <#=modelType.Name#>Wrapper : ModelBaseWrapper<<#=modelType.Name#>>
+	public partial class <#=modelType.Name#>Wrapper : ElementWrapper<Domain.<#=modelType.Name#>>
 	{
-		public <#=modelType.Name#>Wrapper(<#=modelType.Name#> model) : base(model)
+		public <#=modelType.Name#>Wrapper(Domain.<#=modelType.Name#> model) : base(model)
 		{
 		}
 <#
 		}
-		else
+		else if(excludedGenericClasses.Contains(modelType.Name))
 		{
 #>
-	public class ModelBaseWrapper<T> : ModelWrapper<T>
-	where T : ModelBase
+	public class <#=modelType.Name#>Wrapper<T> : ModelWrapper<T>
+	where T : Domain.<#=modelType.Name#>
 	{
-		public ModelBaseWrapper(T model) : base(model)
+		public <#=modelType.Name#>Wrapper(T model) : base(model)
 		{
         }
 <#
-		}
+		}else if(excludedNonGenericClasses.Contains(modelType.Name))
+		{
 #>
+	public class <#=modelType.Name#>Wrapper : ModelWrapper<Domain.<#=modelType.Name#>>
+	{
+		public <#=modelType.Name#>Wrapper(Domain.<#=modelType.Name#> model) : base(model)
+		{
+        }
+<#		}#>
 <#
 		GenerateSimpleProperties(simpleProperties);
 		GenerateComplexProperties(complexProperties);
@@ -63,7 +72,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 #>
 <#+ 
 	private IEnumerable<Type> GetModelTypes(){
-		return typeof(ModelBase).Assembly.GetTypes().Where(t => Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) == null);
+		return typeof(Element).Assembly.GetTypes().Where(t => System.Attribute.GetCustomAttribute(t, typeof(CompilerGeneratedAttribute)) == null);
 	} 
 
 	private void SaveGeneratedCodeAsFile(string filename)
@@ -165,7 +174,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 		{
 #>
 
-		protected override void InitializeCollectionProperties(<#= modelTypeName #> model)
+		protected override void InitializeCollectionProperties(Domain.<#= modelTypeName #> model)
 		{
 <#+
 			foreach(var property in properties)

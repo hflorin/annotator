@@ -33,12 +33,12 @@
                 }
             };
 
-            wrapper.Parser = string.Empty;
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = string.Empty;
 
             Assert.IsTrue(fired);
 
             fired = false;
-            wrapper.Parser = "parser value";
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = "parser value";
 
             Assert.IsFalse(wrapper.HasErrors);
         }
@@ -58,11 +58,11 @@
                 }
             };
 
-            wrapper.Parser = string.Empty;
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = string.Empty;
             Assert.IsTrue(fired);
 
             fired = false;
-            wrapper.Parser = "parser values";
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = "parser values";
             Assert.IsTrue(fired);
         }
 
@@ -74,7 +74,7 @@
             Assert.IsTrue(wrapper.IsValid);
             Assert.IsFalse(wrapper.HasErrors);
 
-            wrapper.Parser = string.Empty;
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = string.Empty;
             Assert.IsFalse(wrapper.IsValid);
             Assert.IsTrue(wrapper.HasErrors);
 
@@ -91,7 +91,7 @@
 
             Assert.IsFalse(wrapper.HasErrors);
 
-            wrapper.Parser = string.Empty;
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = string.Empty;
 
             Assert.IsTrue(wrapper.HasErrors);
 
@@ -100,7 +100,7 @@
             Assert.AreEqual(1, errors.Count());
             Assert.AreEqual("Parser is required.", errors.First());
 
-            wrapper.Parser = "parser value";
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = "parser value";
 
             Assert.IsFalse(wrapper.HasErrors);
         }
@@ -126,10 +126,10 @@
 
             Assert.IsTrue(wrapper.IsValid);
 
-            wrapper.Parser = string.Empty;
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = string.Empty;
             Assert.IsFalse(wrapper.IsValid);
 
-            wrapper.Parser = "parser value";
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = "parser value";
             Assert.IsTrue(wrapper.IsValid);
         }
     }

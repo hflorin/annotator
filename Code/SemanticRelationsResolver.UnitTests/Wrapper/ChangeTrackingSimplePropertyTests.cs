@@ -35,7 +35,7 @@
                 }
             };
 
-            wrapper.Parser = "new parser";
+            sentence.Attributes.Single(a => a.DisplayName == "Parser").Value = "new parser";
 
             Assert.IsTrue(fired);
         }
@@ -55,7 +55,7 @@
                 }
             };
 
-            wrapper.Parser = "new parser";
+            sentence.Attributes.Single(a => a.DisplayName == "Parser").Value = "new parser";
 
             Assert.IsTrue(fired);
         }
@@ -63,34 +63,40 @@
         [Test]
         public void ShouldAcceptChanges()
         {
-            var wrapper = new SentenceWrapper(sentence) {Parser = "new value"};
-            Assert.AreEqual("new value", wrapper.Parser);
-            Assert.AreEqual(parserValue, wrapper.ParserOriginalValue);
-            Assert.IsTrue(wrapper.ParserIsChanged);
+            var wrapper = new SentenceWrapper(sentence);
+
+            sentence.Attributes.Single(a => a.DisplayName == "Parser").Value = "new value";
+
+            Assert.AreEqual("new value", wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value);
+            Assert.AreEqual(parserValue, wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueOriginalValue);
+            Assert.IsTrue(wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueIsChanged);
             Assert.IsTrue(wrapper.IsChanged);
 
             wrapper.AcceptChanges();
 
-            Assert.AreEqual("new value", wrapper.Parser);
-            Assert.AreEqual("new value", wrapper.ParserOriginalValue);
-            Assert.IsFalse(wrapper.ParserIsChanged);
+            Assert.AreEqual("new value", wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value);
+            Assert.AreEqual("new value", wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueOriginalValue);
+            Assert.IsFalse(wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueIsChanged);
             Assert.IsFalse(wrapper.IsChanged);
         }
 
         [Test]
         public void ShouldRejectChanges()
         {
-            var wrapper = new SentenceWrapper(sentence) {Parser = "new value"};
-            Assert.AreEqual("new value", wrapper.Parser);
-            Assert.AreEqual(parserValue, wrapper.ParserOriginalValue);
-            Assert.IsTrue(wrapper.ParserIsChanged);
+            var wrapper = new SentenceWrapper(sentence);
+
+            sentence.Attributes.Single(a => a.DisplayName == "Parser").Value = "new value";
+
+            Assert.AreEqual("new value", wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value);
+            Assert.AreEqual(parserValue, wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueOriginalValue);
+            Assert.IsTrue(wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueIsChanged);
             Assert.IsTrue(wrapper.IsChanged);
 
             wrapper.RejectChanges();
 
-            Assert.AreEqual(parserValue, wrapper.Parser);
-            Assert.AreEqual(parserValue, wrapper.ParserOriginalValue);
-            Assert.IsFalse(wrapper.ParserIsChanged);
+            Assert.AreEqual(parserValue, wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value);
+            Assert.AreEqual(parserValue, wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueOriginalValue);
+            Assert.IsFalse(wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueIsChanged);
             Assert.IsFalse(wrapper.IsChanged);
         }
 
@@ -98,15 +104,15 @@
         public void ShouldSetIsChanged()
         {
             var wrapper = new SentenceWrapper(sentence);
-            Assert.IsFalse(wrapper.ParserIsChanged);
+            Assert.IsFalse(wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueIsChanged);
             Assert.IsFalse(wrapper.IsChanged);
 
-            wrapper.Parser = "new value";
-            Assert.IsTrue(wrapper.ParserIsChanged);
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = "new value";
+            Assert.IsFalse(wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueIsChanged);
             Assert.IsTrue(wrapper.IsChanged);
 
-            wrapper.Parser = parserValue;
-            Assert.IsFalse(wrapper.ParserIsChanged);
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = parserValue;
+            Assert.IsFalse(wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueIsChanged);
             Assert.IsFalse(wrapper.IsChanged);
         }
 
@@ -115,11 +121,11 @@
         {
             var wrapper = new SentenceWrapper(sentence);
 
-            Assert.AreEqual(parserValue, wrapper.ParserOriginalValue);
+            Assert.AreEqual(parserValue, wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueOriginalValue);
 
-            wrapper.Parser = "new value";
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = "new value";
 
-            Assert.AreEqual(parserValue, wrapper.ParserOriginalValue);
+            Assert.AreEqual(parserValue, wrapper.Attributes.Single(a => a.DisplayName == "Parser").ValueOriginalValue);
         }
     }
 }

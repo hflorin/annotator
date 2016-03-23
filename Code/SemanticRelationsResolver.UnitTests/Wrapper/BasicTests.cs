@@ -42,7 +42,7 @@
                 new WordWrapper(newWord)
             });
 
-            Assert.AreEqual(wrapper.Words.First().Id, newWordId);
+            Assert.AreEqual(wrapper.Words.First().Attributes.Single(a=>a.DisplayName == "Id").Value, newWordId);
         }
 
         [Test]

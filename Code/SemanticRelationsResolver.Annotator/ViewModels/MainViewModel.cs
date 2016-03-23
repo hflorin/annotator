@@ -170,7 +170,7 @@
         private void EditSentenceCommandExecute(object obj)
         {
             SentenceEditViewModels.Add(new SentenceEditorView(new SentenceEditorViewModel(eventAggregator, SelectedSentence)));
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}", SelectedSentence.Id, SelectedDocument.Identifier));
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}", SelectedSentence.Attributes.Single(a=>a.DisplayName=="Id").Value, SelectedDocument.Attributes.Single(a => a.DisplayName == "Id").Value));
         }
 
         private bool EditSentenceCommandCanExecute(object arg)

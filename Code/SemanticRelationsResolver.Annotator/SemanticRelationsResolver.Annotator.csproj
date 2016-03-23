@@ -146,26 +146,20 @@
     <Compile Include="Wrapper\Base\IValidatableTrackingObject.cs" />
     <Compile Include="Wrapper\Base\ModelWrapper.cs" />
     <Compile Include="Wrapper\Base\NotifyDataErrorInfoBase.cs" />
+    <Compile Include="Wrapper\Base\StringWrapper.cs" />
     <Compile Include="Wrapper\Custom\SentenceWrapper.cs" />
     <Compile Include="Wrapper\Custom\WordWrapper.cs" />
-    <Compile Include="Wrapper\Generated\DocumentWrapper.g.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Wrapper\Generated\AttributeWrapper.g.cs" />
+    <Compile Include="Wrapper\Generated\DocumentWrapper.g.cs" />
+    <Compile Include="Wrapper\Generated\ElementWrapper.g.cs" />
     <Compile Include="Wrapper\Generated\GenerateModelWrapper.cs">
       <DependentUpon>GenerateModelWrapper.tt</DependentUpon>
       <SubType>Code</SubType>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="Wrapper\Generated\ModelBaseWrapper.g.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Wrapper\Generated\SentenceWrapper.g.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Wrapper\Generated\WordWrapper.g.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Wrapper\Generated\SentenceWrapper.g.cs" />
+    <Compile Include="Wrapper\Generated\WordWrapper.g.cs" />
     <Page Include="View\SentenceEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

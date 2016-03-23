@@ -32,7 +32,7 @@
                 }
             };
 
-            wrapper.Parser = sentence.Attributes.Single(a => a.DisplayName == "Parser").Value;
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = sentence.Attributes.Single(a => a.DisplayName == "Parser").Value;
 
             Assert.IsFalse(fired);
         }
@@ -52,7 +52,7 @@
                 }
             };
 
-            wrapper.Parser = "New Value";
+            wrapper.Attributes.Single(a => a.DisplayName == "Parser").Value = "New Value";
 
             Assert.IsTrue(fired);
         }
