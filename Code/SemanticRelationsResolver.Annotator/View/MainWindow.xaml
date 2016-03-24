@@ -85,19 +85,19 @@
                                           AutoGenerateColumns="False">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Id"
-                                                            Binding="{Binding IdValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding Id.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="Auto" />
                                         <DataGridTextColumn Header="Content"
-                                                            Binding="{Binding ContentValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding Content.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="*" />
                                         <DataGridTextColumn Header="Parser"
-                                                            Binding="{Binding ParserValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding Parser.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="Auto" />
                                         <DataGridTextColumn Header="User"
-                                                            Binding="{Binding UserValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding User.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="Auto" />
                                         <DataGridTextColumn Header="Date"
-                                                            Binding="{Binding DateValue,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                            Binding="{Binding Date.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                             Width="Auto" />
                                     </DataGrid.Columns>
                                 </DataGrid>

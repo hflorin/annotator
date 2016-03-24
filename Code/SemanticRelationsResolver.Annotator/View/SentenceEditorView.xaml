@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="SemanticRelationsResolver.Annotator.View.SentenceEditorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:SemanticRelationsResolver.Annotator.Graph"
              xmlns:graphx="http://schemas.panthernet.ru/graphx/"
@@ -12,15 +12,18 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <graphx:ZoomControl x:Name="GgZoomCtrl" Grid.Row="0">
-            <local:SentenceGraphArea LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}" x:Name="GgArea">
+            <local:SentenceGraphArea LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}"
+                                     x:Name="GgArea">
                 <local:SentenceGraphArea.GraphLogicCoreData>
                     <Binding Path="SentenceGraphLogicCore" UpdateSourceTrigger="PropertyChanged" />
                 </local:SentenceGraphArea.GraphLogicCoreData>
             </local:SentenceGraphArea>
         </graphx:ZoomControl>
-        <TextBlock Text="{Binding Sentence.Content}" Grid.Row="1"/>
-        <Button Click="viewModel_SentenceGraphChanged" Content="Generate" Grid.Row="1"></Button>
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="{Binding Sentence.Content.Value}" Width="Auto" />
+            <Button Click="viewModel_SentenceGraphChanged" Content="Generate" Width="70" />
+        </StackPanel>
     </Grid>
 </UserControl>

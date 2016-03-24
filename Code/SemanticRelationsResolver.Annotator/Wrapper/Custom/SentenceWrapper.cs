@@ -6,34 +6,74 @@
 
     public partial class SentenceWrapper
     {
-        public string IdValue
+        public AttributeWrapper Id
         {
-            get { return Attributes.Single(a => a.Name.Equals("id")).Value; }
-            set { Attributes.Single(a => a.Name.Equals("id")).Value = value; }
+            get
+            {
+                return Attributes.Single(a => a.Name.Equals("id"));
+            }
+            set
+            {
+                var oldId = Attributes.Single(a => a.Name.Equals("id"));
+                Attributes.Remove(oldId);
+                Attributes.Add(value);
+            }
         }
 
-        public string ContentValue
+        public AttributeWrapper Content
         {
-            get { return Attributes.Single(a => a.Name.Equals("content")).Value; }
-            set { Attributes.Single(a => a.Name.Equals("content")).Value = value; }
+            get
+            {
+                return Attributes.Single(a => a.Name.Equals("content"));
+            }
+            set
+            {
+                var oldId = Attributes.Single(a => a.Name.Equals("content"));
+                Attributes.Remove(oldId);
+                Attributes.Add(value);
+            }
         }
 
-        public string ParserValue
+        public AttributeWrapper Parser
         {
-            get { return Attributes.Single(a => a.Name.Equals("parser")).Value; }
-            set { Attributes.Single(a => a.Name.Equals("parser")).Value = value; }
+            get
+            {
+                return Attributes.Single(a => a.Name.Equals("parser"));
+            }
+            set
+            {
+                var oldId = Attributes.Single(a => a.Name.Equals("parser"));
+                Attributes.Remove(oldId);
+                Attributes.Add(value);
+            }
         }
 
-        public string UserValue
+        public AttributeWrapper User
         {
-            get { return Attributes.Single(a => a.Name.Equals("user")).Value; }
-            set { Attributes.Single(a => a.Name.Equals("user")).Value = value; }
+            get
+            {
+                return Attributes.Single(a => a.Name.Equals("user"));
+            }
+            set
+            {
+                var oldId = Attributes.Single(a => a.Name.Equals("user"));
+                Attributes.Remove(oldId);
+                Attributes.Add(value);
+            }
         }
 
-        public string DateValue
+        public AttributeWrapper Date
         {
-            get { return Attributes.Single(a => a.Name.Equals("date")).Value; }
-            set { Attributes.Single(a => a.Name.Equals("date")).Value = value; }
+            get
+            {
+                return Attributes.Single(a => a.Name.Equals("date"));
+            }
+            set
+            {
+                var oldId = Attributes.Single(a => a.Name.Equals("date"));
+                Attributes.Remove(oldId);
+                Attributes.Add(value);
+            }
         }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -45,7 +85,7 @@
 
             if (string.IsNullOrWhiteSpace(Attributes.Single(a => a.Name.Equals("parser")).Value))
             {
-                yield return new ValidationResult("Parser is required.", new[] {"Parser"});
+                yield return new ValidationResult("Parser is required.", new[] { "Parser" });
             }
         }
     }
