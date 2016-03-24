@@ -54,7 +54,13 @@
         </StatusBar>
         
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"
-                             DocumentsSource="{Binding SentenceEditViewModels}">
+                             DocumentsSource="{Binding SentenceEditViewModels}"
+                             ActiveContent="{Binding SelectedSentenceEditorView, Mode=TwoWay}">
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Content.Id}" />
+                </DataTemplate>
+            </xcad:DockingManager.DocumentHeaderTemplate>
             <xcad:DockingManager.Resources>
                 <DataTemplate DataType="{x:Type viewModel:SentenceEditorViewModel}">
                     <view:SentenceEditorView />
@@ -105,12 +111,11 @@
                         </xcad:LayoutAnchorablePane>
                     </xcad:LayoutPanel>
                 </xcad:LayoutPanel>
-
                 <xcad:LayoutRoot.BottomSide>
                     <xcad:LayoutAnchorSide>
                         <xcad:LayoutAnchorGroup>
                             <xcad:LayoutAnchorable Title="Output" ContentId="output">
-                                <ListBox ItemsSource="{Binding DocumentLoadExceptions}" />
+                                <ListBox ItemsSource="{Binding DocumentLoadExceptions}"/>
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorGroup>
                     </xcad:LayoutAnchorSide>

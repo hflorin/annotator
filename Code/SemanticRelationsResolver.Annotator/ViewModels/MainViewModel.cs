@@ -172,10 +172,15 @@
             EditSentenceCommand = new DelegateCommand(EditSentenceCommandExecute, EditSentenceCommandCanExecute);
         }
 
+        public SentenceEditorView SelectedSentenceEditorView { get; set; }
+
         private void EditSentenceCommandExecute(object obj)
         {
-            SentenceEditViewModels.Add(
-                new SentenceEditorView(new SentenceEditorViewModel(eventAggregator, SelectedSentence)));
+            var sentenceEditView = new SentenceEditorView(new SentenceEditorViewModel(eventAggregator, SelectedSentence));
+
+            SentenceEditViewModels.Add(sentenceEditView);
+            SelectedSentenceEditorView = sentenceEditView;
+
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}",
                     SelectedSentence.Attributes.Single(a => a.DisplayName == "Id").Value,
