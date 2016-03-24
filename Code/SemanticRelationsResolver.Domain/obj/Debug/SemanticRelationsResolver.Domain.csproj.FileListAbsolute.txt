@@ -20,3 +20,4 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain\bin\Debug\SemanticRelationsResolver.Domain.pdb
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.pdb
+D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.csprojResolveAssemblyReference.cache
