@@ -18,6 +18,7 @@
 
     public class MainViewModel : Observable
     {
+        private SentenceEditorView activeSentenceEditorView;
         private string currentStatus;
         private IDocumentMapper documentMapper;
 
@@ -84,7 +85,7 @@
             }
         }
 
-        public ObservableCollection<SentenceEditorView> SentenceEditViewModels
+        public ObservableCollection<SentenceEditorView> SentenceEditViews
         {
             get { return sentenceEditViewModels; }
             set
@@ -105,6 +106,16 @@
         public ICommand CloseCommand { get; set; }
 
         public ICommand EditSentenceCommand { get; set; }
+
+        public SentenceEditorView ActiveSentenceEditorView
+        {
+            get { return activeSentenceEditorView; }
+            set
+            {
+                activeSentenceEditorView = value;
+                OnPropertyChanged();
+            }
+        }
 
         private void InitializeMembers()
         {
@@ -172,19 +183,17 @@
             EditSentenceCommand = new DelegateCommand(EditSentenceCommandExecute, EditSentenceCommandCanExecute);
         }
 
-        public SentenceEditorView SelectedSentenceEditorView { get; set; }
-
         private void EditSentenceCommandExecute(object obj)
         {
             var sentenceEditView = new SentenceEditorView(new SentenceEditorViewModel(eventAggregator, SelectedSentence));
 
-            SentenceEditViewModels.Add(sentenceEditView);
-            SelectedSentenceEditorView = sentenceEditView;
+            SentenceEditViews.Add(sentenceEditView);
+            ActiveSentenceEditorView = sentenceEditView;
 
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}",
-                    SelectedSentence.Attributes.Single(a => a.DisplayName == "Id").Value,
-                    SelectedDocument.Attributes.Single(a => a.DisplayName == "Id").Value));
+                    SelectedSentence.Attributes.Single(a => a.Name.Equals("id")).Value,
+                    SelectedDocument.Attributes.Single(a => a.Name.Equals("id")).Value));
         }
 
         private bool EditSentenceCommandCanExecute(object arg)

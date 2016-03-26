@@ -15,6 +15,8 @@
 
         private SentenceGxLogicCore sentenceLogicCore;
 
+        private SentenceWrapper sentenceWrapper;
+
         public SentenceEditorViewModel(IEventAggregator eventAggregator, SentenceWrapper sentence)
         {
             this.eventAggregator = eventAggregator;
@@ -24,7 +26,15 @@
             sentenceLogicCore.Graph = sentenceGraph;
         }
 
-        public SentenceWrapper Sentence { get; set; }
+        public SentenceWrapper Sentence
+        {
+            get { return sentenceWrapper; }
+            set
+            {
+                sentenceWrapper = value;
+                OnPropertyChanged();
+            }
+        }
 
         public SentenceGxLogicCore SentenceGraphLogicCore
         {

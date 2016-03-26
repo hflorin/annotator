@@ -54,12 +54,12 @@
         </StatusBar>
         
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"
-                             DocumentsSource="{Binding SentenceEditViewModels}"
-                             ActiveContent="{Binding SelectedSentenceEditorView, Mode=TwoWay}">
+                             DocumentsSource="{Binding SentenceEditViews}"
+                             ActiveContent="{Binding ActiveSentenceEditorView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <xcad:DockingManager.DocumentHeaderTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Content.Id}" />
-                </DataTemplate>
+                <ItemContainerTemplate>
+                    <TextBlock Text="{Binding Content.DataContext.Sentence.Id.Value}"/>
+                </ItemContainerTemplate>
             </xcad:DockingManager.DocumentHeaderTemplate>
             <xcad:DockingManager.Resources>
                 <DataTemplate DataType="{x:Type viewModel:SentenceEditorViewModel}">
