@@ -31,6 +31,7 @@
         private ISaveDialogService saveDialogService;
 
         private DocumentWrapper selectedDocument;
+        private ElementAttributeEditorViewModel selectedElementAttributeEditorViewModel;
 
         private SentenceWrapper sentence;
 
@@ -117,6 +118,19 @@
             }
         }
 
+        public ElementAttributeEditorViewModel SelectedElementAttributeEditorViewModel
+        {
+            get
+            {
+                return selectedElementAttributeEditorViewModel;
+            }
+            set
+            {
+                selectedElementAttributeEditorViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void InitializeMembers()
         {
             documentsWrappers = new Dictionary<string, DocumentWrapper>();
@@ -189,6 +203,10 @@
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
+            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel
+            {
+                Element = new ElementWrapper<Element>(SelectedSentence.Model)
+            };
 
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}",

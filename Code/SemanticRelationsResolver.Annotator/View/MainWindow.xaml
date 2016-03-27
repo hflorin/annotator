@@ -42,7 +42,7 @@
                 <MenuItem Header="_Tree Explorer" />
                 <MenuItem Header="_Sentence List" />
                 <Separator />
-                <MenuItem x:Name="EditSentence"  Header="_Edit Sentence" Command="{Binding EditSentenceCommand}"/>
+                <MenuItem x:Name="EditSentence" Header="_Edit Sentence" Command="{Binding EditSentenceCommand}" />
             </MenuItem>
             <MenuItem x:Name="HelpMenu" Header="_HELP" />
         </Menu>
@@ -52,13 +52,13 @@
                 <TextBlock Name="CurrentStatus" Text="{Binding CurrentStatus}" />
             </StatusBarItem>
         </StatusBar>
-        
+
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"
-                             DocumentsSource="{Binding SentenceEditViews}"
+                             DocumentsSource="{Binding SentenceEditViews, UpdateSourceTrigger=PropertyChanged}"
                              ActiveContent="{Binding ActiveSentenceEditorView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <xcad:DockingManager.DocumentHeaderTemplate>
                 <ItemContainerTemplate>
-                    <TextBlock Text="{Binding Content.DataContext.Sentence.Id.Value}"/>
+                    <TextBlock Text="{Binding Content.DataContext.Sentence.Id.Value}" />
                 </ItemContainerTemplate>
             </xcad:DockingManager.DocumentHeaderTemplate>
             <xcad:DockingManager.Resources>
@@ -115,11 +115,21 @@
                     <xcad:LayoutAnchorSide>
                         <xcad:LayoutAnchorGroup>
                             <xcad:LayoutAnchorable Title="Output" ContentId="output">
-                                <ListBox ItemsSource="{Binding DocumentLoadExceptions}"/>
+                                <ListBox ItemsSource="{Binding DocumentLoadExceptions}" />
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorGroup>
                     </xcad:LayoutAnchorSide>
                 </xcad:LayoutRoot.BottomSide>
+                <xcad:LayoutRoot.LeftSide>
+                    <xcad:LayoutAnchorSide>
+                        <xcad:LayoutAnchorGroup>
+                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes">
+                                <view:ElementAttributeEditorView
+                                    DataContext="{Binding SelectedElementAttributeEditorViewModel}" />
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorGroup>
+                    </xcad:LayoutAnchorSide>
+                </xcad:LayoutRoot.LeftSide>
             </xcad:LayoutRoot>
         </xcad:DockingManager>
     </Grid>

@@ -132,8 +132,12 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="ViewModels\ElementAttributeEditorViewModel.cs" />
     <Compile Include="ViewModels\Observable.cs" />
     <Compile Include="ViewModels\SentenceEditorViewModel.cs" />
+    <Compile Include="View\ElementAttributeEditorView.xaml.cs">
+      <DependentUpon>ElementAttributeEditorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SentenceEditorView.xaml.cs">
       <DependentUpon>SentenceEditorView.xaml</DependentUpon>
     </Compile>
@@ -161,6 +165,10 @@
     </Compile>
     <Compile Include="Wrapper\Generated\SentenceWrapper.g.cs" />
     <Compile Include="Wrapper\Generated\WordWrapper.g.cs" />
+    <Page Include="View\ElementAttributeEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SentenceEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

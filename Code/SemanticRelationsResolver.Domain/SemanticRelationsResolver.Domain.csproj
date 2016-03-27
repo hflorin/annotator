@@ -41,6 +41,7 @@
     <Compile Include="Attribute.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Element.cs" />
+    <Compile Include="IHasAttributes.cs" />
     <Compile Include="Sentence.cs" />
     <Compile Include="Word.cs" />
   </ItemGroup>

@@ -18,6 +18,7 @@
             builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>();
             builder.RegisterType<SentenceEditorViewModel>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
+            builder.RegisterType<ElementAttributeEditorViewModel>().AsSelf();
         }
     }
 }
