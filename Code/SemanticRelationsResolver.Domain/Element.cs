@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public abstract class Element : IHasAttributes
+    public abstract class Element
     {
         protected Element()
         {

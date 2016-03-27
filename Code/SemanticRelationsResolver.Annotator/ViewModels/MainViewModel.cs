@@ -205,7 +205,7 @@
             ActiveSentenceEditorView = sentenceEditView;
             SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel
             {
-                Element = new ElementWrapper<Element>(SelectedSentence.Model)
+                Attributes = SelectedSentence.Attributes
             };
 
             eventAggregator.GetEvent<StatusNotificationEvent>()

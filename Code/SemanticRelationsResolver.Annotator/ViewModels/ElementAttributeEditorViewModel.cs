@@ -2,10 +2,11 @@
 {
     using Domain;
     using Wrapper;
+    using Wrapper.Base;
 
     public class ElementAttributeEditorViewModel : Observable
     {
-        private ElementWrapper<Element> element;
-        public ElementWrapper<Element> Element { get { return element; } set { element = value; } }
+        private ChangeTrackingCollection<AttributeWrapper> attributes;
+        public ChangeTrackingCollection<AttributeWrapper> Attributes { get { return attributes; } set { attributes = value; } }
     }
 }
