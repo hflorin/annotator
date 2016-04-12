@@ -7,23 +7,33 @@
              xmlns:graphx="http://schemas.panthernet.ru/graphx/"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData SentenceEditorViewModel}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
 
-        <graphx:ZoomControl x:Name="GgZoomCtrl" Grid.Row="0">
-            <local:SentenceGraphArea LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}"
-                                     x:Name="GgArea">
+
+    <DockPanel LastChildFill="True">
+        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
+            <WrapPanel Orientation="Horizontal" >
+                <TextBox Text="Layout" HorizontalAlignment="Left" FontWeight="Bold" />
+                <ComboBox Name="LayoutAlgos" IsReadOnly="True" />
+                <TextBox Text="Edge routing" HorizontalAlignment="Left" FontWeight="Bold" />
+                <ComboBox Name="EdgeRoutingAlgos" IsReadOnly="True" />
+            </WrapPanel>
+        </ScrollViewer>
+
+        <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto">
+            <WrapPanel Orientation="Horizontal" >
+                <TextBlock Text="{Binding Sentence.Content.Value}" Width="Auto" />
+                <Button Click="viewModel_SentenceGraphChanged" Content="Generate" Width="70" />
+            </WrapPanel>
+        </ScrollViewer>
+
+        <graphx:ZoomControl x:Name="GgZoomCtrl">
+            <local:SentenceGraphArea
+                    LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}"
+                    x:Name="GgArea">
                 <local:SentenceGraphArea.GraphLogicCoreData>
                     <Binding Path="SentenceGraphLogicCore" UpdateSourceTrigger="PropertyChanged" />
                 </local:SentenceGraphArea.GraphLogicCoreData>
             </local:SentenceGraphArea>
         </graphx:ZoomControl>
-        <StackPanel Grid.Row="1">
-            <TextBlock Text="{Binding Sentence.Content.Value}" Width="Auto" />
-            <Button Click="viewModel_SentenceGraphChanged" Content="Generate" Width="70" />
-        </StackPanel>
-    </Grid>
+    </DockPanel>
 </UserControl>

@@ -67,3 +67,41 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.Annotator.UnitTests.csprojResolveAssemblyReference.cache
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.dll.config
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.UnitTests.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\nunit.framework.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Annotator.exe
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Domain.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Autofac.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\GraphX.Controls.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Xceed.Wpf.AvalonDock.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Prism.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Mappers.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\GraphX.PCL.Common.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\QuickGraph.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\GraphX.PCL.Logic.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Loaders.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Events.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Annotator.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Domain.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\nunit.framework.xml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Autofac.xml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\Prism.xml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Mappers.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\QuickGraph.xml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Loaders.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\SemanticRelationsResolver.Events.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\de\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\es\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\fr\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\hu\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\it\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\pt-BR\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\ro\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.Annotator.UnitTests.csprojResolveAssemblyReference.cache
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.UnitTests\obj\Debug\SemanticRelationsResolver.UnitTests.pdb
