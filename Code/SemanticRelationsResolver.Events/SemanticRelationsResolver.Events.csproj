@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DocumentLoadExceptionEvent.cs" />
+    <Compile Include="RelayoutGraphEvent.cs" />
     <Compile Include="StatusNotificationEvent.cs" />
   </ItemGroup>
   <ItemGroup>

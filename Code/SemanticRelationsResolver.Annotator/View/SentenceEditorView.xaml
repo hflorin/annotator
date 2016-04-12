@@ -5,31 +5,46 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:SemanticRelationsResolver.Annotator.Graph"
              xmlns:graphx="http://schemas.panthernet.ru/graphx/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData SentenceEditorViewModel}">
 
-
     <DockPanel LastChildFill="True">
         <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
-            <WrapPanel Orientation="Horizontal" >
-                <TextBox Text="Layout" HorizontalAlignment="Left" FontWeight="Bold" />
-                <ComboBox Name="LayoutAlgos" IsReadOnly="True" />
-                <TextBox Text="Edge routing" HorizontalAlignment="Left" FontWeight="Bold" />
-                <ComboBox Name="EdgeRoutingAlgos" IsReadOnly="True" />
+            <WrapPanel Orientation="Horizontal">
+                <Label Content="Layout" HorizontalAlignment="Left" FontWeight="Bold" />
+                <ComboBox Name="LayoutAlgos" SelectedItem="{Binding SelectedLayoutAlgorithmType}"
+                          ItemsSource="{Binding LayoutAlgorithmTypes}" IsReadOnly="True" HorizontalAlignment="Stretch">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding LayoutAlgorithmChangedCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+                <Label Content="Edge routing" HorizontalAlignment="Left" FontWeight="Bold" />
+                <ComboBox Name="EdgeRoutingAlgos" SelectedItem="{Binding SelectedEdgeRoutingAlgorithmType}"
+                          ItemsSource="{Binding EdgeRoutingAlgorithmTypes}" IsReadOnly="True"
+                          HorizontalAlignment="Stretch">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding EdgeRoutingAlgorithmChangedCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
             </WrapPanel>
         </ScrollViewer>
 
         <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto">
-            <WrapPanel Orientation="Horizontal" >
-                <TextBlock Text="{Binding Sentence.Content.Value}" Width="Auto" />
-                <Button Click="viewModel_SentenceGraphChanged" Content="Generate" Width="70" />
+            <WrapPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Sentence.Content.Value}" HorizontalAlignment="Stretch" />
+                <Button Click="viewModel_SentenceGraphChanged" Content="Refresh" Width="70" />
             </WrapPanel>
         </ScrollViewer>
 
         <graphx:ZoomControl x:Name="GgZoomCtrl">
             <local:SentenceGraphArea
-                    LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}"
-                    x:Name="GgArea">
+                LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}"
+                x:Name="GgArea">
                 <local:SentenceGraphArea.GraphLogicCoreData>
                     <Binding Path="SentenceGraphLogicCore" UpdateSourceTrigger="PropertyChanged" />
                 </local:SentenceGraphArea.GraphLogicCoreData>
