@@ -120,10 +120,7 @@
 
         public ElementAttributeEditorViewModel SelectedElementAttributeEditorViewModel
         {
-            get
-            {
-                return selectedElementAttributeEditorViewModel;
-            }
+            get { return selectedElementAttributeEditorViewModel; }
             set
             {
                 selectedElementAttributeEditorViewModel = value;
