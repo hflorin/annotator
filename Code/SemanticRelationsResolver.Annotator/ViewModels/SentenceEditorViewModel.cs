@@ -14,8 +14,6 @@
 
     public class SentenceEditorViewModel : Observable
     {
-        private readonly IEventAggregator eventAggregator;
-
         private IEnumerable edgeRoutingAlgorithmTypes =
             Enum.GetValues(typeof (EdgeRoutingAlgorithmTypeEnum)).Cast<EdgeRoutingAlgorithmTypeEnum>();
 
@@ -32,12 +30,14 @@
         {
             InitializeCommands();
 
-            this.eventAggregator = eventAggregator;
+            EventAggregator = eventAggregator;
             Sentence = sentence;
             sentenceGraph = new SentenceGraph();
             sentenceLogicCore = new SentenceGxLogicCore();
             sentenceLogicCore.Graph = sentenceGraph;
         }
+
+        public IEventAggregator EventAggregator { get; set; }
 
         public ICommand LayoutAlgorithmChangedCommand { get; set; }
 
@@ -50,6 +50,16 @@
             {
                 sentenceWrapper = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public string FordWordForm
+        {
+            get { return Sentence.Words.First().GetAttributeByName("form"); }
+            set
+            {
+                Sentence.Words.First().SetAttributeByName("form", value);
+                EventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
             }
         }
 
@@ -145,8 +155,6 @@
         {
             BuildSentenceGraph();
             SetupGraphLogic();
-
-            eventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
         }
 
         private void SetupGraphLogic()
@@ -184,35 +192,29 @@
 
             foreach (var word in Sentence.Words)
             {
-                id = int.Parse(word.Attributes.Single(a => a.Name.Equals("id")).Value);
-                sentenceGraph.AddVertex(
-                    new WordVertex {ID = id, Text = word.Attributes.Single(a => a.Name.Equals("form")).Value});
+                sentenceGraph.AddVertex(new WordVertex(word));
             }
 
             var vlist = sentenceGraph.Vertices.ToList();
 
             foreach (var word in Sentence.Words)
             {
-                if (int.TryParse(word.Attributes.Single(a => a.Name.Equals("head")).Value, out headId))
+                if (int.TryParse(word.GetAttributeByName("head"), out headId))
                 {
                     if (headId == 0)
                     {
                         continue;
                     }
 
-                    if (int.TryParse(word.Attributes.Single(a => a.Name.Equals("id")).Value, out id))
+                    if (int.TryParse(word.GetAttributeByName("id"), out id))
                     {
-                        id = int.Parse(word.Attributes.Single(a => a.Name.Equals("id")).Value);
-
                         var wordVertex = vlist.Single(v => v.ID == id);
                         var headWordVertex = vlist.Single(v => v.ID == headId);
 
                         sentenceGraph.AddEdge(
                             new WordEdge(headWordVertex, wordVertex)
                             {
-                                Text =
-                                    word.Attributes.Single(
-                                        a => a.Name.Equals("deprel")).Value
+                                Text = word.GetAttributeByName("deprel")
                             });
                     }
                 }

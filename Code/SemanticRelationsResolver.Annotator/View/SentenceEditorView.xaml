@@ -31,14 +31,23 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
+                <Button Click="viewModel_SentenceGraphChanged" Content="Refresh" Width="70" />
             </WrapPanel>
         </ScrollViewer>
 
-        <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto">
-            <WrapPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Sentence.Content.Value}" HorizontalAlignment="Stretch" />
-                <Button Click="viewModel_SentenceGraphChanged" Content="Refresh" Width="70" />
-            </WrapPanel>
+        <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+            <ItemsControl ItemsSource="{Binding Sentence.Words, UpdateSourceTrigger=PropertyChanged}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBox Text="{Binding Form, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextChanged="TextBoxBase_OnTextChanged" HorizontalAlignment="Stretch" Margin="0,0,2,0"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
         <graphx:ZoomControl x:Name="GgZoomCtrl">

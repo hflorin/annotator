@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Windows.Controls;
+    using Events;
     using GraphX.Controls;
     using ViewModels;
 
@@ -24,6 +25,20 @@
 
             GgArea.RelayoutFinished += GgArea_RelayoutFinished;
             GgArea.GenerateGraphFinished += GgArea_GenerateGraphFinished;
+
+            viewModel.EventAggregator.GetEvent<RelayoutGraphEvent>().Subscribe(OnRelayoutGraph);
+        }
+
+        private void OnRelayoutGraph(bool relayout)
+        {
+            if (relayout)
+            {
+                GgArea.GenerateGraph();
+                GgArea.RelayoutGraph(true);
+
+                GgZoomCtrl.ZoomToFill();
+                GgZoomCtrl.Mode = ZoomControlModes.Custom;
+            }
         }
 
         public void Dispose()
@@ -55,6 +70,11 @@
         {
             GgArea.GenerateGraph();
             GgArea.RelayoutGraph(true);
+        }
+
+        private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            OnRelayoutGraph(true);
         }
     }
 }
