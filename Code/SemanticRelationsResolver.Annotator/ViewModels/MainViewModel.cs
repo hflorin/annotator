@@ -6,20 +6,25 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Windows.Input;
-    using Commands;
-    using Domain;
-    using Events;
-    using Mappers;
+
     using Prism.Events;
-    using View;
-    using View.Services;
-    using Wrapper;
-    using Attribute = Domain.Attribute;
+
+    using SemanticRelationsResolver.Annotator.Commands;
+    using SemanticRelationsResolver.Annotator.View;
+    using SemanticRelationsResolver.Annotator.View.Services;
+    using SemanticRelationsResolver.Annotator.Wrapper;
+    using SemanticRelationsResolver.Domain;
+    using SemanticRelationsResolver.Events;
+    using SemanticRelationsResolver.Mappers;
+
+    using Attribute = SemanticRelationsResolver.Domain.Attribute;
 
     public class MainViewModel : Observable
     {
         private SentenceEditorView activeSentenceEditorView;
+
         private string currentStatus;
+
         private IDocumentMapper documentMapper;
 
         private Dictionary<string, DocumentWrapper> documentsWrappers;
@@ -31,6 +36,7 @@
         private ISaveDialogService saveDialogService;
 
         private DocumentWrapper selectedDocument;
+
         private ElementAttributeEditorViewModel selectedElementAttributeEditorViewModel;
 
         private SentenceWrapper sentence;
@@ -58,7 +64,10 @@
 
         public string CurrentStatus
         {
-            get { return currentStatus; }
+            get
+            {
+                return currentStatus;
+            }
             set
             {
                 currentStatus = value;
@@ -68,7 +77,10 @@
 
         public SentenceWrapper SelectedSentence
         {
-            get { return sentence; }
+            get
+            {
+                return sentence;
+            }
             set
             {
                 sentence = value;
@@ -78,7 +90,10 @@
 
         public DocumentWrapper SelectedDocument
         {
-            get { return selectedDocument; }
+            get
+            {
+                return selectedDocument;
+            }
             set
             {
                 selectedDocument = value;
@@ -88,7 +103,10 @@
 
         public ObservableCollection<SentenceEditorView> SentenceEditViews
         {
-            get { return sentenceEditViewModels; }
+            get
+            {
+                return sentenceEditViewModels;
+            }
             set
             {
                 sentenceEditViewModels = value;
@@ -108,9 +126,14 @@
 
         public ICommand EditSentenceCommand { get; set; }
 
+        public ICommand SelectedSentenceChangedCommand { get; set; }
+
         public SentenceEditorView ActiveSentenceEditorView
         {
-            get { return activeSentenceEditorView; }
+            get
+            {
+                return activeSentenceEditorView;
+            }
             set
             {
                 activeSentenceEditorView = value;
@@ -120,7 +143,10 @@
 
         public ElementAttributeEditorViewModel SelectedElementAttributeEditorViewModel
         {
-            get { return selectedElementAttributeEditorViewModel; }
+            get
+            {
+                return selectedElementAttributeEditorViewModel;
+            }
             set
             {
                 selectedElementAttributeEditorViewModel = value;
@@ -140,6 +166,12 @@
         {
             eventAggregator.GetEvent<DocumentLoadExceptionEvent>().Subscribe(OnDocumentLoadException);
             eventAggregator.GetEvent<StatusNotificationEvent>().Subscribe(OnStatusNotification);
+            eventAggregator.GetEvent<ChangeAttributesEditorViewModel>().Subscribe(OnAttributesChanged);
+        }
+
+        private void OnAttributesChanged(ElementAttributeEditorViewModel newViewModel)
+        {
+            SelectedElementAttributeEditorViewModel = newViewModel;
         }
 
         private void OnStatusNotification(string statusNotification)
@@ -192,23 +224,67 @@
             SaveAsCommand = new DelegateCommand(SaveAsCommandExecute, SaveAsCommandCanExecute);
             CloseCommand = new DelegateCommand(CloseCommandExecute, CloseCommandCanExecute);
             EditSentenceCommand = new DelegateCommand(EditSentenceCommandExecute, EditSentenceCommandCanExecute);
+            SelectedSentenceChangedCommand = new DelegateCommand(
+                SelectedSentenceChangedCommandExecute,
+                SelectedSentenceChangedCommandCanExecute);
+        }
+
+        private bool SelectedSentenceChangedCommandCanExecute(object arg)
+        {
+            return true;
+        }
+
+        private void SelectedSentenceChangedCommandExecute(object obj)
+        {
+            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel
+                                                          {
+                                                              Attributes =
+                                                                  SelectedSentence
+                                                                  .Attributes
+                                                          };
+            if (SentenceEditViews.Any())
+            {
+                var sentenceEditView = SentenceEditViews.FirstOrDefault(
+                    s =>
+                        {
+                            var sentenceEditorViewModel = s.DataContext as SentenceEditorViewModel;
+                            return sentenceEditorViewModel != null
+                                   && sentenceEditorViewModel.Sentence.Id == SelectedSentence.Id;
+                        });
+
+                if (sentenceEditView != null)
+                {
+                    ActiveSentenceEditorView = sentenceEditView;
+                }
+            }
+            eventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(
+                    string.Format(
+                        "Selected sentence with ID: {0} from document with ID: {1}",
+                        SelectedSentence.Attributes.Single(a => a.Name.Equals("id")).Value,
+                        SelectedDocument.Attributes.Single(a => a.Name.Equals("id")).Value));
         }
 
         private void EditSentenceCommandExecute(object obj)
         {
-            var sentenceEditView = new SentenceEditorView(new SentenceEditorViewModel(eventAggregator, SelectedSentence));
+            var sentenceEditView = new SentenceEditorView(
+                new SentenceEditorViewModel(eventAggregator, SelectedSentence));
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
             SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel
-            {
-                Attributes = SelectedSentence.Attributes
-            };
+                                                          {
+                                                              Attributes =
+                                                                  SelectedSentence
+                                                                  .Attributes
+                                                          };
 
             eventAggregator.GetEvent<StatusNotificationEvent>()
-                .Publish(string.Format("Editing sentence with ID: {0}, document ID: {1}",
-                    SelectedSentence.Attributes.Single(a => a.Name.Equals("id")).Value,
-                    SelectedDocument.Attributes.Single(a => a.Name.Equals("id")).Value));
+                .Publish(
+                    string.Format(
+                        "Editing sentence with ID: {0}, document ID: {1}",
+                        SelectedSentence.Attributes.Single(a => a.Name.Equals("id")).Value,
+                        SelectedDocument.Attributes.Single(a => a.Name.Equals("id")).Value));
         }
 
         private bool EditSentenceCommandCanExecute(object arg)
@@ -223,11 +299,11 @@
 
         private void InvalidateCommands()
         {
-            ((DelegateCommand) NewTreeBankCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand) OpenCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand) SaveCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand) SaveAsCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand) CloseCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)NewTreeBankCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)OpenCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)SaveAsCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)CloseCommand).RaiseCanExecuteChanged();
         }
 
         private bool CloseCommandCanExecute(object arg)
@@ -275,12 +351,8 @@
         {
             var document = new Document();
 
-            document.Attributes.Add(new Attribute
-            {
-                Name = "id",
-                DisplayName = "Id",
-                Value = "Treebank" + Documents.Count
-            });
+            document.Attributes.Add(
+                new Attribute { Name = "id", DisplayName = "Id", Value = "Treebank" + Documents.Count });
 
             Documents.Add(new DocumentWrapper(document));
 
@@ -331,8 +403,8 @@
         private void SaveCommandExecute(object obj)
         {
             var documentFilePath = selectedDocument != null
-                ? selectedDocument.Model.FilePath
-                : saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+                                       ? selectedDocument.Model.FilePath
+                                       : saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
 
             eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Saving document");
 

@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="clr-namespace:SemanticRelationsResolver.Annotator.View"
     xmlns:viewModel="clr-namespace:SemanticRelationsResolver.Annotator.ViewModels"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     mc:Ignorable="d"
     x:Class="SemanticRelationsResolver.Annotator.View.MainWindow"
     Title="Annotator" Height="600" Width="600" d:DataContext="{d:DesignData MainViewModel}">
@@ -89,6 +90,11 @@
                                 <DataGrid ItemsSource="{Binding SelectedDocument.Sentences}"
                                           SelectedItem="{Binding SelectedSentence,Mode=TwoWay}" Margin="0 5 0 0"
                                           AutoGenerateColumns="False">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction Command="{Binding SelectedSentenceChangedCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Id"
                                                             Binding="{Binding Id.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"

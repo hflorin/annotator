@@ -127,6 +127,7 @@
     </ApplicationDefinition>
     <Compile Include="Behaviors\ChangeBehavior.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
+    <Compile Include="Events\ChangeAttributesEditorViewModel.cs" />
     <Compile Include="Graph\WordEdge.cs" />
     <Compile Include="Graph\SentenceGraph.cs" />
     <Compile Include="Graph\SentenceGraphArea.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="ViewModels\ElementAttributeEditorViewModel.cs" />
     <Compile Include="ViewModels\Observable.cs" />
     <Compile Include="ViewModels\SentenceEditorViewModel.cs" />
+    <Compile Include="ViewModels\WordEditorViewModel.cs" />
     <Compile Include="View\ElementAttributeEditorView.xaml.cs">
       <DependentUpon>ElementAttributeEditorView.xaml</DependentUpon>
     </Compile>

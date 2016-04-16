@@ -6,16 +6,6 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 
     public partial class WordWrapper
     {
-        public string Form
-        {
-            get { return GetAttributeByName("form"); }
-            set
-            {
-                SetAttributeByName("form", value);
-                OnPropertyChanged("Attributes");
-            }
-        }
-
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Attributes == null)
@@ -44,6 +34,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
         public void SetAttributeByName(string attributeName, string value)
         {
             Attributes.Single(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant())).Value = value;
+            OnPropertyChanged("Attributes");
         }
     }
 }

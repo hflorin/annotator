@@ -35,7 +35,6 @@
             {
                 GgArea.GenerateGraph();
                 GgArea.RelayoutGraph(true);
-
                 GgZoomCtrl.ZoomToFill();
                 GgZoomCtrl.Mode = ZoomControlModes.Custom;
             }
@@ -70,11 +69,6 @@
         {
             GgArea.GenerateGraph();
             GgArea.RelayoutGraph(true);
-        }
-
-        private void TextBoxBase_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            OnRelayoutGraph(true);
         }
     }
 }
