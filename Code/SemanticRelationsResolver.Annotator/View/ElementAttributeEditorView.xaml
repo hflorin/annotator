@@ -13,6 +13,49 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        
+        <Grid.Resources>
+            <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridCell}">
+                            <Grid Height="21.96">
+                                <ComboBox x:Name="cbCondition1">
+                                    <ComboBoxItem Content="1"/>
+                                    <ComboBoxItem Content="2"/>
+                                </ComboBox>
+
+                                <TextBox x:Name="tbCondition2" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <!--In your case, you should use custom Converter, just return type, or maybe you'd better add typeProperty in your model-->
+                                <DataTrigger Binding="{Binding IsEditable}" Value="False">
+                                    <Setter Value="Visible" TargetName="cbCondition1" Property="Visibility"/>
+                                    <Setter Value="Hidden" TargetName="tbCondition2" Property="Visibility"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsEditable}" Value="True">
+                                    <Setter Value="Hidden" TargetName="cbCondition1" Property="Visibility"/>
+                                    <Setter Value="Visible" TargetName="tbCondition2" Property="Visibility"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                    </Trigger>
+                    <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static DataGrid.FocusBorderBrushKey}}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
 
         <DataGrid ItemsSource="{Binding Attributes}" Margin="0 5 0 0"
                   AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2">
@@ -20,9 +63,7 @@
                 <DataGridTextColumn Header="Name"
                                     Binding="{Binding DisplayName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                     Width="Auto" />
-                <DataGridTextColumn Header="Value"
-                                    Binding="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                    Width="*" />
+                <DataGridTemplateColumn  Header="Value" Width="*" CellStyle="{StaticResource DataGridCellStyle1}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button Grid.Row="1" Grid.Column="0" Content="Save" IsEnabled="False" />
