@@ -161,6 +161,7 @@
     <Compile Include="Wrapper\Base\StringWrapper.cs" />
     <Compile Include="Wrapper\Custom\AttributeWrapper.cs" />
     <Compile Include="Wrapper\Custom\DocumentWrapper.cs" />
+    <Compile Include="Wrapper\Custom\ElementWrapper.cs" />
     <Compile Include="Wrapper\Custom\SentenceWrapper.cs" />
     <Compile Include="Wrapper\Custom\WordWrapper.cs" />
     <Compile Include="Wrapper\Generated\AttributeWrapper.g.cs" />

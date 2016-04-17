@@ -5,7 +5,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 	using Base;
 	using SemanticRelationsResolver.Domain;
 
-	public class ElementWrapper<T> : ModelWrapper<T>
+	public partial class ElementWrapper<T> : ModelWrapper<T>
 	where T : Domain.Element
 	{
 		public ElementWrapper(T model) : base(model)
@@ -92,6 +92,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 				throw new ArgumentException("Attributes cannot be null.");
 			}
 			Attributes = new ChangeTrackingCollection<AttributeWrapper>(model.Attributes.Select(e => new AttributeWrapper(e)));
+			AddAttributesMetadata();
 			RegisterCollection(Attributes, model.Attributes);
 		}
 	}
