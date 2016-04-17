@@ -51,7 +51,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 		}else if(excludedNonGenericClasses.Contains(modelType.Name))
 		{
 #>
-	public class <#=modelType.Name#>Wrapper : ModelWrapper<Domain.<#=modelType.Name#>>
+	public partial class <#=modelType.Name#>Wrapper : ModelWrapper<Domain.<#=modelType.Name#>>
 	{
 		public <#=modelType.Name#>Wrapper(Domain.<#=modelType.Name#> model) : base(model)
 		{
