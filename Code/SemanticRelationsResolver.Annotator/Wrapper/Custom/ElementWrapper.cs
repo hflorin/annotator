@@ -6,7 +6,7 @@
     {
         public virtual void AddAttributesMetadata()
         {
-             
+
         }
     }
 }
