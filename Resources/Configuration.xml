@@ -94,6 +94,10 @@
 						<displayName>Dependency relation</displayName>
 						<isEditable>true</isEditable>
 						<isOptional>false</isOptional>
+						<allowedValueSet>
+							<value>c.c.m.</value>
+							<value>c.c.l.</value>
+						</allowedValueSet>
 					</attribute>
 				</attributes>
 			</element>
