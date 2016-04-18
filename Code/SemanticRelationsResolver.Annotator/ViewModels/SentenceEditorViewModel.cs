@@ -5,15 +5,12 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Input;
-
+    using Commands;
+    using Graph;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
-
     using Prism.Events;
-
-    using SemanticRelationsResolver.Annotator.Commands;
-    using SemanticRelationsResolver.Annotator.Graph;
-    using SemanticRelationsResolver.Annotator.Wrapper;
+    using Wrapper;
 
     public class SentenceEditorViewModel : Observable
     {
@@ -61,10 +58,7 @@
 
         public SentenceWrapper Sentence
         {
-            get
-            {
-                return sentenceWrapper;
-            }
+            get { return sentenceWrapper; }
             set
             {
                 sentenceWrapper = value;
@@ -76,10 +70,7 @@
 
         public SentenceGxLogicCore SentenceGraphLogicCore
         {
-            get
-            {
-                return sentenceLogicCore;
-            }
+            get { return sentenceLogicCore; }
             set
             {
                 sentenceLogicCore = value;
@@ -93,26 +84,14 @@
 
         public IEnumerable LayoutAlgorithmTypes
         {
-            get
-            {
-                return layoutAlgorithmTypes;
-            }
-            set
-            {
-                layoutAlgorithmTypes = value;
-            }
+            get { return layoutAlgorithmTypes; }
+            set { layoutAlgorithmTypes = value; }
         }
 
         public IEnumerable EdgeRoutingAlgorithmTypes
         {
-            get
-            {
-                return edgeRoutingAlgorithmTypes;
-            }
-            set
-            {
-                edgeRoutingAlgorithmTypes = value;
-            }
+            get { return edgeRoutingAlgorithmTypes; }
+            set { edgeRoutingAlgorithmTypes = value; }
         }
 
         private void PopulateWords(IEventAggregator eventAggregator, SentenceWrapper sentence)
@@ -197,10 +176,10 @@
         private void SetupGraphLogic()
         {
             var logicCore = new SentenceGxLogicCore
-                                {
-                                    DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.EfficientSugiyama,
-                                    EdgeCurvingEnabled = false
-                                };
+            {
+                DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.EfficientSugiyama,
+                EdgeCurvingEnabled = false
+            };
 
             var parameters =
                 SentenceGraphLogicCore.AlgorithmFactory.CreateLayoutParameters(
@@ -249,7 +228,7 @@
                         var headWordVertex = vlist.Single(v => v.ID == headId);
 
                         sentenceGraph.AddEdge(
-                            new WordEdge(headWordVertex, wordVertex) { Text = word.GetAttributeByName("deprel") });
+                            new WordEdge(headWordVertex, wordVertex) {Text = word.GetAttributeByName("deprel")});
                     }
                 }
             }

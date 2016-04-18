@@ -33,10 +33,7 @@
         {
             if (relayout)
             {
-                GgArea.GenerateGraph();
-                GgArea.RelayoutGraph(true);
-                GgZoomCtrl.ZoomToFill();
-                GgZoomCtrl.Mode = ZoomControlModes.Custom;
+                DisplayGraph();
             }
         }
 
@@ -55,6 +52,9 @@
                 GgArea.GenerateAllEdges();
             }
 
+            GgArea.ShowAllEdgesArrows();
+            GgArea.ShowAllEdgesLabels();
+
             GgZoomCtrl.ZoomToFill();
             GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
@@ -67,8 +67,21 @@
 
         private void viewModel_SentenceGraphChanged(object sender, EventArgs e)
         {
+            DisplayGraph();
+        }
+
+        private void DisplayGraph()
+        {
             GgArea.GenerateGraph();
+            GgArea.ShowAllEdgesArrows();
+            GgArea.ShowAllEdgesLabels();
             GgArea.RelayoutGraph(true);
+            if (!GgArea.EdgesList.Any())
+            {
+                GgArea.GenerateAllEdges();
+            }
+            GgZoomCtrl.ZoomToFill();
+            GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
     }
 }

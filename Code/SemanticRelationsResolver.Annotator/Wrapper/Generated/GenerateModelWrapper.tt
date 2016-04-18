@@ -41,7 +41,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 		else if(excludedGenericClasses.Contains(modelType.Name))
 		{
 #>
-	public class <#=modelType.Name#>Wrapper<T> : ModelWrapper<T>
+	public partial class <#=modelType.Name#>Wrapper<T> : ModelWrapper<T>
 	where T : Domain.<#=modelType.Name#>
 	{
 		public <#=modelType.Name#>Wrapper(T model) : base(model)
@@ -51,7 +51,7 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 		}else if(excludedNonGenericClasses.Contains(modelType.Name))
 		{
 #>
-	public class <#=modelType.Name#>Wrapper : ModelWrapper<Domain.<#=modelType.Name#>>
+	public partial class <#=modelType.Name#>Wrapper : ModelWrapper<Domain.<#=modelType.Name#>>
 	{
 		public <#=modelType.Name#>Wrapper(Domain.<#=modelType.Name#> model) : base(model)
 		{
@@ -196,6 +196,9 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 				throw new ArgumentException("<#= propertyName #> cannot be null.");
 			}
 			<#= propertyName #> = new ChangeTrackingCollection<<#= propertyType #>Wrapper>(model.<#= propertyName #>.Select(e => new <#= propertyType #>Wrapper(e)));
+<#+ if(propertyName.Equals("Attributes")){ #>
+			AddAttributesMetadata();
+<#+ }#>
 			RegisterCollection(<#= propertyName #>, model.<#= propertyName #>);
 <#+
 			}
