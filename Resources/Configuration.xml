@@ -52,6 +52,7 @@
 				<tagName>word</tagName>
 				<displayName>Word</displayName>
 				<isOptional>false</isOptional>
+				<uniqueAttr name="id"/>
 				<attributes>
 					<attribute>
 						<name>id</name>
@@ -82,6 +83,7 @@
 						<displayName>Head word id</displayName>
 						<isEditable>true</isEditable>
 						<isOptional>false</isOptional>
+						<type></type>
 					</attribute>
 					<attribute>
 						<name>chunk</name>
