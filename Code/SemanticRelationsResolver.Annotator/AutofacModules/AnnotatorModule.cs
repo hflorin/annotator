@@ -16,6 +16,7 @@
             builder.RegisterType<DocumentMapper>().As<IDocumentMapper>().PropertiesAutowired();
             builder.RegisterType<SaveDialogService>().As<ISaveDialogService>();
             builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>();
+            builder.RegisterType<AppConfigMapper>().As<IAppConfigMapper>().PropertiesAutowired();
             builder.RegisterType<SentenceEditorViewModel>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
             builder.RegisterType<ElementAttributeEditorViewModel>().AsSelf();

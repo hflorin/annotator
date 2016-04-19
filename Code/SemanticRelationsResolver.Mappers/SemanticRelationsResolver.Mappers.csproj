@@ -39,7 +39,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConfigMapper.cs" />
     <Compile Include="DocumentMapper.cs" />
+    <Compile Include="IAppConfigMapper.cs" />
     <Compile Include="IDocumentMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

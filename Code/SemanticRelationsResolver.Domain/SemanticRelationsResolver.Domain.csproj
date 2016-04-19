@@ -39,6 +39,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attribute.cs" />
+    <Compile Include="Configuration\AppConfig.cs" />
+    <Compile Include="Configuration\IAppConfig.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Sentence.cs" />

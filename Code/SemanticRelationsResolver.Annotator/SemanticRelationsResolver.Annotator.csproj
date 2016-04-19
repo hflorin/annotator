@@ -127,8 +127,6 @@
     </ApplicationDefinition>
     <Compile Include="Behaviors\ChangeBehavior.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
-    <Compile Include="Configuration\AppConfig.cs" />
-    <Compile Include="Configuration\IAppConfig.cs" />
     <Compile Include="Events\ChangeAttributesEditorViewModel.cs" />
     <Compile Include="Graph\WordEdge.cs" />
     <Compile Include="Graph\SentenceGraph.cs" />
