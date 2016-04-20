@@ -24,5 +24,6 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Loader\bin\Debug\SemanticRelationsResolver.Loaders.dll.config
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Loader\bin\Debug\SemanticRelationsResolver.Loaders.dll
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Loader\bin\Debug\SemanticRelationsResolver.Loaders.pdb
+E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.csprojResolveAssemblyReference.cache
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.dll
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Loader\obj\Debug\SemanticRelationsResolver.Loaders.pdb
