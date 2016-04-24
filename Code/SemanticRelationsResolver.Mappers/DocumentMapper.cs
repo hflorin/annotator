@@ -5,6 +5,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Domain;
+    using Domain.Configuration;
     using Events;
     using Loaders;
     using Prism.Events;
@@ -16,18 +17,22 @@
 
         public IEventAggregator EventAggregator { get; set; }
 
-        public async Task<Document> Map(string filepath)
+        public IAppConfigMapper AppConfigMapper { get; set; }
+
+        public async Task<Document> Map(string filepath, string configFilepath)
         {
             var documentContent = await ResourceLoader.LoadAsync(filepath).ConfigureAwait(false);
 
-            var document = CreateDocument(documentContent);
+            var appConfig = await AppConfigMapper.Map(configFilepath);
+
+            var document = CreateDocument(documentContent, appConfig);
 
             document.FilePath = filepath;
 
             return document;
         }
 
-        private Document CreateDocument(dynamic documentContent)
+        private Document CreateDocument(dynamic documentContent, IAppConfig appConfig)
         {
             var document = new Document();
             document.Attributes.Add(new Attribute {Name = "id", DisplayName = "Id", Value = documentContent.treebank.id});

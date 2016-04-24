@@ -37,9 +37,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfigMapper.cs" />
+    <Compile Include="ConfigurationStaticData.cs" />
     <Compile Include="DocumentMapper.cs" />
     <Compile Include="ElementFactory.cs" />
     <Compile Include="IAppConfigMapper.cs" />

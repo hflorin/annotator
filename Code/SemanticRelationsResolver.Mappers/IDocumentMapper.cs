@@ -5,6 +5,6 @@
 
     public interface IDocumentMapper
     {
-        Task<Document> Map(string filepath);
+        Task<Document> Map(string filepath, string configFilepath);
     }
 }

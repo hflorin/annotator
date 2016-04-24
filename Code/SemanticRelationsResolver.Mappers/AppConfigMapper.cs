@@ -1,14 +1,13 @@
 ﻿namespace SemanticRelationsResolver.Mappers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Xml;
+    using Domain;
     using Domain.Configuration;
-    using Events;
     using Loaders;
     using Prism.Events;
-    using Attribute = Domain.Attribute;
 
     public class AppConfigMapper : IAppConfigMapper
     {
@@ -18,64 +17,121 @@
 
         public async Task<IAppConfig> Map(string filepath)
         {
-            var appConfigContent = await Loader.LoadAsync(filepath);
+            //var appConfigContent = await Loader.LoadAsync(filepath);
 
-            return await Task.Run(CreateAppConfig(appConfigContent));
+            return await Task.FromResult(CreateAppConfig(filepath));
         }
 
-        private bool CheckPropertyExists(dynamic d, string properrtyName)
+        private IAppConfig CreateAppConfig(string filepath)
         {
-            Type type = d.GetType();
+            var appConfig = new AppConfig();
 
-            return type.GetProperties().Any(p => p.Name.Equals(properrtyName));
+            var reader = new XmlTextReader(filepath);
+
+            var queue = new List<ConfigurationPair>();
+
+            while (reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Element :
+                        var pair = new ConfigurationPair
+                        {
+                            ElementName = reader.Name
+                        };
+
+                        var entityAttributes = new Dictionary<string, string>();
+
+                        while (reader.MoveToNextAttribute())
+                        {
+                            entityAttributes.Add(reader.Name, reader.Value);
+                        }
+
+                        pair.Attributes.Add(entityAttributes);
+                        break;
+                    case XmlNodeType.EndElement :
+                        foreach (var item in queue)
+                        {
+                            var elementName = item.ElementName;
+
+                            if (string.IsNullOrWhiteSpace(elementName))
+                            {
+                                break;
+                            }
+                            foreach (var attributes in item.Attributes)
+                            {
+                                if (elementName.Equals(ConfigurationStaticData.AllowedValueSetTagName))
+                                {
+                                    if (appConfig.Elements.Any())
+                                    {
+                                        var element = appConfig.Elements.Last();
+                                        if (element.Attributes.Any())
+                                        {
+                                            var lastAttribute = element.Attributes.Last();
+                                            lastAttribute.AllowedValuesSet = attributes.Values;
+                                        }
+                                    }
+                                }
+                                else if (attributes.ContainsKey(ConfigurationStaticData.EntityAttributeName))
+                                {
+                                    var entity =
+                                        EntityFactory.GetEntity(
+                                            attributes[ConfigurationStaticData.EntityAttributeName]);
+
+                                    if (entity is Attribute)
+                                    {
+                                        if (appConfig.Elements.Any())
+                                        {
+                                            var element = appConfig.Elements.Last();
+                                            element.Attributes.Add(entity as Attribute);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        appConfig.Elements.Add(entity as Element);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+
+            return appConfig;
         }
 
         private IAppConfig CreateAppConfig(dynamic appConfigContent)
         {
-            if (!CheckPropertyExists(appConfigContent, "configuration"))
-            {
-                EventAggregator.GetEvent<DocumentLoadExceptionEvent>()
-                    .Publish("[Exception] Missing configuration tag.");
-            }
-
-            if (!CheckPropertyExists(appConfigContent, "dataStructure"))
-            {
-                EventAggregator.GetEvent<DocumentLoadExceptionEvent>()
-                    .Publish("[Exception] Missing dataStructure tag.");
-            }
-
-            if (!CheckPropertyExists(appConfigContent, "elements"))
-            {
-                EventAggregator.GetEvent<DocumentLoadExceptionEvent>()
-                    .Publish("[Exception] Missing elements tag.");
-            }
-
             var appConfig = new AppConfig();
 
-            foreach (var element in appConfigContent.configuration.dataStructure.elements)
+            foreach (var element in appConfigContent.dataStructure.element)
             {
-                var newElement = ElementFactory.GetElement(element.entity);
+                var newElement = EntityFactory.GetEntity(element.entity);
 
-                foreach (var attribute in element.attributes)
+                foreach (var attr in element.attribute)
                 {
                     var allowedValues = new List<string>();
-                    if (CheckPropertyExists(attribute, "allowedValueSet"))
+                    try
                     {
-                        foreach (var allowedValue in attribute.allowedValueSet)
+                        foreach (var allowedValue in attr.allowedValueSet)
                         {
                             allowedValues.Add(allowedValue.value);
                         }
                     }
+                    catch
+                    {
+                        // ignored
+                    }
 
                     bool isEditable;
-                    bool.TryParse(attribute.isEditable, out isEditable);
+                    bool.TryParse(attr.isEditable, out isEditable);
                     bool isOptional;
-                    bool.TryParse(attribute.isEditable, out isOptional);
+                    bool.TryParse(attr.isEditable, out isOptional);
 
                     newElement.Attributes.Add(new Attribute
                     {
-                        Name = attribute.name,
-                        DisplayName = attribute.displayName,
+                        Name = attr.name,
+                        DisplayName = attr.displayName,
                         IsEditable = isEditable,
                         IsOptional = isOptional,
                         AllowedValuesSet = allowedValues
@@ -85,5 +141,11 @@
 
             return appConfig;
         }
+    }
+
+    internal class ConfigurationPair
+    {
+        public string ElementName { get; set; }
+        public List<Dictionary<string, string>> Attributes { get; set; }
     }
 }

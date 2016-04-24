@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class Attribute
+    public class Attribute : IEntity
     {
         public Attribute()
         {

@@ -2,10 +2,11 @@
 {
     using System;
     using Domain;
+    using Attribute = Domain.Attribute;
 
-    public static class ElementFactory
+    public static class EntityFactory
     {
-        public static Element GetElement(string entity)
+        public static IEntity GetEntity(string entity)
         {
             var cleanEntity = entity.Trim().ToLowerInvariant();
             if (cleanEntity.Equals("document"))
@@ -16,6 +17,9 @@
 
             if (cleanEntity.Equals("word"))
                 return new Word();
+
+            if (cleanEntity.Equals("attribute"))
+                return new Attribute();
 
             throw new UnknownEntityTypeException();
         }

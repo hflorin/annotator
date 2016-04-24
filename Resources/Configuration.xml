@@ -1,105 +1,29 @@
 <configuration>
 	<dataStructure>
 		<elements>
-			<element>
-				<entity>document</entity>
-				<tagName>treebank</tagName>
-				<displayName>Treebank</displayName>
-				<isOptional>false</isOptional>
+			<element entity="document" name="treebank" displayName="Treebank" isOptional="false">
 				<attributes>
-					<attribute>
-						<name>id</name>
-						<displayName>Id</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>false</isOptional>
-					</attribute>
+					<attribute entity="attribute" name="id" displayName="Id" isEditable="true" isOptional="false"/>
 				</attributes>
 			</element>
-			<element>
-				<entity>sentence</entity>
-				<tagName>sentence</tagName>
-				<displayName>Sentence</displayName>
-				<isOptional>false</isOptional>
+			<element entity="sentence" name="sentence" displayName="Sentence" isOptional="false">
 				<attributes>
-					<attribute>
-						<name>id</name>
-						<displayName>Id</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>false</isOptional>
-					</attribute>
-					<attribute>
-						<name>parser</name>
-						<displayName>Parser</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>true</isOptional>
-					</attribute>
-					<attribute>
-						<name>user</name>
-						<displayName>User</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>true</isOptional>
-					</attribute>
-					<attribute>
-						<name>date</name>
-						<displayName>Date added</displayName>
-						<isEditable>false</isEditable>
-						<isOptional>true</isOptional>
-					</attribute>
+					<attribute entity="attribute" name="id" displayName="Id" isEditable="true" isOptional="false"/>
+					<attribute entity="attribute" name="parser" displayName="Parser" isEditable="true" isOptional="true"/>
+					<attribute entity="attribute" name="user" displayName="User" isEditable="true" isOptional="true"/>
+					<attribute entity="attribute" name="date" displayName="Date added" isEditable="false" isOptional="true"/>
 				</attributes>
 			</element>
-			<element>
-				<entity>word</entity>
-				<tagName>word</tagName>
-				<displayName>Word</displayName>
-				<isOptional>false</isOptional>
-				<uniqueAttr name="id"/>
+			<element entity="word" name="word" displayName="Word" isOptional="false">
 				<attributes>
-					<attribute>
-						<name>id</name>
-						<displayName>Id</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>false</isOptional>
-					</attribute>
-					<attribute>
-						<name>form</name>
-						<displayName>Form</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>false</isOptional>
-					</attribute>
-					<attribute>
-						<name>lemma</name>
-						<displayName>Lemma</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>false</isOptional>
-					</attribute>
-					<attribute>
-						<name>postag</name>
-						<displayName>Part of speech tag</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>false</isOptional>
-					</attribute>
-					<attribute>
-						<name>head</name>
-						<displayName>Head word id</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>false</isOptional>
-						<type></type>
-					</attribute>
-					<attribute>
-						<name>chunk</name>
-						<displayName>Chunk</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>true</isOptional>
-					</attribute>
-					<attribute>
-						<name>deprel</name>
-						<displayName>Dependency relation</displayName>
-						<isEditable>true</isEditable>
-						<isOptional>false</isOptional>
-						<allowedValueSet>
-							<value>c.c.m.</value>
-							<value>c.c.l.</value>
-						</allowedValueSet>
+					<attribute entity="attribute" name="id" displayName="Id" isEditable="true" isOptional="false"/>
+					<attribute entity="attribute" name="form" displayName="Form" isEditable="true" isOptional="false"/>
+					<attribute entity="attribute" name="lemma" displayName="Lemma" isEditable="true" isOptional="false"/>
+					<attribute entity="attribute" name="postag" displayName="Part of speech tag" isEditable="true" isOptional="false"/>
+					<attribute entity="attribute" name="head" displayName="Head word id" isEditable="true" isOptional="false" type=""/>
+					<attribute entity="attribute" name="chunk" displayName="Chunk" isEditable="true" isOptional="true"/>
+					<attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true" isOptional="false">
+						<allowedValueSet value1="c.c.m." value2="c.c.l." />
 					</attribute>
 				</attributes>
 			</element>

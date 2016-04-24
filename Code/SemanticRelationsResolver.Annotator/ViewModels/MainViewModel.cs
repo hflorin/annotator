@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Configuration;
     using System.Linq;
     using System.Windows.Input;
     using Commands;
@@ -357,7 +358,7 @@
 
             DocumentLoadExceptions.Clear();
 
-            var documentModel = await documentMapper.Map(documentFilePath);
+            var documentModel = await documentMapper.Map(documentFilePath, ConfigurationManager.AppSettings["configurationFilePath"]);
 
             //must check if the file is alredy loaded and has changes offer to save if so
 

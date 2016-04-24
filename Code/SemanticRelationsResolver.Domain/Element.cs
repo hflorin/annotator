@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public abstract class Element
+    public abstract class Element : IEntity
     {
         protected Element()
         {
