@@ -17,12 +17,10 @@
 
         public async Task<IAppConfig> Map(string filepath)
         {
-            //var appConfigContent = await Loader.LoadAsync(filepath);
-
             return await Task.FromResult(CreateAppConfig(filepath));
         }
 
-        private IAppConfig CreateAppConfig(string filepath)
+        private static IAppConfig CreateAppConfig(string filepath)
         {
             var appConfig = new AppConfig();
 
@@ -48,6 +46,7 @@
                         }
 
                         pair.Attributes.Add(entityAttributes);
+                        queue.Add(pair);
                         break;
                     case XmlNodeType.EndElement :
                         foreach (var item in queue)
@@ -80,62 +79,44 @@
 
                                     if (entity is Attribute)
                                     {
+                                        var attribute = entity as Attribute;
                                         if (appConfig.Elements.Any())
                                         {
                                             var element = appConfig.Elements.Last();
-                                            element.Attributes.Add(entity as Attribute);
+
+                                            attribute.DisplayName =
+                                                attributes[ConfigurationStaticData.DisplayNameAttributeName];
+                                            attribute.Name =
+                                                attributes[ConfigurationStaticData.NameStructureAttributeName];
+                                            attribute.IsOptional =
+                                                bool.Parse(attributes[ConfigurationStaticData.IsOptionalAttributeName]);
+                                            attribute.IsEditable =
+                                                bool.Parse(attributes[ConfigurationStaticData.IsEditableAttributeName]);
+
+                                            element.Attributes.Add(attribute);
                                         }
                                     }
                                     else
                                     {
-                                        appConfig.Elements.Add(entity as Element);
+                                        var element = entity as Element;
+
+                                        if (element != null)
+                                        {
+                                            element.DisplayName =
+                                                attributes[ConfigurationStaticData.DisplayNameAttributeName];
+                                            element.Name =
+                                                attributes[ConfigurationStaticData.NameStructureAttributeName];
+                                            element.IsOptional =
+                                                bool.Parse(attributes[ConfigurationStaticData.IsOptionalAttributeName]);
+
+                                            appConfig.Elements.Add(element);
+                                        }
                                     }
                                 }
                             }
                         }
+                        queue.Clear();
                         break;
-                }
-            }
-
-            return appConfig;
-        }
-
-        private IAppConfig CreateAppConfig(dynamic appConfigContent)
-        {
-            var appConfig = new AppConfig();
-
-            foreach (var element in appConfigContent.dataStructure.element)
-            {
-                var newElement = EntityFactory.GetEntity(element.entity);
-
-                foreach (var attr in element.attribute)
-                {
-                    var allowedValues = new List<string>();
-                    try
-                    {
-                        foreach (var allowedValue in attr.allowedValueSet)
-                        {
-                            allowedValues.Add(allowedValue.value);
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-
-                    bool isEditable;
-                    bool.TryParse(attr.isEditable, out isEditable);
-                    bool isOptional;
-                    bool.TryParse(attr.isEditable, out isOptional);
-
-                    newElement.Attributes.Add(new Attribute
-                    {
-                        Name = attr.name,
-                        DisplayName = attr.displayName,
-                        IsEditable = isEditable,
-                        IsOptional = isOptional,
-                        AllowedValuesSet = allowedValues
-                    });
                 }
             }
 
@@ -145,6 +126,11 @@
 
     internal class ConfigurationPair
     {
+        public ConfigurationPair()
+        {
+            Attributes = new List<Dictionary<string, string>>();
+        }
+
         public string ElementName { get; set; }
         public List<Dictionary<string, string>> Attributes { get; set; }
     }
