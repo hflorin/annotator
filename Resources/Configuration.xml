@@ -23,7 +23,7 @@
 					<attribute entity="attribute" name="head" displayName="Head word id" isEditable="true" isOptional="false" type=""/>
 					<attribute entity="attribute" name="chunk" displayName="Chunk" isEditable="true" isOptional="true"/>
 					<attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true" isOptional="false">
-						<allowedValueSet value1="c.c.m." value2="c.c.l." />
+						<allowedValueSet value1="c.c.m." value2="c.c.l." value3="sbj." />
 					</attribute>
 				</attributes>
 			</element>

@@ -23,19 +23,19 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type DataGridCell}">
                             <Grid Height="21.96">
-                                <ComboBox x:Name="cbCondition1">
-                                    <ComboBoxItem Content="1"/>
-                                    <ComboBoxItem Content="2"/>
+                                <ComboBox x:Name="cbCondition1" ItemsSource="{Binding AllowedValuesSet}" SelectedItem="{Binding Value}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Model}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
                                 </ComboBox>
                                 <TextBox x:Name="tbCondition2" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBox x:Name="tbCondition3" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
                             </Grid>
                             <ControlTemplate.Triggers>
-                                <DataTrigger Binding="{Binding HasAllowedValuesSet}" Value="False">
-                                    <Setter Value="Visible" TargetName="cbCondition1" Property="Visibility"/>
-                                    <Setter Value="Hidden" TargetName="tbCondition2" Property="Visibility"/>
-                                    <Setter Value="Hidden" TargetName="tbCondition3" Property="Visibility"/>
-                                </DataTrigger>
                                 <DataTrigger Binding="{Binding IsEditable}" Value="True">
                                     <Setter Value="Hidden" TargetName="cbCondition1" Property="Visibility"/>
                                     <Setter Value="Visible" TargetName="tbCondition2" Property="Visibility"/>
@@ -45,6 +45,11 @@
                                     <Setter Value="Hidden" TargetName="cbCondition1" Property="Visibility"/>
                                     <Setter Value="Hidden" TargetName="tbCondition2" Property="Visibility"/>
                                     <Setter Value="Visible" TargetName="tbCondition3" Property="Visibility"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding HasAllowedValuesSet}" Value="True">
+                                    <Setter Value="Visible" TargetName="cbCondition1" Property="Visibility"/>
+                                    <Setter Value="Hidden" TargetName="tbCondition2" Property="Visibility"/>
+                                    <Setter Value="Hidden" TargetName="tbCondition3" Property="Visibility"/>
                                 </DataTrigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
