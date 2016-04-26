@@ -2,14 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Domain;
-    using Domain.Configuration;
-    using Events;
-    using Loaders;
+
     using Prism.Events;
-    using Attribute = Domain.Attribute;
+
+    using SemanticRelationsResolver.Domain;
+    using SemanticRelationsResolver.Domain.Configuration;
+    using SemanticRelationsResolver.Events;
+    using SemanticRelationsResolver.Loaders;
+
+    using Attribute = SemanticRelationsResolver.Domain.Attribute;
 
     public class DocumentMapper : IDocumentMapper
     {
@@ -34,8 +38,17 @@
 
         private Document CreateDocument(dynamic documentContent, IAppConfig appConfig)
         {
-            var document = new Document();
-            document.Attributes.Add(new Attribute {Name = "id", DisplayName = "Id", Value = documentContent.treebank.id});
+            var documentElementPrototype = appConfig.Elements.OfType<Document>().Single();
+            var wordElementPrototype = appConfig.Elements.OfType<Word>().Single();
+
+            var documentElement = ObjectCopier.Clone(documentElementPrototype);
+
+            documentElement.Attributes.Clear();
+
+            var documentIdAttribute = ObjectCopier.Clone(documentElementPrototype.Attributes.Single(a => a.Name.Equals("id")));
+            
+            documentIdAttribute.Value = documentContent.treebank.id;
+            documentElement.Attributes.Add(documentIdAttribute);
 
             foreach (var sentence in documentContent.treebank.sentence)
             {
@@ -62,31 +75,42 @@
                         continue;
                     }
 
-                    var newWord = new Word();
+                    var newWord = ObjectCopier.Clone(wordElementPrototype);
+                    newWord.Attributes.Clear();
 
-                    newWord.Attributes.Add(new Attribute {Name = "id", DisplayName = "Id", Value = word.id});
-                    newWord.Attributes.Add(new Attribute {Name = "form", DisplayName = "Form", Value = word.form});
-                    newWord.Attributes.Add(new Attribute {Name = "lemma", DisplayName = "Lemma", Value = word.lemma});
-                    newWord.Attributes.Add(new Attribute
-                    {
-                        Name = "postag",
-                        DisplayName = "Part Of Speech",
-                        Value = word.postag
-                    });
-                    newWord.Attributes.Add(new Attribute
-                    {
-                        Name = "head",
-                        DisplayName = "Head Word Id",
-                        Value = word.head
-                    });
-                    newWord.Attributes.Add(new Attribute {Name = "chunk", DisplayName = "Chunk", Value = word.chunk});
-                    newWord.Attributes.Add(new Attribute
-                    {
-                        Name = "deprel",
-                        DisplayName = "Dependency Relation",
-                        Value = word.head == "0" ? string.Empty : word.deprel
-                    });
-                    newWord.Attributes.Add(new Attribute {Name = "content", DisplayName = "Content", Value = word.form});
+
+                    var wordIdAttribute = ObjectCopier.Clone(
+                        wordElementPrototype.Attributes.Single(a => a.Name.Equals("id")));
+                    wordIdAttribute.Value = word.id;
+
+                    var wordFormAttribute = ObjectCopier.Clone(wordElementPrototype.Attributes.Single(a => a.Name.Equals("form")));
+                    wordFormAttribute.Value = word.form;
+
+                    var wordLemmaAttribute = ObjectCopier.Clone(wordElementPrototype.Attributes.Single(a => a.Name.Equals("lemma")));
+                    wordLemmaAttribute.Value = word.lemma;
+
+                    var wordPostagAttribute = ObjectCopier.Clone(
+                        wordElementPrototype.Attributes.Single(a => a.Name.Equals("postag")));
+                    wordPostagAttribute.Value = word.postag;
+
+                    var wordHeadAttribute = ObjectCopier.Clone(wordElementPrototype.Attributes.Single(a => a.Name.Equals("head")));
+                    wordHeadAttribute.Value = word.head;
+
+                    var wordChunkAttribute = ObjectCopier.Clone(wordElementPrototype.Attributes.Single(a => a.Name.Equals("chunk")));
+                    wordChunkAttribute.Value = word.chunk;
+
+                    var wordDeprelAttribute = ObjectCopier.Clone(
+                        wordElementPrototype.Attributes.Single(a => a.Name.Equals("deprel")));
+                    wordDeprelAttribute.Value = word.deprel;
+
+                    newWord.Attributes.Add(wordIdAttribute);
+                    newWord.Attributes.Add(wordFormAttribute);
+                    newWord.Attributes.Add(wordLemmaAttribute);
+                    newWord.Attributes.Add(wordPostagAttribute);
+                    newWord.Attributes.Add(wordHeadAttribute);
+                    newWord.Attributes.Add(wordChunkAttribute);
+                    newWord.Attributes.Add(wordDeprelAttribute);
+                    newWord.Attributes.Add(new Attribute { Name = "content", DisplayName = "Content", Value = word.form });
 
                     words.Add(newWord);
                 }
@@ -109,27 +133,25 @@
 
                 var newSentence = new Sentence();
 
-                newSentence.Attributes.Add(new Attribute {Name = "id", DisplayName = "Id", Value = sentence.id});
-                newSentence.Attributes.Add(new Attribute
-                {
-                    Name = "parser",
-                    DisplayName = "Parser",
-                    Value = sentence.parser
-                });
-                newSentence.Attributes.Add(new Attribute {Name = "user", DisplayName = "User", Value = sentence.user});
-                newSentence.Attributes.Add(new Attribute {Name = "date", DisplayName = "Date", Value = sentence.date});
-                newSentence.Attributes.Add(new Attribute
-                {
-                    Name = "content",
-                    DisplayName = "Content",
-                    Value = sentenceBody.ToString(0, sentenceBody.Length - 1)
-                });
+                newSentence.Attributes.Add(new Attribute { Name = "id", DisplayName = "Id", Value = sentence.id });
+                newSentence.Attributes.Add(
+                    new Attribute { Name = "parser", DisplayName = "Parser", Value = sentence.parser });
+                newSentence.Attributes.Add(new Attribute { Name = "user", DisplayName = "User", Value = sentence.user });
+                newSentence.Attributes.Add(new Attribute { Name = "date", DisplayName = "Date", Value = sentence.date });
+                newSentence.Attributes.Add(
+                    new Attribute
+                        {
+                            Name = "content", 
+                            DisplayName = "Content", 
+                            Value = sentenceBody.ToString(0, sentenceBody.Length - 1)
+                        });
 
                 newSentence.Words = words;
 
-                document.Sentences.Add(newSentence);
+                documentElement.Sentences.Add(newSentence);
             }
-            return document;
+
+            return documentElement;
         }
     }
 }

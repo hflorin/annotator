@@ -4,21 +4,18 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
-    using Domain;
-    using Domain.Configuration;
-    using Loaders;
+
     using Prism.Events;
+
+    using SemanticRelationsResolver.Domain;
+    using SemanticRelationsResolver.Domain.Configuration;
+    using SemanticRelationsResolver.Loaders;
 
     public class AppConfigMapper : IAppConfigMapper
     {
         public IResourceLoader Loader { get; set; }
 
         public IEventAggregator EventAggregator { get; set; }
-
-        public async Task<IAppConfig> Map(string filepath)
-        {
-            return await Task.FromResult(CreateAppConfig(filepath));
-        }
 
         private static IAppConfig CreateAppConfig(string filepath)
         {
@@ -32,11 +29,8 @@
             {
                 switch (reader.NodeType)
                 {
-                    case XmlNodeType.Element :
-                        var pair = new ConfigurationPair
-                        {
-                            ElementName = reader.Name
-                        };
+                    case XmlNodeType.Element:
+                        var pair = new ConfigurationPair { ElementName = reader.Name };
 
                         var entityAttributes = new Dictionary<string, string>();
 
@@ -48,7 +42,7 @@
                         pair.Attributes.Add(entityAttributes);
                         queue.Add(pair);
                         break;
-                    case XmlNodeType.EndElement :
+                    case XmlNodeType.EndElement:
                         foreach (var item in queue)
                         {
                             var elementName = item.ElementName;
@@ -57,6 +51,7 @@
                             {
                                 break;
                             }
+
                             foreach (var attributes in item.Attributes)
                             {
                                 if (elementName.Equals(ConfigurationStaticData.AllowedValueSetTagName))
@@ -74,8 +69,7 @@
                                 else if (attributes.ContainsKey(ConfigurationStaticData.EntityAttributeName))
                                 {
                                     var entity =
-                                        EntityFactory.GetEntity(
-                                            attributes[ConfigurationStaticData.EntityAttributeName]);
+                                        EntityFactory.GetEntity(attributes[ConfigurationStaticData.EntityAttributeName]);
 
                                     if (entity is Attribute)
                                     {
@@ -115,12 +109,18 @@
                                 }
                             }
                         }
+
                         queue.Clear();
                         break;
                 }
             }
 
             return appConfig;
+        }
+
+        public async Task<IAppConfig> Map(string filepath)
+        {
+            return await Task.FromResult(CreateAppConfig(filepath));
         }
     }
 
@@ -132,6 +132,7 @@
         }
 
         public string ElementName { get; set; }
+
         public List<Dictionary<string, string>> Attributes { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿namespace SemanticRelationsResolver.Domain
 {
+    using System;
     using System.Collections.Generic;
 
+    [Serializable]
     public abstract class Element : IEntity
     {
         protected Element()

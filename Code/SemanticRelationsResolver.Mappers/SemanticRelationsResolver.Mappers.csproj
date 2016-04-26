@@ -46,6 +46,7 @@
     <Compile Include="ElementFactory.cs" />
     <Compile Include="IAppConfigMapper.cs" />
     <Compile Include="IDocumentMapper.cs" />
+    <Compile Include="ObjectCopier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

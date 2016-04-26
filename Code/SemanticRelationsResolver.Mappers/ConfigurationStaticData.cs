@@ -14,7 +14,7 @@
 
         #endregion
 
-        #region lowercase attributes names
+        #region lowercase configuration attributes names
 
         public static readonly string EntityAttributeName = "entity";
         public static readonly string NameStructureAttributeName = "name";

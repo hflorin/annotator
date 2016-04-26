@@ -27,3 +27,9 @@ E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.csprojResolveAssemblyReference.cache
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.dll
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Domain\bin\Debug\SemanticRelationsResolver.Domain.dll.config
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Domain\bin\Debug\SemanticRelationsResolver.Domain.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Domain\bin\Debug\SemanticRelationsResolver.Domain.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.csprojResolveAssemblyReference.cache
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Domain\obj\Debug\SemanticRelationsResolver.Domain.pdb

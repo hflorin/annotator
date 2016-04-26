@@ -1,7 +1,9 @@
 ﻿namespace SemanticRelationsResolver.Domain
 {
+    using System;
     using System.Collections.Generic;
 
+    [Serializable]
     public class Attribute : IEntity
     {
         public Attribute()
