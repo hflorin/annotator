@@ -23,7 +23,10 @@
 					<attribute entity="attribute" name="head" displayName="Head word id" isEditable="true" isOptional="false" type=""/>
 					<attribute entity="attribute" name="chunk" displayName="Chunk" isEditable="true" isOptional="true"/>
 					<attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true" isOptional="false">
-						<allowedValueSet value1="c.c.m." value2="c.c.l." value3="sbj." />
+						<allowedValueSet value1="a.adj." value2="a.adv." value3="a.pron." value4="a.subst" value5="a.subst." value6="a.vb." value7="ap." value8="aux."
+value9="c.ag." value10="c.c.conc." value11="c.c.cons." value12="c.c.cz." value13="c.c.l." value14="c.c.m." value15="c.c.scop." value16="c.c.soc." value17="c.c.t."
+value18="c.d." value19="c.i." value20="c.prep." value21="comp." value22="coord" value23="coord." value24="det." value25="el.pred." value26="incid." value27="n.pred."
+value28="narativ." value29="neg." value30="part." value31="prep." value32="punct." value33="refl." value34="sbj." value35="subord." value36="superl." />
 					</attribute>
 				</attributes>
 			</element>

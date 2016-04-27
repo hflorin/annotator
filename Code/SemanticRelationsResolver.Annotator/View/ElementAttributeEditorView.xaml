@@ -23,15 +23,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type DataGridCell}">
                             <Grid Height="21.96">
-                                <ComboBox x:Name="cbCondition1" ItemsSource="{Binding AllowedValuesSet}" SelectedItem="{Binding Value}">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Model}" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                </ComboBox>
+                                <ComboBox x:Name="cbCondition1" ItemsSource="{Binding AllowedValuesSet}" SelectedValue="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Model" DisplayMemberPath="Model"/>
                                 <TextBox x:Name="tbCondition2" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBox x:Name="tbCondition3" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
                             </Grid>
