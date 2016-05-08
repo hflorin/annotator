@@ -19,6 +19,11 @@
             SetVertexId();
         }
 
+        public WordWrapper WordWrapper
+        {
+            get { return wordWrapper; }
+        }
+
         public string Form
         {
             get { return wordWrapper.GetAttributeByName("form"); }

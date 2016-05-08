@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Windows.Input;
     using Commands;
+    using Events;
     using Graph;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
@@ -19,6 +20,8 @@
 
         private IEnumerable layoutAlgorithmTypes =
             Enum.GetValues(typeof(LayoutAlgorithmTypeEnum)).Cast<LayoutAlgorithmTypeEnum>();
+
+        private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
         private SentenceGraph sentenceGraph;
 
@@ -50,11 +53,19 @@
             sentenceLogicCore.Graph = sentenceGraph;
         }
 
+        public SenteceGraphOperationMode SenteceGraphOperationMode
+        {
+            get { return operationMode; }
+            set { operationMode = value; }
+        }
+
         public IEventAggregator EventAggregator { get; set; }
 
         public ICommand LayoutAlgorithmChangedCommand { get; set; }
 
         public ICommand EdgeRoutingAlgorithmChangedCommand { get; set; }
+
+        public ICommand ToggleEditModeCommand { get; set; }
 
         public SentenceWrapper Sentence
         {
@@ -111,6 +122,20 @@
             EdgeRoutingAlgorithmChangedCommand = new DelegateCommand(
                 EdgeRoutingAlgorithmChangedCommandExecute,
                 EdgeRoutingAlgorithmChangedCommandCanExecute);
+            ToggleEditModeCommand = new DelegateCommand(ToggleEditModeCommandExecute, ToggleEditModeCommandCanExecute);
+        }
+
+        private bool ToggleEditModeCommandCanExecute(object arg)
+        {
+            return true;
+        }
+
+        private void ToggleEditModeCommandExecute(object obj)
+        {
+            EventAggregator.GetEvent<SetSentenceEditModeEvent>().Publish(new SetSenteceGraphOperationModeRequest
+            {
+                Mode = obj is SenteceGraphOperationMode ? (SenteceGraphOperationMode) obj : SenteceGraphOperationMode.Select
+            });
         }
 
         private bool EdgeRoutingAlgorithmChangedCommandCanExecute(object arg)

@@ -129,6 +129,7 @@
     <Compile Include="Behaviors\ChangeBehavior.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Events\ChangeAttributesEditorViewModel.cs" />
+    <Compile Include="Graph\SentenceEditorManager.cs" />
     <Compile Include="Graph\WordEdge.cs" />
     <Compile Include="Graph\SentenceGraph.cs" />
     <Compile Include="Graph\SentenceGraphArea.cs" />
@@ -176,6 +177,10 @@
     </Compile>
     <Compile Include="Wrapper\Generated\SentenceWrapper.g.cs" />
     <Compile Include="Wrapper\Generated\WordWrapper.g.cs" />
+    <Page Include="Templates\SentenceEditorViewTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ElementAttributeEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

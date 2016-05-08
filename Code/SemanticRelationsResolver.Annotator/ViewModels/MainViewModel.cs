@@ -255,7 +255,7 @@
         private void EditSentenceCommandExecute(object obj)
         {
             var sentenceEditView = new SentenceEditorView(
-                new SentenceEditorViewModel(eventAggregator, SelectedSentence));
+                new SentenceEditorViewModel(eventAggregator, SelectedSentence), eventAggregator);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;

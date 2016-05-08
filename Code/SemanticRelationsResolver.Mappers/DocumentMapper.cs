@@ -141,22 +141,22 @@
                 newSentence.Attributes.Clear();
 
                 var sentenceIdAttribute = ObjectCopier.Clone(
-                        sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("id")));
+                    sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("id")));
                 sentenceIdAttribute.Value = sentence.id;
                 newSentence.Attributes.Add(sentenceIdAttribute);
 
                 var sentenceParserAttribute = ObjectCopier.Clone(
-                        sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("parser")));
+                    sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("parser")));
                 sentenceParserAttribute.Value = sentence.parser;
                 newSentence.Attributes.Add(sentenceParserAttribute);
 
                 var sentenceUserAttribute = ObjectCopier.Clone(
-                        sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("user")));
+                    sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("user")));
                 sentenceUserAttribute.Value = sentence.user;
                 newSentence.Attributes.Add(sentenceUserAttribute);
 
                 var sentenceDateAttribute = ObjectCopier.Clone(
-                        sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("date")));
+                    sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("date")));
                 sentenceDateAttribute.Value = sentence.date;
                 newSentence.Attributes.Add(sentenceDateAttribute);
 

@@ -41,6 +41,9 @@
   <ItemGroup>
     <Compile Include="DocumentLoadExceptionEvent.cs" />
     <Compile Include="RelayoutGraphEvent.cs" />
+    <Compile Include="SenteceGraphOperationMode.cs" />
+    <Compile Include="SetSenteceGraphOperationModeRequest.cs" />
+    <Compile Include="SetSentenceEditModeEvent.cs" />
     <Compile Include="StatusNotificationEvent.cs" />
   </ItemGroup>
   <ItemGroup>

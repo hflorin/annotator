@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:SemanticRelationsResolver.Annotator.Graph"
              xmlns:graphx="http://schemas.panthernet.ru/graphx/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:events="clr-namespace:SemanticRelationsResolver.Events;assembly=SemanticRelationsResolver.Events"
              mc:Ignorable="d"
              d:DataContext="{d:DesignData SentenceEditorViewModel}">
 
@@ -34,6 +35,9 @@
                 <Button Click="viewModel_SentenceGraphChanged" Content="Refresh" Width="70" />
                 <Button Click="viewModel_SentenceGraphChanged" Content="Validate" Width="70" />
                 <Button Click="viewModel_SentenceGraphChanged" Content="Save" Width="70"/>
+                <ToggleButton Name="butSelect" Content="Select" Command="{Binding ToggleEditModeCommand}" CommandParameter="{x:Static events:SenteceGraphOperationMode.Select}" ToolTip="Selection mode: drag vertices, Ctrl+Click to group them" x:FieldModifier="private" Width="70"/>
+                <ToggleButton Name="butEdit" Content="Edit" Command="{Binding ToggleEditModeCommand}" CommandParameter="{x:Static events:SenteceGraphOperationMode.Edit}" ToolTip="Edit mode: click to place vertices, click vertices to add edges" x:FieldModifier="private" Width="70"/>
+                <ToggleButton Name="butDelete" Content="Delete" Command="{Binding ToggleEditModeCommand}" CommandParameter="{x:Static events:SenteceGraphOperationMode.Delete}" x:FieldModifier="private" Width="70"/>
             </WrapPanel>
         </ScrollViewer>
 
