@@ -1,9 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:SemanticRelationsResolver.Annotator.Templates"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:graphx="http://schemas.panthernet.ru/graphx/"
                     xmlns:graphX="clr-namespace:GraphX;assembly=GraphX.Controls">
-
+    
+    <LinearGradientBrush x:Key="EdgeBrush" EndPoint="0.5,0" StartPoint="0.5,1" po:Freeze="true">
+        <GradientStop Color="#500202"/>
+        <GradientStop Color="#630303" Offset="1"/>
+    </LinearGradientBrush>
 
     <Style TargetType="{x:Type graphx:VertexControl}">
         <Setter Property="Background" Value="#FFE3E3E3"/>

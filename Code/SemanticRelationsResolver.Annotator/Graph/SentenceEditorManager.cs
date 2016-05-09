@@ -10,55 +10,56 @@
 
     public class SentenceEditorManager : IDisposable
     {
-        private EdgeBlueprint _edgeBp;
-        private SentenceGraphArea _graphArea;
-        private ResourceDictionary _rd;
-        private ZoomControl _zoomControl;
+        private EdgeBlueprint edgeBlueprint;
+        private SentenceGraphArea graphArea;
+        private ResourceDictionary resourceDictionary;
+        private ZoomControl zoomControl;
 
         public SentenceEditorManager(SentenceGraphArea graphArea, ZoomControl zc)
         {
-            _graphArea = graphArea;
-            _zoomControl = zc;
-            _zoomControl.MouseMove += _zoomControl_MouseMove;
-            _rd = new ResourceDictionary
+            this.graphArea = graphArea;
+            zoomControl = zc;
+            zoomControl.MouseMove += _zoomControl_MouseMove;
+            resourceDictionary = new ResourceDictionary
             {
-                Source = new Uri("/ShowcaseApp.WPF;component/Templates/EditorGraphXTemplates.xaml",
-                    UriKind.RelativeOrAbsolute)
+                Source =
+                    new Uri("/SemanticRelationsResolver.Annotator;component/Templates/SentenceEditorViewTemplates.xaml",
+                        UriKind.RelativeOrAbsolute)
             };
         }
 
         public void Dispose()
         {
             ClearEdgeBp();
-            _graphArea = null;
-            if (_zoomControl != null)
-                _zoomControl.MouseMove -= _zoomControl_MouseMove;
-            _zoomControl = null;
-            _rd = null;
+            graphArea = null;
+            if (zoomControl != null)
+                zoomControl.MouseMove -= _zoomControl_MouseMove;
+            zoomControl = null;
+            resourceDictionary = null;
         }
 
         public void CreateVirtualEdge(VertexControl source, Point mousePos)
         {
-            _edgeBp = new EdgeBlueprint(source, mousePos, (LinearGradientBrush) _rd["EdgeBrush"]);
-            _graphArea.InsertCustomChildControl(0, _edgeBp.EdgePath);
+            edgeBlueprint = new EdgeBlueprint(source, mousePos, (LinearGradientBrush) resourceDictionary["EdgeBrush"]);
+            graphArea.InsertCustomChildControl(0, edgeBlueprint.EdgePath);
         }
 
         private void _zoomControl_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_edgeBp == null)
+            if (edgeBlueprint == null)
                 return;
-            var pos = _zoomControl.TranslatePoint(e.GetPosition(_zoomControl), _graphArea);
+            var pos = zoomControl.TranslatePoint(e.GetPosition(zoomControl), graphArea);
             pos.Offset(2, 2);
-            _edgeBp.UpdateTargetPosition(pos);
+            edgeBlueprint.UpdateTargetPosition(pos);
         }
 
         private void ClearEdgeBp()
         {
-            if (_edgeBp == null)
+            if (edgeBlueprint == null)
                 return;
-            _graphArea.RemoveCustomChildControl(_edgeBp.EdgePath);
-            _edgeBp.Dispose();
-            _edgeBp = null;
+            graphArea.RemoveCustomChildControl(edgeBlueprint.EdgePath);
+            edgeBlueprint.Dispose();
+            edgeBlueprint = null;
         }
 
         public void DestroyVirtualEdge()
