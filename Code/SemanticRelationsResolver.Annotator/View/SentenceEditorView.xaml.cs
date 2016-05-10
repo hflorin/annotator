@@ -75,8 +75,8 @@
                 GgZoomCtrl.Cursor = Cursors.Help;
                 viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Delete;
                 operationMode = SenteceGraphOperationMode.Delete;
-                //    ClearEditMode();
-                //  ClearSelectMode();
+                ClearEditMode();
+                ClearSelectMode();
                 return;
             }
             if ((butEdit.IsChecked == true) &&
@@ -87,7 +87,7 @@
                 GgZoomCtrl.Cursor = Cursors.Pen;
                 viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Edit;
                 operationMode = SenteceGraphOperationMode.Edit;
-                //ClearSelectMode();
+                ClearSelectMode();
                 return;
             }
             if ((butSelect.IsChecked == true) &&
@@ -98,9 +98,32 @@
                 GgZoomCtrl.Cursor = Cursors.Hand;
                 viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Select;
                 operationMode = SenteceGraphOperationMode.Select;
-                //ClearEditMode();
+                ClearEditMode();
                 GgArea.SetVerticesDrag(true, true);
             }
+        }
+
+        private void ClearSelectMode(bool soft = false)
+        {
+            GgArea.VertexList.Values
+                .Where(DragBehaviour.GetIsTagged)
+                .ToList()
+                .ForEach(a =>
+                {
+                    HighlightBehaviour.SetHighlighted(a, false);
+                    DragBehaviour.SetIsTagged(a, false);
+                });
+
+            if (!soft)
+                GgArea.SetVerticesDrag(false);
+        }
+
+        private void ClearEditMode()
+        {
+            if (fromVertexControl != null)
+                HighlightBehaviour.SetHighlighted(fromVertexControl, false);
+            editorManager.DestroyVirtualEdge();
+            fromVertexControl = null;
         }
 
         private void GgZoomCtrl_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
