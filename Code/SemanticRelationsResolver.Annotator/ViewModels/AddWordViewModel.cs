@@ -7,6 +7,7 @@
     using Commands;
     using Domain;
     using Wrapper;
+    using Attribute = Domain.Attribute;
 
     public class AddWordViewModel : Observable
     {
@@ -53,6 +54,18 @@
 
         private void OkButtonCommandExecute(object obj)
         {
+            var wordFormValue = Word.Model.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("form")).Value;
+            Word.Attributes.Add(
+                new AttributeWrapper(new Attribute
+                {
+                    Name = "content",
+                    DisplayName = "Content",
+                    Value = wordFormValue,
+                    IsEditable = false,
+                    IsOptional = false
+                }));
+
+            //validate the values entered
         }
 
         private bool OkButtonCommandCanExecute(object arg)
