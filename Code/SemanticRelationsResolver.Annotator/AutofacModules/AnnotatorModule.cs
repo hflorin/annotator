@@ -19,6 +19,7 @@
             builder.RegisterType<AppConfigMapper>().As<IAppConfigMapper>().PropertiesAutowired();
             builder.RegisterType<SentenceEditorViewModel>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
+            builder.RegisterType<AddWordViewModel>().AsSelf();
             builder.RegisterType<ElementAttributeEditorViewModel>().AsSelf();
         }
     }

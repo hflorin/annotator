@@ -9,6 +9,7 @@
     using System.Windows.Input;
     using Commands;
     using Domain;
+    using Domain.Configuration;
     using Events;
     using Mappers;
     using Prism.Events;
@@ -33,6 +34,10 @@
 
         private ISaveDialogService saveDialogService;
 
+        private IAppConfigMapper appConfigMapper;
+
+        private IAppConfig appConfig;
+
         private DocumentWrapper selectedDocument;
 
         private ElementAttributeEditorViewModel selectedElementAttributeEditorViewModel;
@@ -45,11 +50,12 @@
             IEventAggregator eventAggregator,
             ISaveDialogService saveDialogService,
             IOpenFileDialogService openFileDialogService,
-            IDocumentMapper documentMapper)
+            IDocumentMapper documentMapper,
+            IAppConfigMapper appConfigMapper)
         {
             InitializeCommands();
 
-            InitializeServices(eventAggregator, saveDialogService, openFileDialogService, documentMapper);
+            InitializeServices(eventAggregator, saveDialogService, openFileDialogService, documentMapper, appConfigMapper);
 
             SubscribeToEvents();
 
@@ -78,6 +84,9 @@
             set
             {
                 sentence = value;
+
+                ((DelegateCommand) EditSentenceCommand).RaiseCanExecuteChanged();
+
                 OnPropertyChanged();
             }
         }
@@ -174,7 +183,8 @@
             IEventAggregator eventAggregatorArg,
             ISaveDialogService saveDialogServiceArg,
             IOpenFileDialogService openFileDialogServiceArg,
-            IDocumentMapper documentMapperArg)
+            IDocumentMapper documentMapperArg,
+            IAppConfigMapper configMapper)
         {
             if (eventAggregatorArg == null)
             {
@@ -196,10 +206,20 @@
                 throw new ArgumentNullException("documentMapperArg");
             }
 
+            if (configMapper == null)
+            {
+                throw new ArgumentNullException("configMapper");
+            }
+
             saveDialogService = saveDialogServiceArg;
             openFileDialogService = openFileDialogServiceArg;
             eventAggregator = eventAggregatorArg;
             documentMapper = documentMapperArg;
+            appConfigMapper = configMapper;
+            if (appConfig == null)
+            {
+                appConfig = appConfigMapper.Map(ConfigurationManager.AppSettings["configurationFilePath"]).Result;
+            }
         }
 
         private void InitializeCommands()
@@ -255,7 +275,7 @@
         private void EditSentenceCommandExecute(object obj)
         {
             var sentenceEditView = new SentenceEditorView(
-                new SentenceEditorViewModel(eventAggregator, SelectedSentence), eventAggregator);
+                new SentenceEditorViewModel(eventAggregator, appConfig, SelectedSentence), eventAggregator);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;

@@ -30,15 +30,6 @@
                 <Separator />
                 <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick" />
             </MenuItem>
-            <MenuItem x:Name="EditMenu" Header="_EDIT">
-                <MenuItem Header="_Undo" />
-                <MenuItem Header="_Redo" />
-                <Separator />
-                <MenuItem Header="_Cut" />
-                <MenuItem Header="_Copy" />
-                <MenuItem Header="_Paste" />
-                <MenuItem Header="_Delete" />
-            </MenuItem>
             <MenuItem x:Name="ViewMenu" Header="_VIEW">
                 <MenuItem Header="_Tree Explorer" />
                 <MenuItem Header="_Sentence List" />

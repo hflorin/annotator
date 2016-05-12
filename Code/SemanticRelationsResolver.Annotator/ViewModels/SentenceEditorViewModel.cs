@@ -6,15 +6,20 @@
     using System.Linq;
     using System.Windows.Input;
     using Commands;
+    using Domain;
+    using Domain.Configuration;
     using Events;
     using Graph;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
     using Prism.Events;
+    using View;
     using Wrapper;
 
     public class SentenceEditorViewModel : Observable
     {
+        private readonly IAppConfig appConfig;
+
         private IEnumerable edgeRoutingAlgorithmTypes =
             Enum.GetValues(typeof(EdgeRoutingAlgorithmTypeEnum)).Cast<EdgeRoutingAlgorithmTypeEnum>();
 
@@ -29,7 +34,7 @@
 
         private SentenceWrapper sentenceWrapper;
 
-        public SentenceEditorViewModel(IEventAggregator eventAggregator, SentenceWrapper sentence)
+        public SentenceEditorViewModel(IEventAggregator eventAggregator, IAppConfig appConfig, SentenceWrapper sentence)
         {
             if (sentence == null)
             {
@@ -41,10 +46,16 @@
                 throw new ArgumentNullException("eventAggregator");
             }
 
+            if (appConfig == null)
+            {
+                throw new ArgumentNullException("appConfig");
+            }
+
             InitializeCommands();
 
             EventAggregator = eventAggregator;
             Sentence = sentence;
+            this.appConfig = appConfig;
 
             PopulateWords(eventAggregator, sentence);
 
@@ -62,6 +73,8 @@
         public IEventAggregator EventAggregator { get; set; }
 
         public ICommand LayoutAlgorithmChangedCommand { get; set; }
+
+        public ICommand AddWordCommand { get; set; }
 
         public ICommand EdgeRoutingAlgorithmChangedCommand { get; set; }
 
@@ -123,6 +136,24 @@
                 EdgeRoutingAlgorithmChangedCommandExecute,
                 EdgeRoutingAlgorithmChangedCommandCanExecute);
             ToggleEditModeCommand = new DelegateCommand(ToggleEditModeCommandExecute, ToggleEditModeCommandCanExecute);
+            AddWordCommand = new DelegateCommand(AddWordCommandExecute, AddWordCommandCanExecute);
+        }
+
+        private void AddWordCommandExecute(object obj)
+        {
+            var wordPrototype = appConfig.Elements.OfType<Word>().Single();
+            var wordIds = Sentence.Words.Select(w => int.Parse(w.GetAttributeByName("id"))).ToList();
+            var addWordWindow = new AddWordWindow(new AddWordViewModel(wordPrototype, wordIds));
+
+            if (addWordWindow.ShowDialog().GetValueOrDefault())
+            {
+                sentenceWrapper.Words.Add(((AddWordViewModel) addWordWindow.DataContext).Word);
+            }
+        }
+
+        private bool AddWordCommandCanExecute(object arg)
+        {
+            return true;
         }
 
         private bool ToggleEditModeCommandCanExecute(object arg)
@@ -134,7 +165,10 @@
         {
             EventAggregator.GetEvent<SetSentenceEditModeEvent>().Publish(new SetSenteceGraphOperationModeRequest
             {
-                Mode = obj is SenteceGraphOperationMode ? (SenteceGraphOperationMode) obj : SenteceGraphOperationMode.Select
+                Mode =
+                    obj is SenteceGraphOperationMode
+                        ? (SenteceGraphOperationMode) obj
+                        : SenteceGraphOperationMode.Select
             });
         }
 

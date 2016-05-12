@@ -34,37 +34,49 @@
                 </ComboBox>
                 <Button Click="viewModel_SentenceGraphChanged" Content="Refresh" Width="70" />
                 <Button Click="viewModel_SentenceGraphChanged" Content="Validate" Width="70" />
-                <Button Click="viewModel_SentenceGraphChanged" Content="Save" Width="70"/>
-                <ToggleButton Name="butSelect" Content="Select" Command="{Binding ToggleEditModeCommand}" CommandParameter="{x:Static events:SenteceGraphOperationMode.Select}" ToolTip="Selection mode: drag vertices, Ctrl+Click to group them" x:FieldModifier="private" Width="70"/>
-                <ToggleButton Name="butEdit" Content="Edit" Command="{Binding ToggleEditModeCommand}" CommandParameter="{x:Static events:SenteceGraphOperationMode.Edit}" ToolTip="Edit mode: click to place vertices, click vertices to add edges" x:FieldModifier="private" Width="70"/>
-                <ToggleButton Name="butDelete" Content="Delete" Command="{Binding ToggleEditModeCommand}" CommandParameter="{x:Static events:SenteceGraphOperationMode.Delete}" x:FieldModifier="private" Width="70"/>
+                <Button Click="viewModel_SentenceGraphChanged" Content="Save" Width="70" />
+                <ToggleButton Name="butSelect" Content="Select" Command="{Binding ToggleEditModeCommand}"
+                              CommandParameter="{x:Static events:SenteceGraphOperationMode.Select}"
+                              ToolTip="Selection mode: drag vertices, Ctrl+Click to group them"
+                              x:FieldModifier="private" Width="70" />
+                <ToggleButton Name="butEdit" Content="Edit" Command="{Binding ToggleEditModeCommand}"
+                              CommandParameter="{x:Static events:SenteceGraphOperationMode.Edit}"
+                              ToolTip="Edit mode: click to place vertices, click vertices to add edges"
+                              x:FieldModifier="private" Width="70" />
+                <ToggleButton Name="butDelete" Content="Delete" Command="{Binding ToggleEditModeCommand}"
+                              CommandParameter="{x:Static events:SenteceGraphOperationMode.Delete}"
+                              x:FieldModifier="private" Width="70" />
             </WrapPanel>
         </ScrollViewer>
-
         <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
-            <ItemsControl ItemsSource="{Binding Words, UpdateSourceTrigger=PropertyChanged}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBox Text="{Binding Form, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Margin="0,0,2,0">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding WordChangedCommand}" />
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding WordGotFocusCommand}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </TextBox>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+        <WrapPanel Orientation="Horizontal">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+                <ItemsControl ItemsSource="{Binding Words, UpdateSourceTrigger=PropertyChanged}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Form, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     HorizontalAlignment="Stretch" Margin="0,0,2,0">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding WordChangedCommand}" />
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding WordGotFocusCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Button Content="Add word" Command="{Binding AddWordCommand}"/>
+        </WrapPanel>
         </ScrollViewer>
-
         <graphx:ZoomControl x:Name="GgZoomCtrl">
             <local:SentenceGraphArea
                 LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}"
