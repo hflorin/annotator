@@ -1,12 +1,11 @@
 ﻿namespace SemanticRelationsResolver.Annotator.ViewModels
 {
-    using System;
     using System.Linq;
     using System.Windows.Input;
     using Commands;
+    using Domain;
     using Wrapper;
     using Wrapper.Base;
-    using Attribute = Domain.Attribute;
 
     public class ElementAttributeEditorViewModel : Observable
     {
@@ -64,6 +63,7 @@
         private void RemoveAttributeCommandExecute(object obj)
         {
             Attributes.Remove(SelectedAttribute);
+            InvalidateCommands();
         }
 
         private bool RemoveAttributeCommandCanExecute(object arg)

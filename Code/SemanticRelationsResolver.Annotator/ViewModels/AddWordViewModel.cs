@@ -65,7 +65,7 @@
                     IsOptional = false
                 }));
 
-            //validate the values entered
+            //todo:validate the values entered
         }
 
         private bool OkButtonCommandCanExecute(object arg)
