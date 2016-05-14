@@ -147,7 +147,7 @@
 
             if (addWordWindow.ShowDialog().GetValueOrDefault())
             {
-                sentenceWrapper.Words.Add(((AddWordViewModel) addWordWindow.DataContext).Word);
+                Sentence.Words.Add(((AddWordViewModel) addWordWindow.DataContext).Word);
             }
         }
 
