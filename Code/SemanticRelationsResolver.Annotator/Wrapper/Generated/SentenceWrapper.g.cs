@@ -1,11 +1,10 @@
 namespace SemanticRelationsResolver.Annotator.Wrapper
 {
-	using System;
-	using System.Linq;
-	using Base;
-	using SemanticRelationsResolver.Domain;
+    using System;
+    using System.Linq;
+    using Base;
 
-	public partial class SentenceWrapper : ElementWrapper<Domain.Sentence>
+    public partial class SentenceWrapper : ElementWrapper<Domain.Sentence>
 	{
 		public SentenceWrapper(Domain.Sentence model) : base(model)
 		{

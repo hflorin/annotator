@@ -11,6 +11,7 @@
     using GraphX.PCL.Logic.Helpers;
     using Prism.Events;
     using ViewModels;
+    using Wrapper;
 
     public partial class SentenceEditorView : UserControl, IDisposable
     {
@@ -50,6 +51,7 @@
 
             viewModel.EventAggregator.GetEvent<RelayoutGraphEvent>().Subscribe(OnRelayoutGraph);
             viewModel.EventAggregator.GetEvent<SetSentenceEditModeEvent>().Subscribe(OnSetSentenceEditMode);
+            viewModel.EventAggregator.GetEvent<AddWordVertexEvent>().Subscribe(OnAddWordVertexControl);
         }
 
         public void Dispose()
@@ -63,6 +65,23 @@
             {
                 GgArea.Dispose();
             }
+        }
+
+        private void OnAddWordVertexControl(WordWrapper word)
+        {
+            var vertexControl = AddWordVertexControl(word);
+            var headWordId = word.GetAttributeByName("head");
+            var headWordVertexControl =
+                GgArea.VertexList.Where(p => p.Key.WordWrapper.GetAttributeByName("id").Equals(headWordId))
+                    .Select(p => p.Value)
+                    .SingleOrDefault();
+
+            if (headWordVertexControl != null)
+            {
+                fromVertexControl = headWordVertexControl;
+                CreateEdgeControl(vertexControl);
+            }
+            DisplayGraph();
         }
 
         private void OnSetSentenceEditMode(SetSenteceGraphOperationModeRequest setSenteceGraphOperationModeRequest)
@@ -161,26 +180,37 @@
             }
         }
 
-        private void CreateEdgeControl(VertexControl vc)
+        private void CreateEdgeControl(VertexControl toVertexControl)
         {
             if (fromVertexControl == null)
             {
-                editorManager.CreateVirtualEdge(vc, vc.GetPosition());
-                fromVertexControl = vc;
+                editorManager.CreateVirtualEdge(toVertexControl, toVertexControl.GetPosition());
+                fromVertexControl = toVertexControl;
                 HighlightBehaviour.SetHighlighted(fromVertexControl, true);
                 return;
             }
 
-            if (Equals(fromVertexControl, vc))
+            if (Equals(fromVertexControl, toVertexControl))
                 return;
 
-            var data = new WordEdge((WordVertex) fromVertexControl.Vertex, (WordVertex) vc.Vertex);
-            var ec = new EdgeControl(fromVertexControl, vc, data);
+            var data = new WordEdge((WordVertex) fromVertexControl.Vertex, (WordVertex) toVertexControl.Vertex)
+            {
+                Text = ((WordVertex) toVertexControl.Vertex).WordWrapper.GetAttributeByName("deprel")
+            };
+            var ec = new EdgeControl(fromVertexControl, toVertexControl, data);
             GgArea.InsertEdgeAndData(data, ec, 0, true);
 
             HighlightBehaviour.SetHighlighted(fromVertexControl, false);
             fromVertexControl = null;
             editorManager.DestroyVirtualEdge();
+        }
+
+        private VertexControl AddWordVertexControl(WordWrapper wordWrapper)
+        {
+            var vertex = new WordVertex(wordWrapper);
+            var vertexControl = new VertexControl(vertex);
+            GgArea.AddVertexAndData(vertex, vertexControl, true);
+            return vertexControl;
         }
 
         private void SafeRemoveVertex(VertexControl vc)

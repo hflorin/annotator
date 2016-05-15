@@ -12,6 +12,7 @@
     using Graph;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
+    using Mappers;
     using Prism.Events;
     using View;
     using Wrapper;
@@ -121,10 +122,27 @@
         private void PopulateWords(IEventAggregator eventAggregator, SentenceWrapper sentence)
         {
             Words = new ObservableCollection<WordEditorViewModel>();
-            foreach (var word in sentence.Words)
+
+            var sortedWords = sentence.Words.ToList();
+            sortedWords.Sort(Comparison);
+
+            foreach (var word in sortedWords)
             {
                 Words.Add(new WordEditorViewModel(word, eventAggregator));
             }
+        }
+
+        private int Comparison(WordWrapper left, WordWrapper right)
+        {
+            var leftId = int.Parse(left.GetAttributeByName("id"));
+            var rightId = int.Parse(right.GetAttributeByName("id"));
+
+            if (leftId == rightId)
+            {
+                return 0;
+            }
+
+            return leftId > rightId ? 1 : -1;
         }
 
         private void InitializeCommands()
@@ -141,13 +159,24 @@
 
         private void AddWordCommandExecute(object obj)
         {
-            var wordPrototype = appConfig.Elements.OfType<Word>().Single();
+            var wordPrototype = ObjectCopier.Clone(appConfig.Elements.OfType<Word>().Single());
             var wordIds = Sentence.Words.Select(w => int.Parse(w.GetAttributeByName("id"))).ToList();
             var addWordWindow = new AddWordWindow(new AddWordViewModel(wordPrototype, wordIds));
 
             if (addWordWindow.ShowDialog().GetValueOrDefault())
             {
-                Sentence.Words.Add(((AddWordViewModel) addWordWindow.DataContext).Word);
+                var word = ((AddWordViewModel) addWordWindow.DataContext).Word;
+                Sentence.Words.Add(word);
+
+                var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(Sentence));
+                if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
+                {
+                }
+
+                //todo: ensure tree and id ordering is in place
+
+                Words.Add(new WordEditorViewModel(word, EventAggregator));
+                EventAggregator.GetEvent<AddWordVertexEvent>().Publish(word);
             }
         }
 

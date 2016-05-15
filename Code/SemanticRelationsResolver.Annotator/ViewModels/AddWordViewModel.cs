@@ -46,10 +46,10 @@
         {
             var localCopy = new List<int>(allowedIds) {0};
 
-
             var headWordIdAttribute = word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("head"));
             localCopy.Sort();
             headWordIdAttribute.AllowedValuesSet = localCopy.Select(id => id.ToString()).ToList();
+            headWordIdAttribute.Value = localCopy.Max().ToString();
         }
 
         private void OkButtonCommandExecute(object obj)
@@ -75,12 +75,14 @@
 
         private void SetAllowedValuesSetForWordIdAttribute(Word word, List<int> allowedIds)
         {
+            var newId = wordsIds.Max() + 1;
             //supplement the list of available ids by one, for the new word
-            var localCopy = new List<int>(allowedIds) {wordsIds.Max() + 1};
+            var localCopy = new List<int>(allowedIds) {newId};
 
             var idAttribute = word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("id"));
             localCopy.Sort();
             idAttribute.AllowedValuesSet = localCopy.Select(id => id.ToString()).ToList();
+            idAttribute.Value = newId.ToString();
         }
 
         private void SetAllWordAttributesAsEditable(Word word)

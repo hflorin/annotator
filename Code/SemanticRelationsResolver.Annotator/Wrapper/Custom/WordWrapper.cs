@@ -6,6 +6,18 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
 
     public partial class WordWrapper
     {
+        public string Form
+        {
+            get { return GetAttributeByName("form"); }
+            set { SetAttributeByName("form", value); }
+        }
+
+        public int Id
+        {
+            get { return int.Parse(GetAttributeByName("id")); }
+            set { SetAttributeByName("id", value.ToString()); }
+        }
+
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Attributes == null)
