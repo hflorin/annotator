@@ -18,6 +18,12 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
             set { SetAttributeByName("id", value.ToString()); }
         }
 
+        public int HeadWordId
+        {
+            get { return int.Parse(GetAttributeByName("head")); }
+            set { SetAttributeByName("head", value.ToString()); }
+        }
+
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Attributes == null)

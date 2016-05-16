@@ -17,7 +17,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <DataGrid ItemsSource="{Binding Sentence.Words}" Margin="0 5 0 0" SelectionUnit="FullRow"
+        <DataGrid ItemsSource="{Binding Sentence.Words}" Margin="0 5 0 0" SelectionUnit="FullRow" SelectedItem="{Binding SelectedWord}"
                   AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id"
@@ -26,6 +26,9 @@
                 <DataGridTextColumn Header="Form"
                                     Binding="{Binding Form,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                     Width="*" IsReadOnly="True" />
+                <DataGridTextColumn Header="Head Word Id"
+                                    Binding="{Binding HeadWordId,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    Width="*" />
             </DataGrid.Columns>
         </DataGrid>
         
