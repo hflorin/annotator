@@ -51,6 +51,9 @@
                 Sentence.Words[selectedWordIndex + 1] = temp;
 
                 SwitchHeadWordIds(tempIdCurrent, tempIdNext);
+                Sentence.Words.AcceptChanges();
+
+                SelectedWord = Sentence.Words[selectedWordIndex + 1];
             }
         }
 
@@ -95,6 +98,9 @@
                 Sentence.Words[selectedWordIndex - 1] = temp;
 
                 SwitchHeadWordIds(tempIdCurrent, tempIdNext);
+                Sentence.Words.AcceptChanges();
+
+                SelectedWord = Sentence.Words[selectedWordIndex - 1];
             }
         }
 

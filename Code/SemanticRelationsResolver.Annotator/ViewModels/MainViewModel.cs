@@ -86,6 +86,7 @@
                 sentence = value;
 
                 ((DelegateCommand) EditSentenceCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand) EditWordOrderCommand).RaiseCanExecuteChanged();
 
                 OnPropertyChanged();
             }
@@ -124,6 +125,8 @@
         public ICommand CloseCommand { get; set; }
 
         public ICommand EditSentenceCommand { get; set; }
+
+        public ICommand EditWordOrderCommand { get; set; }
 
         public ICommand SelectedSentenceChangedCommand { get; set; }
 
@@ -233,6 +236,20 @@
             SelectedSentenceChangedCommand = new DelegateCommand(
                 SelectedSentenceChangedCommandExecute,
                 SelectedSentenceChangedCommandCanExecute);
+            EditWordOrderCommand = new DelegateCommand(EditWordOrderCommandExecute, EditWordOrderCommandCanExecute);
+        }
+
+        private bool EditWordOrderCommandCanExecute(object arg)
+        {
+            return SelectedSentence != null;
+        }
+
+        private void EditWordOrderCommandExecute(object obj)
+        {
+            var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(SelectedSentence));
+            if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
+            {
+            }
         }
 
         private bool SelectedSentenceChangedCommandCanExecute(object arg)

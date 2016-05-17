@@ -6,12 +6,14 @@
     using System.Windows.Input;
     using Commands;
     using Domain;
+    using Mappers;
     using Wrapper;
     using Attribute = Domain.Attribute;
 
     public class AddWordViewModel : Observable
     {
         private readonly Word wordPrototype;
+        private readonly Word wordPrototypeOriginal;
 
         private readonly List<int> wordsIds;
 
@@ -27,6 +29,7 @@
             }
 
             this.wordPrototype = wordPrototype;
+            this.wordPrototypeOriginal = ObjectCopier.Clone(wordPrototype);
             wordsIds = existingWordIds;
 
             SetAllWordAttributesAsEditable(this.wordPrototype);
@@ -65,6 +68,7 @@
                     IsOptional = false
                 }));
 
+            Word.AcceptChanges();
             //todo:validate the values entered
         }
 

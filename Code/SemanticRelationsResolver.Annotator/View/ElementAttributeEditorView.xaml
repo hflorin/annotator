@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <DataGrid ItemsSource="{Binding Attributes}" Margin="0 5 0 0" SelectedItem="{Binding SelectedAttribute}"
+        <DataGrid ItemsSource="{Binding Attributes}" Margin="0 5 0 0" SelectedItem="{Binding SelectedAttribute}" SelectionUnit="FullRow"
                   AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name"

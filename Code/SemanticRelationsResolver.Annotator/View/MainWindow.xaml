@@ -35,6 +35,7 @@
                 <MenuItem Header="_Sentence List" />
                 <Separator />
                 <MenuItem x:Name="EditSentence" Header="_Edit Sentence" Command="{Binding EditSentenceCommand}" />
+                <MenuItem x:Name="EditWordOrder" Header="_Edit Word Order" Command="{Binding EditWordOrderCommand}" />
             </MenuItem>
             <MenuItem x:Name="HelpMenu" Header="_HELP" />
         </Menu>
