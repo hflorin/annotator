@@ -10,31 +10,37 @@
     using Wrapper;
     using Attribute = Domain.Attribute;
 
+    public class Pair
+    {
+        public int Id { get; set; }
+        public string Form { get; set; }
+    }
+
     public class AddWordViewModel : Observable
     {
         private readonly Word wordPrototype;
         private readonly Word wordPrototypeOriginal;
 
-        private readonly List<int> wordsIds;
+        private readonly List<Pair> words;
 
-        public AddWordViewModel(Word wordPrototype, List<int> existingWordIds)
+        public AddWordViewModel(Word wordPrototype, List<Pair> words)
         {
             if (wordPrototype == null)
             {
                 throw new ArgumentNullException("wordPrototype");
             }
-            if (existingWordIds == null)
+            if (words == null)
             {
                 throw new ArgumentNullException("existingWordIds");
             }
 
             this.wordPrototype = wordPrototype;
             this.wordPrototypeOriginal = ObjectCopier.Clone(wordPrototype);
-            wordsIds = existingWordIds;
+            this.words = words;
 
             SetAllWordAttributesAsEditable(this.wordPrototype);
-            SetAllowedValuesSetForWordIdAttribute(this.wordPrototype, wordsIds);
-            SetAllowedValuesSetForHeadWordIdAttribute(this.wordPrototype, wordsIds);
+            SetAllowedValuesSetForWordIdAttribute(this.wordPrototype, this.words);
+            SetAllowedValuesSetForHeadWordAttribute(this.wordPrototype, this.words);
 
             Word = new WordWrapper(this.wordPrototype);
 
@@ -45,14 +51,14 @@
 
         public WordWrapper Word { get; set; }
 
-        private void SetAllowedValuesSetForHeadWordIdAttribute(Word word, List<int> allowedIds)
+        private void SetAllowedValuesSetForHeadWordAttribute(Word word, List<Pair> words)
         {
-            var localCopy = new List<int>(allowedIds) {0};
+            var localCopy = new List<Pair>(words) { new Pair { Id = 0, Form = string.Empty} };
 
             var headWordIdAttribute = word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("head"));
-            localCopy.Sort();
-            headWordIdAttribute.AllowedValuesSet = localCopy.Select(id => id.ToString()).ToList();
-            headWordIdAttribute.Value = localCopy.Max().ToString();
+            localCopy.Sort((l, r)=> { return l.Id == r.Id? 0 : l.Id < r.Id ? -1 : 1; });
+            headWordIdAttribute.AllowedValuesSet = localCopy.Select(p => p.Form).ToList();
+            headWordIdAttribute.Value = localCopy.Aggregate((l, r) => l.Id > r.Id ? l : r).Form;
         }
 
         private void OkButtonCommandExecute(object obj)
@@ -67,7 +73,16 @@
                     IsEditable = false,
                     IsOptional = false
                 }));
+            var originalWordWrapper = new WordWrapper(wordPrototypeOriginal);
 
+            var originalHeadWordAttribute = originalWordWrapper.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("head"));
+
+
+            var headwordAttribute = Word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("head"));
+            var headWordId = words.Where(p => p.Form == headwordAttribute.Value).Select(p => p.Id).Single();
+            headwordAttribute.IsEditable = originalHeadWordAttribute.IsEditable;
+            headwordAttribute.AllowedValuesSet = originalHeadWordAttribute.AllowedValuesSet;
+            headwordAttribute.Value = headWordId.ToString();
             Word.AcceptChanges();
             //todo:validate the values entered
         }
@@ -77,15 +92,11 @@
             return true;
         }
 
-        private void SetAllowedValuesSetForWordIdAttribute(Word word, List<int> allowedIds)
+        private void SetAllowedValuesSetForWordIdAttribute(Word word, List<Pair> words)
         {
-            var newId = wordsIds.Max() + 1;
-            //supplement the list of available ids by one, for the new word
-            var localCopy = new List<int>(allowedIds) {newId};
-
+            var newId = words.Max(w => w.Id) + 1;
             var idAttribute = word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("id"));
-            localCopy.Sort();
-            idAttribute.AllowedValuesSet = localCopy.Select(id => id.ToString()).ToList();
+            idAttribute.IsEditable = false;
             idAttribute.Value = newId.ToString();
         }
 

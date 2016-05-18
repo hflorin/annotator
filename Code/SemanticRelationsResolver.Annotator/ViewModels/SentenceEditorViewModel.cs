@@ -160,7 +160,11 @@
         private void AddWordCommandExecute(object obj)
         {
             var wordPrototype = ObjectCopier.Clone(appConfig.Elements.OfType<Word>().Single());
-            var wordIds = Sentence.Words.Select(w => int.Parse(w.GetAttributeByName("id"))).ToList();
+            var wordIds = Sentence.Words.Select(w => new Pair
+            {
+                Id = int.Parse(w.GetAttributeByName("id")),
+                Form = w.GetAttributeByName("form")
+            }).ToList();
             var addWordWindow = new AddWordWindow(new AddWordViewModel(wordPrototype, wordIds));
 
             if (addWordWindow.ShowDialog().GetValueOrDefault())
@@ -299,7 +303,7 @@
                 sentenceGraph.AddVertex(new WordVertex(word));
             }
 
-            var vlist = sentenceGraph.Vertices.ToList();
+            var vertices = sentenceGraph.Vertices.ToList();
 
             foreach (var word in Sentence.Words)
             {
@@ -312,8 +316,8 @@
 
                     if (int.TryParse(word.GetAttributeByName("id"), out id))
                     {
-                        var wordVertex = vlist.Single(v => v.ID == id);
-                        var headWordVertex = vlist.Single(v => v.ID == headId);
+                        var wordVertex = vertices.Single(v => v.ID == id);
+                        var headWordVertex = vertices.Single(v => v.ID == headId);
 
                         sentenceGraph.AddEdge(
                             new WordEdge(headWordVertex, wordVertex) {Text = word.GetAttributeByName("deprel")});
