@@ -6,8 +6,13 @@
 
         public static readonly string ConfigurationTagName = "configuration";
         public static readonly string DataStructureTagName = "dataStructure";
+        public static readonly string TreeStructureTagName = "treeStructure";
+        public static readonly string DefinitionsTagName = "definitions";
         public static readonly string ElementsTagName = "elements";
         public static readonly string ElementTagName = "element";
+        public static readonly string DefinitionTagName = "definition";
+        public static readonly string VertexTagName = "vertex";
+        public static readonly string EdgeTagName = "edge";
         public static readonly string AttributesTagName = "attributes";
         public static readonly string AttributeTagName = "attribute";
         public static readonly string AllowedValueSetTagName = "allowedValueSet";
@@ -21,6 +26,17 @@
         public static readonly string DisplayNameAttributeName = "displayName";
         public static readonly string IsOptionalAttributeName = "isOptional";
         public static readonly string IsEditableAttributeName = "isEditable";
+        public static readonly string LabelAttributeName = "labelAttributeName";
+        public static readonly string FromAttributeName = "fromAttributeName";
+        public static readonly string ToAttributeName = "toAttributeName";
+        public static readonly string RootVertex = "rootVertex";
+
+        #endregion
+
+        #region allowed values
+
+        public static readonly string RootVertexLowest = "lowest";
+        public static readonly string RootVertexHighest = "highest";
 
         #endregion
 

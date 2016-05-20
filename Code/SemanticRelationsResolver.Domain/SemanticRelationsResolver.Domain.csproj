@@ -40,7 +40,10 @@
   <ItemGroup>
     <Compile Include="Attribute.cs" />
     <Compile Include="Configuration\AppConfig.cs" />
+    <Compile Include="Configuration\Definition.cs" />
+    <Compile Include="Configuration\EdgeConfig.cs" />
     <Compile Include="Configuration\IAppConfig.cs" />
+    <Compile Include="Configuration\VertexConfig.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="IEntity.cs" />

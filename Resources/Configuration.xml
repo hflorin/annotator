@@ -32,4 +32,12 @@ value28="narativ." value29="neg." value30="part." value31="prep." value32="punct
 			</element>
 		</elements>
 	</dataStructure>
+	<treeStructure>
+		<definitions>
+			<definition>
+				<vertex entity="word" labelAttributeName="form" fromAttributeName="id" toAttributeName="head" rootVertex="lowest"/>
+				<edge entity="word" labelAttributeName="deprel" />
+			</definition>
+		</definitions>
+	</treeStructure>
 </configuration>

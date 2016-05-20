@@ -5,5 +5,7 @@
     public interface IAppConfig
     {
         IList<Element> Elements { get; set; }
+
+        IList<Definition> Definitions { get; set; }
     }
 }
