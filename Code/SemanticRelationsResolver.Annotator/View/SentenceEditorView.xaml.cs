@@ -171,11 +171,7 @@
                     SafeRemoveVertex(args.VertexControl);
                     break;
                 case SenteceGraphOperationMode.Select :
-                    break;
-                default :
-                    if ((viewModel.SenteceGraphOperationMode == SenteceGraphOperationMode.Select) &&
-                        (args.Modifiers == ModifierKeys.Control))
-                        SelectVertex(args.VertexControl);
+                    SelectVertex(args.VertexControl);
                     break;
             }
         }
