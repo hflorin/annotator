@@ -109,7 +109,6 @@
                             Entity = attributes[ConfigurationStaticData.EntityAttributeName],
                             FromAttributeName = attributes[ConfigurationStaticData.FromAttributeName],
                             LabelAttributeName = attributes[ConfigurationStaticData.LabelAttributeName],
-                            RootVertex = attributes[ConfigurationStaticData.RootVertex],
                             ToAttributeName = attributes[ConfigurationStaticData.ToAttributeName]
                         };
 

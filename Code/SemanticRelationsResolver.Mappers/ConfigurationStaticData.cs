@@ -29,14 +29,6 @@
         public static readonly string LabelAttributeName = "labelAttributeName";
         public static readonly string FromAttributeName = "fromAttributeName";
         public static readonly string ToAttributeName = "toAttributeName";
-        public static readonly string RootVertex = "rootVertex";
-
-        #endregion
-
-        #region allowed values
-
-        public static readonly string RootVertexLowest = "lowest";
-        public static readonly string RootVertexHighest = "highest";
 
         #endregion
 

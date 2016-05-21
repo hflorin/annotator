@@ -21,6 +21,8 @@
     {
         private readonly IAppConfig appConfig;
 
+        private readonly GraphBuilder graphBuilder;
+
         private IEnumerable edgeRoutingAlgorithmTypes =
             Enum.GetValues(typeof(EdgeRoutingAlgorithmTypeEnum)).Cast<EdgeRoutingAlgorithmTypeEnum>();
 
@@ -56,6 +58,7 @@
 
             EventAggregator = eventAggregator;
             Sentence = sentence;
+            this.graphBuilder = new GraphBuilder(appConfig);
             this.appConfig = appConfig;
 
             PopulateWords(eventAggregator, sentence);
@@ -261,69 +264,12 @@
 
         public void Initialize()
         {
-            BuildSentenceGraph();
-            SetupGraphLogic();
-        }
-
-        private void SetupGraphLogic()
-        {
-            var logicCore = new SentenceGxLogicCore
-            {
-                DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.EfficientSugiyama,
-                EdgeCurvingEnabled = false
-            };
-
-            var parameters =
-                SentenceGraphLogicCore.AlgorithmFactory.CreateLayoutParameters(
-                    LayoutAlgorithmTypeEnum.EfficientSugiyama) as EfficientSugiyamaLayoutParameters;
-
-            if (parameters != null)
-            {
-                parameters.EdgeRouting = SugiyamaEdgeRoutings.Orthogonal;
-                parameters.LayerDistance = parameters.VertexDistance = 50;
-                logicCore.EdgeCurvingEnabled = false;
-                logicCore.DefaultLayoutAlgorithmParams = parameters;
-            }
-
-            logicCore.Graph = sentenceGraph;
+            var logicCore = graphBuilder.SetupGraphLogic(Sentence);
 
             SentenceGraphLogicCore = logicCore;
+
             SelectedLayoutAlgorithmType = LayoutAlgorithmTypeEnum.EfficientSugiyama;
             SelectedEdgeRoutingAlgorithmType = EdgeRoutingAlgorithmTypeEnum.None;
-        }
-
-        private void BuildSentenceGraph()
-        {
-            sentenceGraph = new SentenceGraph();
-
-            int id, headId;
-
-            foreach (var word in Sentence.Words)
-            {
-                sentenceGraph.AddVertex(new WordVertex(word));
-            }
-
-            var vertices = sentenceGraph.Vertices.ToList();
-
-            foreach (var word in Sentence.Words)
-            {
-                if (int.TryParse(word.GetAttributeByName("head"), out headId))
-                {
-                    if (headId == 0)
-                    {
-                        continue;
-                    }
-
-                    if (int.TryParse(word.GetAttributeByName("id"), out id))
-                    {
-                        var wordVertex = vertices.Single(v => v.ID == id);
-                        var headWordVertex = vertices.Single(v => v.ID == headId);
-
-                        sentenceGraph.AddEdge(
-                            new WordEdge(headWordVertex, wordVertex) {Text = word.GetAttributeByName("deprel")});
-                    }
-                }
-            }
         }
     }
 }

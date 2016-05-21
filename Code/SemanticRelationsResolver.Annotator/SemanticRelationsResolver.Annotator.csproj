@@ -130,6 +130,8 @@
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Events\AddWordVertexEvent.cs" />
     <Compile Include="Events\ChangeAttributesEditorViewModel.cs" />
+    <Compile Include="Graph\GraphBuilder.cs" />
+    <Compile Include="Graph\MotherObjects.cs" />
     <Compile Include="Graph\SentenceEditorManager.cs" />
     <Compile Include="Graph\WordEdge.cs" />
     <Compile Include="Graph\SentenceGraph.cs" />

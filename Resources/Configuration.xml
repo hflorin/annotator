@@ -35,7 +35,7 @@ value28="narativ." value29="neg." value30="part." value31="prep." value32="punct
 	<treeStructure>
 		<definitions>
 			<definition>
-				<vertex entity="word" labelAttributeName="form" fromAttributeName="id" toAttributeName="head" rootVertex="lowest"/>
+				<vertex entity="word" labelAttributeName="form" fromAttributeName="head" toAttributeName="id" />
 				<edge entity="word" labelAttributeName="deprel" />
 			</definition>
 		</definitions>
