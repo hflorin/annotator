@@ -1,6 +1,5 @@
 ﻿namespace SemanticRelationsResolver.Annotator.Graph
 {
-    using System;
     using System.Linq;
     using Domain.Configuration;
     using GraphX.PCL.Common.Enums;
@@ -9,19 +8,13 @@
 
     public class GraphBuilder
     {
-        private IAppConfig appConfig;
         private readonly Definition definition;
 
         public GraphBuilder(IAppConfig appConfig, Definition definition = null)
         {
-            if (appConfig == null)
-            {
-                throw new ArgumentNullException("appConfig");
-            }
-
             if (definition == null)
             {
-                if (appConfig.Definitions.Any())
+                if ((appConfig != null) && appConfig.Definitions.Any())
                 {
                     this.definition = appConfig.Definitions.First();
                 }
@@ -30,8 +23,6 @@
                     this.definition = MotherObjects.DefaultDefinition;
                 }
             }
-
-            this.appConfig = appConfig;
         }
 
         public SentenceGxLogicCore SetupGraphLogic(SentenceWrapper sentence)
@@ -64,7 +55,7 @@
         {
             var sentenceGraph = new SentenceGraph();
 
-            int to, from;
+            string to, from;
 
             foreach (var word in sentence.Words)
             {
@@ -75,25 +66,26 @@
 
             foreach (var word in sentence.Words)
             {
-                if (int.TryParse(word.GetAttributeByName(definition.Vertex.FromAttributeName), out from))
+                from = word.GetAttributeByName(definition.Vertex.FromAttributeName);
+
+                if (from == "0")
                 {
-                    if (from == 0)
-                    {
-                        continue;
-                    }
-
-                    if (int.TryParse(word.GetAttributeByName(definition.Vertex.ToAttributeName), out to))
-                    {
-                        var toWordVertex = vertices.Single(v => v.ID == to);
-                        var fromWordVertex = vertices.Single(v => v.ID == from);
-
-                        sentenceGraph.AddEdge(
-                            new WordEdge(fromWordVertex, toWordVertex)
-                            {
-                                Text = word.GetAttributeByName(definition.Edge.LabelAttributeName)
-                            });
-                    }
+                    continue;
                 }
+
+                to = word.GetAttributeByName(definition.Vertex.ToAttributeName);
+
+                var toWordVertex =
+                    vertices.Single(v => v.WordWrapper.GetAttributeByName(definition.Vertex.ToAttributeName).Equals(to));
+                var fromWordVertex =
+                    vertices.Single(
+                        v => v.WordWrapper.GetAttributeByName(definition.Vertex.ToAttributeName).Equals(from));
+
+                sentenceGraph.AddEdge(
+                    new WordEdge(fromWordVertex, toWordVertex)
+                    {
+                        Text = word.GetAttributeByName(definition.Edge.LabelAttributeName)
+                    });
             }
 
             return sentenceGraph;
