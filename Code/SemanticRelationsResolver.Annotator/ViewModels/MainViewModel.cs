@@ -22,6 +22,10 @@
     {
         private SentenceEditorView activeSentenceEditorView;
 
+        private IAppConfig appConfig;
+
+        private IAppConfigMapper appConfigMapper;
+
         private string currentStatus;
 
         private IDocumentMapper documentMapper;
@@ -34,10 +38,6 @@
 
         private ISaveDialogService saveDialogService;
 
-        private IAppConfigMapper appConfigMapper;
-
-        private IAppConfig appConfig;
-
         private DocumentWrapper selectedDocument;
 
         private ElementAttributeEditorViewModel selectedElementAttributeEditorViewModel;
@@ -45,17 +45,20 @@
         private SentenceWrapper sentence;
 
         private ObservableCollection<SentenceEditorView> sentenceEditViewModels;
+        private IShowInfoMessage showInfoMessage;
 
         public MainViewModel(
             IEventAggregator eventAggregator,
             ISaveDialogService saveDialogService,
             IOpenFileDialogService openFileDialogService,
             IDocumentMapper documentMapper,
-            IAppConfigMapper appConfigMapper)
+            IAppConfigMapper appConfigMapper,
+            IShowInfoMessage showInfoMessage)
         {
             InitializeCommands();
 
-            InitializeServices(eventAggregator, saveDialogService, openFileDialogService, documentMapper, appConfigMapper);
+            InitializeServices(eventAggregator, saveDialogService, openFileDialogService, documentMapper,
+                appConfigMapper, showInfoMessage);
 
             SubscribeToEvents();
 
@@ -187,7 +190,8 @@
             ISaveDialogService saveDialogServiceArg,
             IOpenFileDialogService openFileDialogServiceArg,
             IDocumentMapper documentMapperArg,
-            IAppConfigMapper configMapper)
+            IAppConfigMapper configMapper,
+            IShowInfoMessage showMessage)
         {
             if (eventAggregatorArg == null)
             {
@@ -214,6 +218,13 @@
                 throw new ArgumentNullException("configMapper");
             }
 
+            if (showMessage == null)
+            {
+                throw new ArgumentNullException("showMessage");
+            }
+
+
+            showInfoMessage = showMessage;
             saveDialogService = saveDialogServiceArg;
             openFileDialogService = openFileDialogServiceArg;
             eventAggregator = eventAggregatorArg;
@@ -292,7 +303,8 @@
         private void EditSentenceCommandExecute(object obj)
         {
             var sentenceEditView = new SentenceEditorView(
-                new SentenceEditorViewModel(eventAggregator, appConfig, SelectedSentence), eventAggregator);
+                new SentenceEditorViewModel(eventAggregator, appConfig, SelectedSentence, showInfoMessage),
+                eventAggregator);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;

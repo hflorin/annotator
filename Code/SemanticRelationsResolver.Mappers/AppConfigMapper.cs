@@ -98,7 +98,10 @@
                 {
                     if (elementName.Equals(ConfigurationStaticData.DefinitionTagName))
                     {
-                        appConfig.Definitions.Add(new Definition());
+                        appConfig.Definitions.Add(new Definition
+                        {
+                            Name = attributes[ConfigurationStaticData.NameStructureAttributeName]
+                        });
                     }
                     else if (elementName.Equals(ConfigurationStaticData.VertexTagName))
                     {

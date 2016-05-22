@@ -33,7 +33,7 @@
                     </i:Interaction.Triggers>
                 </ComboBox>
                 <Button Click="viewModel_SentenceGraphChanged" Content="Refresh" Width="70" />
-                <Button Click="viewModel_SentenceGraphChanged" Content="Validate" Width="70" />
+                <Button Click="viewModel_SentenceGraphChanged" Content="Validate" Width="70" Command="{Binding CheckIsTreeCommand}" />
                 <Button Click="viewModel_SentenceGraphChanged" Content="Save" Width="70" IsEnabled="{Binding Sentence.IsChanged}"/>
                 <ToggleButton Name="butSelect" Content="Select" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events:SenteceGraphOperationMode.Select}"

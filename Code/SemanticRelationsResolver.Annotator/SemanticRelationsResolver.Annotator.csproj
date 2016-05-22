@@ -130,6 +130,8 @@
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Events\AddWordVertexEvent.cs" />
     <Compile Include="Events\ChangeAttributesEditorViewModel.cs" />
+    <Compile Include="Graph\Algos\GraphOperations.cs" />
+    <Compile Include="Graph\Algos\Graph.cs" />
     <Compile Include="Graph\GraphBuilder.cs" />
     <Compile Include="Graph\MotherObjects.cs" />
     <Compile Include="Graph\SentenceEditorManager.cs" />
@@ -162,8 +164,10 @@
     <Compile Include="View\Services\FileFilters.cs" />
     <Compile Include="View\Services\IOpenFileDialogService.cs" />
     <Compile Include="View\Services\ISaveDialogService.cs" />
+    <Compile Include="View\Services\IShowInfoMessage.cs" />
     <Compile Include="View\Services\OpenFileDialogService.cs" />
     <Compile Include="View\Services\SaveDialogService.cs" />
+    <Compile Include="View\Services\ShowMessageBoxInfo.cs" />
     <Compile Include="View\WordReorderingWindow.xaml.cs">
       <DependentUpon>WordReorderingWindow.xaml</DependentUpon>
     </Compile>

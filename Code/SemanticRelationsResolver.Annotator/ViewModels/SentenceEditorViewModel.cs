@@ -10,11 +10,13 @@
     using Domain.Configuration;
     using Events;
     using Graph;
+    using Graph.Algos;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
     using Mappers;
     using Prism.Events;
     using View;
+    using View.Services;
     using Wrapper;
 
     public class SentenceEditorViewModel : Observable
@@ -36,8 +38,9 @@
         private SentenceGxLogicCore sentenceLogicCore;
 
         private SentenceWrapper sentenceWrapper;
+        private IShowInfoMessage showMessage;
 
-        public SentenceEditorViewModel(IEventAggregator eventAggregator, IAppConfig appConfig, SentenceWrapper sentence)
+        public SentenceEditorViewModel(IEventAggregator eventAggregator, IAppConfig appConfig, SentenceWrapper sentence, IShowInfoMessage showMessage)
         {
             if (sentence == null)
             {
@@ -54,12 +57,18 @@
                 throw new ArgumentNullException("appConfig");
             }
 
+            if (showMessage == null)
+            {
+                throw new ArgumentNullException("showMessage");
+            }
+
             InitializeCommands();
 
             EventAggregator = eventAggregator;
             Sentence = sentence;
-            this.graphBuilder = new GraphBuilder(appConfig);
+            graphBuilder = new GraphBuilder(appConfig);
             this.appConfig = appConfig;
+            this.showMessage = showMessage;
 
             PopulateWords(eventAggregator, sentence);
 
@@ -75,6 +84,8 @@
         }
 
         public IEventAggregator EventAggregator { get; set; }
+
+        public ICommand CheckIsTreeCommand { get; set; }
 
         public ICommand LayoutAlgorithmChangedCommand { get; set; }
 
@@ -158,6 +169,18 @@
                 EdgeRoutingAlgorithmChangedCommandCanExecute);
             ToggleEditModeCommand = new DelegateCommand(ToggleEditModeCommandExecute, ToggleEditModeCommandCanExecute);
             AddWordCommand = new DelegateCommand(AddWordCommandExecute, AddWordCommandCanExecute);
+            CheckIsTreeCommand = new DelegateCommand(CheckIsTreeCommandExecute, CheckIsTreeCommandCanExecute);
+        }
+
+        private void CheckIsTreeCommandExecute(object obj)
+        {
+            var isTree = GraphOperations.GetGraph(Sentence, appConfig.Definitions.First()).IsTree();
+            showMessage.ShowInfoMessage(string.Format("Graph for sentence with id {0} is tree: {1}", Sentence.Id.Value, isTree));
+        }
+
+        private bool CheckIsTreeCommandCanExecute(object arg)
+        {
+            return true;
         }
 
         private void AddWordCommandExecute(object obj)
