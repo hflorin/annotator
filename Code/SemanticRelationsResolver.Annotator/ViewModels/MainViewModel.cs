@@ -11,8 +11,10 @@
     using Domain;
     using Domain.Configuration;
     using Events;
+    using Graph.Algos;
     using Mappers;
     using Prism.Events;
+    using SemanticRelationsResolver.Events;
     using View;
     using View.Services;
     using Wrapper;
@@ -168,6 +170,12 @@
             eventAggregator.GetEvent<DocumentLoadExceptionEvent>().Subscribe(OnDocumentLoadException);
             eventAggregator.GetEvent<StatusNotificationEvent>().Subscribe(OnStatusNotification);
             eventAggregator.GetEvent<ChangeAttributesEditorViewModel>().Subscribe(OnAttributesChanged);
+            eventAggregator.GetEvent<CheckIsTreeOnSentenceEvent>().Subscribe(OnCheckIsTreeOnSentence);
+        }
+
+        private void OnCheckIsTreeOnSentence(SentenceWrapper sentenceWrapper)
+        {
+            sentenceWrapper.IsTree = GraphOperations.GetGraph(sentenceWrapper, appConfig.Definitions.First()).IsTree();
         }
 
         private void OnAttributesChanged(ElementAttributeEditorViewModel newViewModel)

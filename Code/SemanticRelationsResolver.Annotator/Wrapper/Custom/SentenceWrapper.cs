@@ -8,10 +8,7 @@
     {
         public AttributeWrapper Id
         {
-            get
-            {
-                return Attributes.Single(a => a.Name.Equals("id"));
-            }
+            get { return Attributes.Single(a => a.Name.Equals("id")); }
             set
             {
                 var oldId = Attributes.Single(a => a.Name.Equals("id"));
@@ -22,10 +19,7 @@
 
         public AttributeWrapper Content
         {
-            get
-            {
-                return Attributes.Single(a => a.Name.Equals("content"));
-            }
+            get { return Attributes.Single(a => a.Name.Equals("content")); }
             set
             {
                 var oldId = Attributes.Single(a => a.Name.Equals("content"));
@@ -36,10 +30,7 @@
 
         public AttributeWrapper Parser
         {
-            get
-            {
-                return Attributes.Single(a => a.Name.Equals("parser"));
-            }
+            get { return Attributes.Single(a => a.Name.Equals("parser")); }
             set
             {
                 var oldId = Attributes.Single(a => a.Name.Equals("parser"));
@@ -50,10 +41,7 @@
 
         public AttributeWrapper User
         {
-            get
-            {
-                return Attributes.Single(a => a.Name.Equals("user"));
-            }
+            get { return Attributes.Single(a => a.Name.Equals("user")); }
             set
             {
                 var oldId = Attributes.Single(a => a.Name.Equals("user"));
@@ -64,10 +52,7 @@
 
         public AttributeWrapper Date
         {
-            get
-            {
-                return Attributes.Single(a => a.Name.Equals("date"));
-            }
+            get { return Attributes.Single(a => a.Name.Equals("date")); }
             set
             {
                 var oldId = Attributes.Single(a => a.Name.Equals("date"));
@@ -75,6 +60,8 @@
                 Attributes.Add(value);
             }
         }
+
+        public bool IsTree { get; set; }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -85,7 +72,7 @@
 
             if (string.IsNullOrWhiteSpace(Attributes.Single(a => a.Name.Equals("parser")).Value))
             {
-                yield return new ValidationResult("Parser is required.", new[] { "Parser" });
+                yield return new ValidationResult("Parser is required.", new[] {"Parser"});
             }
         }
     }

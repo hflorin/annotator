@@ -37,9 +37,9 @@
                 return false;
             }
 
-            foreach (var b in visited)
+            foreach (var isVisited in visited)
             {
-                if (!b)
+                if (!isVisited)
                 {
                     return false;
                 }

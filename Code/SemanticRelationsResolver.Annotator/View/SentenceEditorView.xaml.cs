@@ -4,12 +4,12 @@
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Input;
-    using Events;
     using Graph;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Logic.Helpers;
     using Prism.Events;
+    using SemanticRelationsResolver.Events;
     using ViewModels;
     using Wrapper;
 

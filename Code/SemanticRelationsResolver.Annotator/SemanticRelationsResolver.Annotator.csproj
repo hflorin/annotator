@@ -130,6 +130,7 @@
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Events\AddWordVertexEvent.cs" />
     <Compile Include="Events\ChangeAttributesEditorViewModel.cs" />
+    <Compile Include="Events\CheckIsTreeOnSentenceEvent.cs" />
     <Compile Include="Graph\Algos\GraphOperations.cs" />
     <Compile Include="Graph\Algos\Graph.cs" />
     <Compile Include="Graph\GraphBuilder.cs" />

@@ -8,13 +8,13 @@
     using Commands;
     using Domain;
     using Domain.Configuration;
-    using Events;
     using Graph;
     using Graph.Algos;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
     using Mappers;
     using Prism.Events;
+    using SemanticRelationsResolver.Events;
     using View;
     using View.Services;
     using Wrapper;
@@ -33,14 +33,15 @@
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
-        private SentenceGraph sentenceGraph;
+        private readonly SentenceGraph sentenceGraph;
 
         private SentenceGxLogicCore sentenceLogicCore;
 
         private SentenceWrapper sentenceWrapper;
         private IShowInfoMessage showMessage;
 
-        public SentenceEditorViewModel(IEventAggregator eventAggregator, IAppConfig appConfig, SentenceWrapper sentence, IShowInfoMessage showMessage)
+        public SentenceEditorViewModel(IEventAggregator eventAggregator, IAppConfig appConfig, SentenceWrapper sentence,
+            IShowInfoMessage showMessage)
         {
             if (sentence == null)
             {

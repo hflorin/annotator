@@ -2,6 +2,7 @@
 {
     using System.Windows;
     using Autofac;
+    using Prism.Events;
     using Startup;
     using View;
     using ViewModels;
@@ -17,7 +18,7 @@
 
             var viewModel = container.Resolve<MainViewModel>();
 
-            MainWindow = new MainWindow(viewModel);
+            MainWindow = new MainWindow(viewModel, container.Resolve<IEventAggregator>());
 
             MainWindow.Show();
         }
