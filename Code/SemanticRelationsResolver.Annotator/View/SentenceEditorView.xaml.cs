@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Input;
+    using Domain;
+    using Domain.Configuration;
     using Graph;
     using GraphX.Controls;
     using GraphX.Controls.Models;
@@ -15,6 +17,9 @@
 
     public partial class SentenceEditorView : UserControl, IDisposable
     {
+        private readonly IAppConfig appConfig;
+
+        private readonly Definition currentDefinition;
         private readonly SentenceEditorManager editorManager;
 
         private readonly IEventAggregator eventAggregator;
@@ -25,7 +30,7 @@
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
-        public SentenceEditorView(IEventAggregator eventAggregator)
+        public SentenceEditorView(IEventAggregator eventAggregator, IAppConfig appConfig)
         {
             InitializeComponent();
             if (eventAggregator == null)
@@ -33,24 +38,28 @@
                 throw new ArgumentNullException("eventAggregator");
             }
 
+            if (appConfig == null)
+            {
+                throw new ArgumentNullException("appConfig");
+            }
+
             editorManager = new SentenceEditorManager(GgArea, GgZoomCtrl);
             this.eventAggregator = eventAggregator;
+            this.appConfig = appConfig;
         }
 
-        public SentenceEditorView(SentenceEditorViewModel sentenceEditorViewModel, IEventAggregator eventAggregator)
+        public SentenceEditorView(SentenceEditorViewModel sentenceEditorViewModel, IEventAggregator eventAggregator,
+            IAppConfig appConfig, Definition definition = null)
+            : this(eventAggregator, appConfig)
         {
-            InitializeComponent();
-
-            if (eventAggregator == null)
+            if (sentenceEditorViewModel == null)
             {
-                throw new ArgumentNullException("eventAggregator");
+                throw new ArgumentNullException("sentenceEditorViewModel");
             }
-
-            this.eventAggregator = eventAggregator;
-            editorManager = new SentenceEditorManager(GgArea, GgZoomCtrl);
 
             viewModel = sentenceEditorViewModel;
             DataContext = viewModel;
+            currentDefinition = definition ?? this.appConfig.Definitions.First();
 
             viewModel.CreateSentenceGraph();
             GgZoomCtrl.MouseLeftButtonUp += GgZoomCtrl_MouseLeftButtonUp;
@@ -223,26 +232,32 @@
             {
                 return;
             }
-
-            var data = new WordEdge((WordVertex) fromVertexControl.Vertex, (WordVertex) toVertexControl.Vertex)
+            var wordPrototype = appConfig.Elements.OfType<Word>().Single();
+            var addEdgeDialog =
+                new AddEdgeWindow(
+                    new AddEdgeViewModel(
+                        wordPrototype.Attributes.Single(a => a.Name.Equals(currentDefinition.Edge.LabelAttributeName))));
+            if (addEdgeDialog.ShowDialog().GetValueOrDefault())
             {
-                Text =
-                    ((
-                        WordVertex
-                        )
-                        toVertexControl
-                            .Vertex)
-                        .WordWrapper
-                        .GetAttributeByName
-                        (
-                            "deprel")
-            };
-            var ec = new EdgeControl(fromVertexControl, toVertexControl, data);
-            GgArea.InsertEdgeAndData(data, ec, 0, true);
+                var edgeLabelText = string.Empty;
+                var dataContext = addEdgeDialog.DataContext as AddEdgeViewModel;
+                if (dataContext != null)
+                {
+                    edgeLabelText = dataContext.Attributes.First().Value;
+                }
 
-            HighlightBehaviour.SetHighlighted(fromVertexControl, false);
-            fromVertexControl = null;
-            editorManager.DestroyVirtualEdge();
+                var data = new WordEdge((WordVertex) fromVertexControl.Vertex, (WordVertex) toVertexControl.Vertex)
+                {
+                    Text = edgeLabelText
+                };
+
+                var ec = new EdgeControl(fromVertexControl, toVertexControl, data);
+                GgArea.InsertEdgeAndData(data, ec, 0, true);
+
+                HighlightBehaviour.SetHighlighted(fromVertexControl, false);
+                fromVertexControl = null;
+                editorManager.DestroyVirtualEdge();
+            }
         }
 
         private VertexControl AddWordVertexControl(WordWrapper wordWrapper)
@@ -261,13 +276,14 @@
             {
                 GgArea.RemoveVertexAndEdges(wordToRemove);
                 viewModel.Sentence.Words.Remove(wordToRemove.WordWrapper);
-                //todo:update all words that have as head word the removed word
 
                 foreach (var word in viewModel.Sentence.Words)
                 {
-                    if (word.GetAttributeByName("head") == wordToRemove.WordWrapper.GetAttributeByName("id"))
+                    if (word.GetAttributeByName(currentDefinition.Vertex.FromAttributeName) ==
+                        wordToRemove.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName))
                     {
-                        word.SetAttributeByName("head", wordToRemove.WordWrapper.GetAttributeByName("head"));
+                        word.SetAttributeByName(currentDefinition.Vertex.FromAttributeName,
+                            wordToRemove.WordWrapper.GetAttributeByName(currentDefinition.Vertex.FromAttributeName));
                     }
                 }
 

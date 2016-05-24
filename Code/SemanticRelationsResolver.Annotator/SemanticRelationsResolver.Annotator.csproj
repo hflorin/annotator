@@ -147,12 +147,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="ViewModels\AddEdgeViewModel.cs" />
     <Compile Include="ViewModels\AddWordViewModel.cs" />
     <Compile Include="ViewModels\ElementAttributeEditorViewModel.cs" />
     <Compile Include="ViewModels\Observable.cs" />
     <Compile Include="ViewModels\SentenceEditorViewModel.cs" />
     <Compile Include="ViewModels\WordEditorViewModel.cs" />
     <Compile Include="ViewModels\WordReorderingViewModel.cs" />
+    <Compile Include="View\AddEdgeWindow .xaml.cs">
+      <DependentUpon>AddEdgeWindow .xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AddWordWindow.xaml.cs">
       <DependentUpon>AddWordWindow.xaml</DependentUpon>
     </Compile>
@@ -196,6 +200,10 @@
     <Page Include="Templates\SentenceEditorViewTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddEdgeWindow .xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\AddWordWindow.xaml">
       <SubType>Designer</SubType>

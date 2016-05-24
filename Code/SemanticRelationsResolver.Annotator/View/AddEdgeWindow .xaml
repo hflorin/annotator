@@ -1,0 +1,32 @@
+﻿<Window x:Class="SemanticRelationsResolver.Annotator.View.AddEdgeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SemanticRelationsResolver.Annotator.View"
+        mc:Ignorable="d"
+        Title="Select Edge Label Value" Height="150" Width="300" d:DataContext="{d:DesignData AddEdgeViewModel}">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid ItemsSource="{Binding Attributes}" Margin="0 5 0 0"
+                  AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name"
+                                    Binding="{Binding DisplayName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                    Width="Auto" IsReadOnly="True"/>
+                <DataGridTemplateColumn CellStyle="{StaticResource DataGridCellStyle1}" Header="Value" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Name="OKButton" Content="Ok" Click="OKButton_Click" IsDefault="True"
+                Command="{Binding OkButtonCommand}" Grid.Row="1" Grid.Column="0" />
+        <Button Name="CancelButton" Content="Cancel" IsCancel="True" Grid.Row="1" Grid.Column="1" />
+    </Grid>
+</Window>

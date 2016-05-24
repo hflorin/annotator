@@ -390,3 +390,5 @@ E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.csproj.GenerateResource.Cache
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.exe
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.pdb
+E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddEdgeWindow .g.cs
+E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddEdgeWindow .baml
