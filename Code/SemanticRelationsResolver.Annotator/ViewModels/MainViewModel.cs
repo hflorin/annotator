@@ -425,7 +425,7 @@
             var documentModel =
                 await documentMapper.Map(documentFilePath, ConfigurationManager.AppSettings["configurationFilePath"]);
 
-            // must check if the file is alredy loaded and has changes offer to save if so
+            //todo: must check if the file is alredy loaded and has changes offer to save if so
             documentsWrappers[documentFilePath] = new DocumentWrapper(documentModel);
 
             RefreshDocumentsExplorerList();

@@ -286,7 +286,7 @@
             return true;
         }
 
-        public void Initialize()
+        public void CreateSentenceGraph()
         {
             var logicCore = graphBuilder.SetupGraphLogic(Sentence);
 

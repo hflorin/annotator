@@ -301,6 +301,12 @@ D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\De
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.exe
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.pdb
 D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\bin\Debug\Configuration.xml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\Templates\SentenceEditorViewTemplates.baml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\App.baml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddWordWindow.g.cs
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.g.cs
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddWordWindow.baml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.baml
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\Configuration.xml
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Annotator.exe.config
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\bin\Debug\SemanticRelationsResolver.Annotator.exe
@@ -370,6 +376,7 @@ E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\ElementAttributeEditorView.g.cs
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\SentenceEditorView.g.cs
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\MainWindow.g.cs
+E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.g.cs
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\App.g.cs
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\GeneratedInternalTypeHelper.g.cs
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator_MarkupCompile.cache
@@ -377,16 +384,9 @@ E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddWordWindow.baml
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\SentenceEditorView.baml
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\MainWindow.baml
+E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.baml
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.g.resources
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.Properties.Resources.resources
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.csproj.GenerateResource.Cache
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.exe
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.pdb
-E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.g.cs
-E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.baml
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\Templates\SentenceEditorViewTemplates.baml
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\App.baml
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddWordWindow.g.cs
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.g.cs
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddWordWindow.baml
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.baml
