@@ -384,3 +384,9 @@ E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\SemanticRelationsResolver.Annotator.pdb
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.g.cs
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.baml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\Templates\SentenceEditorViewTemplates.baml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\App.baml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddWordWindow.g.cs
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.g.cs
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\AddWordWindow.baml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Annotator\obj\Debug\View\WordReorderingWindow.baml

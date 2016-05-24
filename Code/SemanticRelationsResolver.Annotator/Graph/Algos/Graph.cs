@@ -52,6 +52,11 @@
         {
             visited[vertex] = true;
 
+            if (!adjencyList.ContainsKey(vertex))
+            {
+                return false;
+            }
+
             foreach (var v in adjencyList[vertex])
             {
                 if (!visited[v])

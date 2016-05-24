@@ -1,8 +1,9 @@
 ﻿namespace SemanticRelationsResolver.Annotator.Graph.Algos
 {
     using System.Collections.Generic;
-    using Domain.Configuration;
-    using Wrapper;
+
+    using SemanticRelationsResolver.Annotator.Wrapper;
+    using SemanticRelationsResolver.Domain.Configuration;
 
     public static class GraphOperations
     {
@@ -30,10 +31,13 @@
 
                 var to = word.GetAttributeByName(definition.Vertex.ToAttributeName);
 
-                var toVertexId = wordToVertexMapping[to];
-                var fromVertexId = wordToVertexMapping[from];
+                if (wordToVertexMapping.ContainsKey(to) && wordToVertexMapping.ContainsKey(from))
+                {
+                    var toVertexId = wordToVertexMapping[to];
+                    var fromVertexId = wordToVertexMapping[from];
 
-                result.AddEdge(fromVertexId, toVertexId);
+                    result.AddEdge(fromVertexId, toVertexId);
+                }
             }
 
             return result;
