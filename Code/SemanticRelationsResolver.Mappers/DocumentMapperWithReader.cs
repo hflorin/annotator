@@ -95,11 +95,26 @@
                     var formValue = formAttribute != null ? formAttribute.Value : string.Empty;
 
                     sentenceContent += " " + formValue;
-                    word.Attributes.Add(new Attribute { Name = "content", DisplayName = "Content", Value = formValue });
+                    word.Attributes.Add(
+                        new Attribute
+                            {
+                                Name = "content", 
+                                DisplayName = "Content", 
+                                Value = formValue, 
+                                IsOptional = true, 
+                                IsEditable = false
+                            });
                 }
 
                 sentence.Attributes.Add(
-                    new Attribute { Name = "content", DisplayName = "Content", Value = sentenceContent });
+                    new Attribute
+                        {
+                            Name = "content", 
+                            DisplayName = "Content", 
+                            Value = sentenceContent, 
+                            IsOptional = true, 
+                            IsEditable = false
+                        });
             }
         }
 
