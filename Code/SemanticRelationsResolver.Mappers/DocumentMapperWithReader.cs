@@ -25,7 +25,7 @@
         public IEventAggregator EventAggregator { get; set; }
 
         public IAppConfigMapper AppConfigMapper { get; set; }
-
+        
         public async Task<Document> Map(string filepath, string configFilepath)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
@@ -48,10 +48,24 @@
             return document;
         }
 
+        private static string GetEntityNameByElementName(IAppConfig appConfig, ConfigurationPair item)
+        {
+            return appConfig.Elements.Single(e => e.Name.Equals(item.ElementName)).Entity;
+        }
+
         private Document CreateDocument(string filepath, IAppConfig appConfig)
         {
             var document = ObjectCopier.Clone(documentPrototype);
 
+            ParseDocument(filepath, appConfig, document);
+
+            AddInternalAttributes(document);
+
+            return document;
+        }
+
+        private void ParseDocument(string filepath, IAppConfig appConfig, Document document)
+        {
             var reader = new XmlTextReader(filepath);
 
             var queue = new List<ConfigurationPair>();
@@ -78,10 +92,6 @@
                         break;
                 }
             }
-
-            AddInternalAttributes(document);
-
-            return document;
         }
 
         private void AddInternalAttributes(Document document)
@@ -135,7 +145,7 @@
 
             foreach (var item in queue)
             {
-                var entityName = appConfig.Elements.Single(e => e.Name.Equals(item.ElementName)).Entity;
+                var entityName = GetEntityNameByElementName(appConfig, item);
 
                 if (string.IsNullOrWhiteSpace(entityName))
                 {
@@ -146,31 +156,15 @@
 
                 if (entity is Word)
                 {
-                    var newWord = ObjectCopier.Clone(wordPrototype);
-                    newWord.Attributes.Clear();
-
-                    AddAttributesToElement(item, wordPrototype, newWord);
-                    NotifyIfAnyNonOptionalAttributeIsMissing(document, wordPrototype, newWord);
-
-                    var lastSentence = document.Sentences.Last();
-                    lastSentence.Words.Add(newWord);
+                    ParseWord(document, item);
                 }
                 else if (entity is Sentence)
                 {
-                    var newSentence = ObjectCopier.Clone(sentencePrototype);
-                    newSentence.Attributes.Clear();
-
-                    AddAttributesToElement(item, sentencePrototype, newSentence);
-                    NotifyIfAnyNonOptionalAttributeIsMissing(document, sentencePrototype, newSentence);
-
-                    document.Sentences.Add(newSentence);
+                    ParseSentence(document, item);
                 }
                 else if (entity is Document)
                 {
-                    document.Attributes.Clear();
-
-                    AddAttributesToElement(item, documentPrototype, document);
-                    NotifyIfAnyNonOptionalAttributeIsMissing(document, documentPrototype, document);
+                    ParseDocument(document, item);
                 }
                 else
                 {
@@ -179,6 +173,37 @@
             }
 
             queue.Clear();
+        }
+
+        private void ParseDocument(Document document, ConfigurationPair item)
+        {
+            document.Attributes.Clear();
+
+            AddAttributesToElement(item, documentPrototype, document);
+            NotifyIfAnyNonOptionalAttributeIsMissing(document, documentPrototype, document);
+        }
+
+        private void ParseSentence(Document document, ConfigurationPair item)
+        {
+            var newSentence = ObjectCopier.Clone(sentencePrototype);
+            newSentence.Attributes.Clear();
+
+            AddAttributesToElement(item, sentencePrototype, newSentence);
+            NotifyIfAnyNonOptionalAttributeIsMissing(document, sentencePrototype, newSentence);
+
+            document.Sentences.Add(newSentence);
+        }
+
+        private void ParseWord(Document document, ConfigurationPair item)
+        {
+            var newWord = ObjectCopier.Clone(wordPrototype);
+            newWord.Attributes.Clear();
+
+            AddAttributesToElement(item, wordPrototype, newWord);
+            NotifyIfAnyNonOptionalAttributeIsMissing(document, wordPrototype, newWord);
+
+            var lastSentence = document.Sentences.Last();
+            lastSentence.Words.Add(newWord);
         }
 
         private void AddAttributesToElement(ConfigurationPair item, Element elementPrototype, Element elementToModify)
