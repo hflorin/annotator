@@ -12,7 +12,7 @@
     using Prism.Events;
     using Attribute = Domain.Attribute;
 
-    public class DocumentMapper : IDocumentMapper
+    public class DocumentMapperWithDynamic : IDocumentMapper
     {
         public IResourceLoader ResourceLoader { get; set; }
 

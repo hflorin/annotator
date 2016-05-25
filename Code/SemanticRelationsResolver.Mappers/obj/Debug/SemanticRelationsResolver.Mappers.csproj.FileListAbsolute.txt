@@ -38,19 +38,6 @@ D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.csprojResolveAssemblyReference.cache
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.dll
 D:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.pdb
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Mappers.dll
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Mappers.pdb
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\Prism.dll
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Domain.dll
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Events.dll
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Loaders.dll
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Domain.pdb
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Events.pdb
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Loaders.pdb
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\Prism.xml
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.csprojResolveAssemblyReference.cache
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.dll
-D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.pdb
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Mappers.dll
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Mappers.pdb
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\bin\Debug\Prism.dll
@@ -64,3 +51,16 @@ E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsRes
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.csprojResolveAssemblyReference.cache
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.dll
 E:\Faxultate\Facultate\Dizertatie\Repository\Annotator\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Mappers.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Mappers.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\Prism.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Domain.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Events.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Loaders.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Domain.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Events.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\SemanticRelationsResolver.Loaders.pdb
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\bin\Debug\Prism.xml
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.csprojResolveAssemblyReference.cache
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.dll
+D:\Desktop stuff\Dizertatie\Repo\Code\SemanticRelationsResolver.Mappers\obj\Debug\SemanticRelationsResolver.Mappers.pdb

@@ -13,7 +13,7 @@
         {
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
             builder.RegisterType<DynamicXmlLoader>().As<IResourceLoader>();
-            builder.RegisterType<DocumentMapper>().As<IDocumentMapper>().PropertiesAutowired();
+            builder.RegisterType<DocumentMapperWithReader>().As<IDocumentMapper>().PropertiesAutowired();
             builder.RegisterType<SaveDialogService>().As<ISaveDialogService>();
             builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>();
             builder.RegisterType<ShowMessageBoxInfo>().As<IShowInfoMessage>();

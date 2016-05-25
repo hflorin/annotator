@@ -19,6 +19,8 @@
 
         public bool IsOptional { get; set; }
 
+        public string Entity { get; set; }
+
         public ICollection<Attribute> Attributes { get; set; }
     }
 }
