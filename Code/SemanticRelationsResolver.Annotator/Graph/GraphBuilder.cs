@@ -23,6 +23,10 @@
                     this.definition = MotherObjects.DefaultDefinition;
                 }
             }
+            else
+            {
+                this.definition = definition;
+            }
         }
 
         public SentenceGxLogicCore SetupGraphLogic(SentenceWrapper sentence)

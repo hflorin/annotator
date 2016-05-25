@@ -5,25 +5,30 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Input;
-    using Commands;
-    using Domain;
-    using Domain.Configuration;
-    using Graph;
-    using Graph.Algos;
+
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
-    using Mappers;
+
     using Prism.Events;
+
+    using SemanticRelationsResolver.Annotator.Commands;
+    using SemanticRelationsResolver.Annotator.Graph;
+    using SemanticRelationsResolver.Annotator.Graph.Algos;
+    using SemanticRelationsResolver.Annotator.View;
+    using SemanticRelationsResolver.Annotator.View.Services;
+    using SemanticRelationsResolver.Annotator.Wrapper;
+    using SemanticRelationsResolver.Domain;
+    using SemanticRelationsResolver.Domain.Configuration;
     using SemanticRelationsResolver.Events;
-    using View;
-    using View.Services;
-    using Wrapper;
+    using SemanticRelationsResolver.Mappers;
 
     public class SentenceEditorViewModel : Observable
     {
         private readonly IAppConfig appConfig;
 
         private readonly GraphBuilder graphBuilder;
+
+        private readonly SentenceGraph sentenceGraph;
 
         private IEnumerable edgeRoutingAlgorithmTypes =
             Enum.GetValues(typeof(EdgeRoutingAlgorithmTypeEnum)).Cast<EdgeRoutingAlgorithmTypeEnum>();
@@ -33,14 +38,16 @@
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
-        private readonly SentenceGraph sentenceGraph;
-
         private SentenceGxLogicCore sentenceLogicCore;
 
         private SentenceWrapper sentenceWrapper;
-        private IShowInfoMessage showMessage;
 
-        public SentenceEditorViewModel(IEventAggregator eventAggregator, IAppConfig appConfig, SentenceWrapper sentence,
+        private readonly IShowInfoMessage showMessage;
+
+        public SentenceEditorViewModel(
+            IEventAggregator eventAggregator, 
+            IAppConfig appConfig, 
+            SentenceWrapper sentence, 
             IShowInfoMessage showMessage)
         {
             if (sentence == null)
@@ -67,7 +74,7 @@
 
             EventAggregator = eventAggregator;
             Sentence = sentence;
-            graphBuilder = new GraphBuilder(appConfig);
+            graphBuilder = new GraphBuilder(appConfig, appConfig.Definitions.First());
             this.appConfig = appConfig;
             this.showMessage = showMessage;
 
@@ -80,8 +87,15 @@
 
         public SenteceGraphOperationMode SenteceGraphOperationMode
         {
-            get { return operationMode; }
-            set { operationMode = value; }
+            get
+            {
+                return operationMode;
+            }
+
+            set
+            {
+                operationMode = value;
+            }
         }
 
         public IEventAggregator EventAggregator { get; set; }
@@ -98,7 +112,11 @@
 
         public SentenceWrapper Sentence
         {
-            get { return sentenceWrapper; }
+            get
+            {
+                return sentenceWrapper;
+            }
+
             set
             {
                 sentenceWrapper = value;
@@ -110,7 +128,11 @@
 
         public SentenceGxLogicCore SentenceGraphLogicCore
         {
-            get { return sentenceLogicCore; }
+            get
+            {
+                return sentenceLogicCore;
+            }
+
             set
             {
                 sentenceLogicCore = value;
@@ -124,14 +146,28 @@
 
         public IEnumerable LayoutAlgorithmTypes
         {
-            get { return layoutAlgorithmTypes; }
-            set { layoutAlgorithmTypes = value; }
+            get
+            {
+                return layoutAlgorithmTypes;
+            }
+
+            set
+            {
+                layoutAlgorithmTypes = value;
+            }
         }
 
         public IEnumerable EdgeRoutingAlgorithmTypes
         {
-            get { return edgeRoutingAlgorithmTypes; }
-            set { edgeRoutingAlgorithmTypes = value; }
+            get
+            {
+                return edgeRoutingAlgorithmTypes;
+            }
+
+            set
+            {
+                edgeRoutingAlgorithmTypes = value;
+            }
         }
 
         private void PopulateWords(IEventAggregator eventAggregator, SentenceWrapper sentence)
@@ -163,10 +199,10 @@
         private void InitializeCommands()
         {
             LayoutAlgorithmChangedCommand = new DelegateCommand(
-                LayoutAlgorithmChangedCommandExecute,
+                LayoutAlgorithmChangedCommandExecute, 
                 LayoutAlgorithmChangedCommandCanExecute);
             EdgeRoutingAlgorithmChangedCommand = new DelegateCommand(
-                EdgeRoutingAlgorithmChangedCommandExecute,
+                EdgeRoutingAlgorithmChangedCommandExecute, 
                 EdgeRoutingAlgorithmChangedCommandCanExecute);
             ToggleEditModeCommand = new DelegateCommand(ToggleEditModeCommandExecute, ToggleEditModeCommandCanExecute);
             AddWordCommand = new DelegateCommand(AddWordCommandExecute, AddWordCommandCanExecute);
@@ -176,7 +212,8 @@
         private void CheckIsTreeCommandExecute(object obj)
         {
             var isTree = GraphOperations.GetGraph(Sentence, appConfig.Definitions.First()).IsTree();
-            showMessage.ShowInfoMessage(string.Format("Graph for sentence with id {0} is tree: {1}", Sentence.Id.Value, isTree));
+            showMessage.ShowInfoMessage(
+                string.Format("Graph for sentence with id {0} is tree: {1}", Sentence.Id.Value, isTree));
         }
 
         private bool CheckIsTreeCommandCanExecute(object arg)
@@ -187,16 +224,15 @@
         private void AddWordCommandExecute(object obj)
         {
             var wordPrototype = ObjectCopier.Clone(appConfig.Elements.OfType<Word>().Single());
-            var wordIds = Sentence.Words.Select(w => new Pair
-            {
-                Id = int.Parse(w.GetAttributeByName("id")),
-                Form = w.GetAttributeByName("form")
-            }).ToList();
+            var wordIds =
+                Sentence.Words.Select(
+                    w => new Pair { Id = int.Parse(w.GetAttributeByName("id")), Form = w.GetAttributeByName("form") })
+                    .ToList();
             var addWordWindow = new AddWordWindow(new AddWordViewModel(wordPrototype, wordIds));
 
             if (addWordWindow.ShowDialog().GetValueOrDefault())
             {
-                var word = ((AddWordViewModel) addWordWindow.DataContext).Word;
+                var word = ((AddWordViewModel)addWordWindow.DataContext).Word;
                 Sentence.Words.Add(word);
 
                 var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(Sentence));
@@ -204,8 +240,7 @@
                 {
                 }
 
-                //todo: ensure tree and id ordering is in place
-
+                // todo: ensure tree and id ordering is in place
                 Words.Add(new WordEditorViewModel(word, EventAggregator));
                 EventAggregator.GetEvent<AddWordVertexEvent>().Publish(word);
             }
@@ -223,13 +258,15 @@
 
         private void ToggleEditModeCommandExecute(object obj)
         {
-            EventAggregator.GetEvent<SetSentenceEditModeEvent>().Publish(new SetSenteceGraphOperationModeRequest
-            {
-                Mode =
-                    obj is SenteceGraphOperationMode
-                        ? (SenteceGraphOperationMode) obj
-                        : SenteceGraphOperationMode.Select
-            });
+            EventAggregator.GetEvent<SetSentenceEditModeEvent>()
+                .Publish(
+                    new SetSenteceGraphOperationModeRequest
+                        {
+                            Mode =
+                                obj is SenteceGraphOperationMode
+                                    ? (SenteceGraphOperationMode)obj
+                                    : SenteceGraphOperationMode.Select
+                        });
         }
 
         private bool EdgeRoutingAlgorithmChangedCommandCanExecute(object arg)
@@ -274,6 +311,7 @@
                 SentenceGraphLogicCore.DefaultLayoutAlgorithmParams =
                     SentenceGraphLogicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.BoundedFR);
             }
+
             if (newLayoutAlgorithmType == LayoutAlgorithmTypeEnum.FR)
             {
                 SentenceGraphLogicCore.DefaultLayoutAlgorithmParams =
