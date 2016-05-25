@@ -5,12 +5,15 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Domain;
-    using Domain.Configuration;
-    using Events;
-    using Loaders;
+
     using Prism.Events;
-    using Attribute = Domain.Attribute;
+
+    using SemanticRelationsResolver.Domain;
+    using SemanticRelationsResolver.Domain.Configuration;
+    using SemanticRelationsResolver.Events;
+    using SemanticRelationsResolver.Loaders;
+
+    using Attribute = SemanticRelationsResolver.Domain.Attribute;
 
     public class DocumentMapperWithDynamic : IDocumentMapper
     {
@@ -77,9 +80,8 @@
                     var newWord = ObjectCopier.Clone(wordElementPrototype);
                     newWord.Attributes.Clear();
 
-
-                    var wordIdAttribute = ObjectCopier.Clone(
-                        wordElementPrototype.Attributes.Single(a => a.Name.Equals("id")));
+                    var wordIdAttribute =
+                        ObjectCopier.Clone(wordElementPrototype.Attributes.Single(a => a.Name.Equals("id")));
                     wordIdAttribute.Value = word.id;
 
                     var wordFormAttribute =
@@ -90,8 +92,8 @@
                         ObjectCopier.Clone(wordElementPrototype.Attributes.Single(a => a.Name.Equals("lemma")));
                     wordLemmaAttribute.Value = word.lemma;
 
-                    var wordPostagAttribute = ObjectCopier.Clone(
-                        wordElementPrototype.Attributes.Single(a => a.Name.Equals("postag")));
+                    var wordPostagAttribute =
+                        ObjectCopier.Clone(wordElementPrototype.Attributes.Single(a => a.Name.Equals("postag")));
                     wordPostagAttribute.Value = word.postag;
 
                     var wordHeadAttribute =
@@ -110,13 +112,15 @@
                     newWord.Attributes.Add(wordChunkAttribute);
                     if (wordHeadAttribute.Value != "0")
                     {
-                        var wordDeprelAttribute = ObjectCopier.Clone(
-                            wordElementPrototype.Attributes.Single(a => a.Name.Equals("deprel")));
+                        var wordDeprelAttribute =
+                            ObjectCopier.Clone(wordElementPrototype.Attributes.Single(a => a.Name.Equals("deprel")));
 
                         wordDeprelAttribute.Value = word.deprel;
                         newWord.Attributes.Add(wordDeprelAttribute);
                     }
-                    newWord.Attributes.Add(new Attribute {Name = "content", DisplayName = "Content", Value = word.form});
+
+                    newWord.Attributes.Add(
+                        new Attribute { Name = "content", DisplayName = "Content", Value = word.form });
 
                     words.Add(newWord);
                 }
@@ -140,33 +144,33 @@
                 var newSentence = ObjectCopier.Clone(sentenceElementPrototype);
                 newSentence.Attributes.Clear();
 
-                var sentenceIdAttribute = ObjectCopier.Clone(
-                    sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("id")));
+                var sentenceIdAttribute =
+                    ObjectCopier.Clone(sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("id")));
                 sentenceIdAttribute.Value = sentence.id;
                 newSentence.Attributes.Add(sentenceIdAttribute);
 
-                var sentenceParserAttribute = ObjectCopier.Clone(
-                    sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("parser")));
+                var sentenceParserAttribute =
+                    ObjectCopier.Clone(sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("parser")));
                 sentenceParserAttribute.Value = sentence.parser;
                 newSentence.Attributes.Add(sentenceParserAttribute);
 
-                var sentenceUserAttribute = ObjectCopier.Clone(
-                    sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("user")));
+                var sentenceUserAttribute =
+                    ObjectCopier.Clone(sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("user")));
                 sentenceUserAttribute.Value = sentence.user;
                 newSentence.Attributes.Add(sentenceUserAttribute);
 
-                var sentenceDateAttribute = ObjectCopier.Clone(
-                    sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("date")));
+                var sentenceDateAttribute =
+                    ObjectCopier.Clone(sentenceElementPrototype.Attributes.Single(a => a.Name.Equals("date")));
                 sentenceDateAttribute.Value = sentence.date;
                 newSentence.Attributes.Add(sentenceDateAttribute);
 
                 newSentence.Attributes.Add(
                     new Attribute
-                    {
-                        Name = "content",
-                        DisplayName = "Content",
-                        Value = sentenceBody.ToString(0, sentenceBody.Length - 1)
-                    });
+                        {
+                            Name = "content", 
+                            DisplayName = "Content", 
+                            Value = sentenceBody.ToString(0, sentenceBody.Length - 1)
+                        });
 
                 newSentence.Words = words;
 
