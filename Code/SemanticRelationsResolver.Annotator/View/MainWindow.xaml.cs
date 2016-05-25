@@ -1,17 +1,20 @@
 ﻿namespace SemanticRelationsResolver.Annotator.View
 {
+    using System;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Threading;
     using Events;
     using Prism.Events;
     using ViewModels;
     using Wrapper;
+    using Xceed.Wpf.AvalonDock;
 
     public partial class MainWindow : Window
     {
-        private readonly MainViewModel viewModel;
         private readonly IEventAggregator eventAggregator;
+        private readonly MainViewModel viewModel;
 
         public MainWindow(MainViewModel viewModel, IEventAggregator eventAggregator)
         {
@@ -35,6 +38,18 @@
         private void DataGrid_OnLoadingRow(object sender, DataGridRowEventArgs e)
         {
             eventAggregator.GetEvent<CheckIsTreeOnSentenceEvent>().Publish(e.Row.DataContext as SentenceWrapper);
+        }
+
+        private void ContentDockingManager_OnDocumentClosing(object sender, DocumentClosingEventArgs e)
+        {
+            e.Document.CanClose = false;
+
+            var documentModel = e.Document.Content as SentenceEditorView;
+            if (documentModel != null)
+            {
+                Dispatcher.BeginInvoke(new Action(() => viewModel.SentenceEditViews.Remove(documentModel)),
+                    DispatcherPriority.Background);
+            }
         }
     }
 }

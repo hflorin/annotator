@@ -48,7 +48,7 @@
 
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"
                              DocumentsSource="{Binding SentenceEditViews, UpdateSourceTrigger=PropertyChanged}"
-                             ActiveContent="{Binding ActiveSentenceEditorView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                             ActiveContent="{Binding ActiveSentenceEditorView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DocumentClosing="ContentDockingManager_OnDocumentClosing">
             <xcad:DockingManager.DocumentHeaderTemplate>
                 <ItemContainerTemplate>
                     <TextBlock Text="{Binding Content.DataContext.Sentence.Id.Value}" />

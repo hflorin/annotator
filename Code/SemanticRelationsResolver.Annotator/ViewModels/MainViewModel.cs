@@ -312,7 +312,7 @@
         {
             var sentenceEditView = new SentenceEditorView(
                 new SentenceEditorViewModel(eventAggregator, appConfig, SelectedSentence, showInfoMessage),
-                eventAggregator,appConfig);
+                eventAggregator, appConfig);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
