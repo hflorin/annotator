@@ -387,7 +387,7 @@
             GgArea.LogicCore.ExternalLayoutAlgorithm =
                 new TopologicalLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
                     GgArea.LogicCore.Graph as SentenceGraph, 
-                    50, 25);
+                    50);
         }
     }
 }

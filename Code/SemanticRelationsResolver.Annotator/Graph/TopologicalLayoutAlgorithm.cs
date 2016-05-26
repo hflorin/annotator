@@ -3,11 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
-
     using GraphX.Measure;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Common.Interfaces;
-
     using QuickGraph;
 
     public class TopologicalLayoutAlgorithm<TVertex, TEdge, TGraph> : IExternalLayout<TVertex, TEdge>
@@ -32,10 +30,7 @@
 
         public bool NeedVertexSizes
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         public bool SupportsObjectFreeze { get; private set; }
