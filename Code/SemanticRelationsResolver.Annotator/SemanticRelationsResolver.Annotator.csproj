@@ -136,6 +136,8 @@
     <Compile Include="Graph\GraphBuilder.cs" />
     <Compile Include="Graph\MotherObjects.cs" />
     <Compile Include="Graph\SentenceEditorManager.cs" />
+    <Compile Include="Graph\TopologicalEdgeRoutingAlgorithm.cs" />
+    <Compile Include="Graph\TopologicalLayoutAlgorithm.cs" />
     <Compile Include="Graph\WordEdge.cs" />
     <Compile Include="Graph\SentenceGraph.cs" />
     <Compile Include="Graph\SentenceGraphArea.cs" />

@@ -32,9 +32,10 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
+                <Button Click="ButtonBase_OnClick" Content="Custom Layout Algo" Width="70" />
                 <Button Click="viewModel_SentenceGraphChanged" Content="Refresh" Width="70" />
-                <Button Click="viewModel_SentenceGraphChanged" Content="Validate" Width="70" Command="{Binding CheckIsTreeCommand}" />
-                <Button Click="viewModel_SentenceGraphChanged" Content="Save" Width="70" IsEnabled="{Binding Sentence.IsChanged}"/>
+                <Button Content="Validate" Width="70" Command="{Binding CheckIsTreeCommand}" />
+                <Button Content="Save" Width="70" IsEnabled="{Binding Sentence.IsChanged}"/>
                 <ToggleButton Name="butSelect" Content="Select" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events:SenteceGraphOperationMode.Select}"
                               ToolTip="Selection mode: drag vertices, Ctrl+Click to group them"
