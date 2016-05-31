@@ -23,7 +23,7 @@
         {
             var graph = (SentenceGraphArea) obj;
 
-            graph.SetVerticesDrag(true);
+            graph.SetVerticesDrag(true, true);
 
             graph.RelayoutGraph(true);
             graph.GenerateGraph();

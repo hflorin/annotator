@@ -8,6 +8,7 @@
 
     using GraphX.Controls;
     using GraphX.Controls.Models;
+    using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Helpers;
 
     using Prism.Events;
@@ -351,6 +352,18 @@
 
             GgZoomCtrl.ZoomToFill();
             GgZoomCtrl.Mode = ZoomControlModes.Custom;
+
+
+            foreach (var item in GgArea.VertexList)
+            {
+                HighlightBehaviour.SetHighlightControl(item.Value, GraphControlType.VertexAndEdge);
+                HighlightBehaviour.SetIsHighlightEnabled(item.Value, true);
+            }
+            foreach (var item in GgArea.EdgesList)
+            {
+                HighlightBehaviour.SetHighlightControl(item.Value, GraphControlType.VertexAndEdge);
+                HighlightBehaviour.SetIsHighlightEnabled(item.Value, true);
+            }
         }
 
         private void GgArea_RelayoutFinished(object sender, EventArgs e)

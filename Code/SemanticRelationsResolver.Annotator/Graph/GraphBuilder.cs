@@ -45,7 +45,7 @@
 
             if (parameters != null)
             {
-                parameters.EdgeRouting = SugiyamaEdgeRoutings.Orthogonal;
+                parameters.EdgeRouting = SugiyamaEdgeRoutings.Traditional;
                 parameters.LayerDistance = parameters.VertexDistance = 50;
                 logicCore.EdgeCurvingEnabled = false;
                 logicCore.DefaultLayoutAlgorithmParams = parameters;
