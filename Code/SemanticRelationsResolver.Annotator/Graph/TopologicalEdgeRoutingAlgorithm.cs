@@ -125,22 +125,76 @@
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (edge.Source.ID < edge.Target.ID)
-            {
-                ComputeFirstCase(edge, offset, edgesPerVertex, edgesDrawnPerVertex, 1);
-            }
-            else
-            {
-                ComputeFirstCase(edge, offset, edgesPerVertex, edgesDrawnPerVertex, -1);
-            }
+            ComputeFirstCase(edge, offset, edgesPerVertex, edgesDrawnPerVertex);
+
+            //if (edge.Source.ID < edge.Target.ID)
+            //{
+            //    ComputeFirstCase(edge, offset, edgesPerVertex, edgesDrawnPerVertex);
+            //}
+            //else
+            //{
+            //    ComputeSecondCase(edge, offset, edgesPerVertex, edgesDrawnPerVertex);
+            //}
         }
 
         private void ComputeFirstCase(
             TEdge edge, 
             double offset, 
             IDictionary<TVertex, int> edgesPerVertex, 
-            IDictionary<TVertex, int> edgesDrawnPerVertex, 
-            int direction)
+            IDictionary<TVertex, int> edgesDrawnPerVertex)
+        {
+            var sourcePoint = VertexPositions[edge.Source];
+
+            var targetPoint = VertexPositions[edge.Target];
+
+            if (sourcePoint == targetPoint)
+            {
+                return;
+            }
+
+            var sourceVertexWidth = VertexSizes[edge.Source].Width;
+            var targetVertexWidth = VertexSizes[edge.Target].Width;
+
+            var x = sourcePoint.X;
+            var y = sourcePoint.Y;
+            var tempList = new List<Point> { new Point(x+100, y) };
+            
+            x = sourcePoint.X
+                + (sourceVertexWidth / edgesPerVertex[edge.Source]
+                   * edgesPerVertex[edge.Source] + edgesDrawnPerVertex[edge.Source]);
+            y = sourcePoint.Y + offset;
+
+            tempList.Add(new Point(x, y));
+
+            x = targetPoint.X
+                + (targetVertexWidth / edgesPerVertex[edge.Target]) * edgesDrawnPerVertex[edge.Target];
+            y = sourcePoint.Y + offset;
+
+            tempList.Add(new Point(x, y));
+
+            x = targetPoint.X;
+            y = targetPoint.Y;
+
+            tempList.Add(new Point(x+100, y));
+
+            if (EdgeRoutes.ContainsKey(edge))
+            {
+                EdgeRoutes[edge] = tempList.Count > 2 ? tempList.ToArray() : null;
+            }
+            else
+            {
+                EdgeRoutes.Add(edge, tempList.Count > 2 ? tempList.ToArray() : null);
+            }
+
+            edgesDrawnPerVertex[edge.Source]++;
+            edgesDrawnPerVertex[edge.Target]++;
+        }
+
+        private void ComputeSecondCase(
+           TEdge edge,
+           double offset,
+           IDictionary<TVertex, int> edgesPerVertex,
+           IDictionary<TVertex, int> edgesDrawnPerVertex)
         {
             var sourcePoint = VertexPositions[edge.Source];
 
@@ -155,29 +209,28 @@
             var targetVertexWidth = VertexSizes[edge.Target].Width;
 
             var x = sourcePoint.X
-                    + ((sourceVertexWidth / edgesPerVertex[edge.Source])
-                       * (edgesPerVertex[edge.Source] + direction * edgesDrawnPerVertex[edge.Source]));
+                    + sourceVertexWidth / edgesPerVertex[edge.Source]
+                    * (edgesPerVertex[edge.Source] + edgesDrawnPerVertex[edge.Source]);
             var y = sourcePoint.Y + offset;
 
-            var adjustedSourcePoint = new Point(x - 100.0, y);
+            var adjustedSourcePoint = new Point(x, y);
 
             var tempList = new List<Point> { adjustedSourcePoint };
 
-            x = targetPoint.X
-                + (direction * ((targetVertexWidth / edgesPerVertex[edge.Target]) * edgesDrawnPerVertex[edge.Target]));
+            x = targetPoint.X + (targetVertexWidth / edgesPerVertex[edge.Target]) * edgesDrawnPerVertex[edge.Target];
             y = targetPoint.Y + offset;
 
             var adjustedTargetPoint = new Point(x, y);
 
             x = sourcePoint.X
-                + ((sourceVertexWidth / edgesPerVertex[edge.Source])
-                   * (edgesPerVertex[edge.Source] + direction * edgesDrawnPerVertex[edge.Source]));
+                + (sourceVertexWidth / edgesPerVertex[edge.Source]
+                   * edgesPerVertex[edge.Source] + edgesDrawnPerVertex[edge.Source]);
             y = sourcePoint.Y + offset;
 
             tempList.Add(new Point(x, y));
 
             x = targetPoint.X
-                + (direction * ((targetVertexWidth / edgesPerVertex[edge.Target]) * edgesDrawnPerVertex[edge.Target]));
+                + (targetVertexWidth / edgesPerVertex[edge.Target]) * edgesDrawnPerVertex[edge.Target];
             y = sourcePoint.Y + offset;
 
             tempList.Add(new Point(x, y));
