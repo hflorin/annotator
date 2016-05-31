@@ -3,11 +3,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+
     using GraphX.Measure;
     using GraphX.PCL.Common;
     using GraphX.PCL.Common.Exceptions;
     using GraphX.PCL.Common.Interfaces;
     using GraphX.PCL.Logic.Algorithms.EdgeRouting;
+
     using QuickGraph;
 
     public class TopologicalEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> :
@@ -17,9 +19,9 @@
         where TVertex : class, IGraphXVertex, IIdentifiableGraphDataObject
     {
         public TopologicalEdgeRoutingAlgorithm(
-            TGraph graph,
-            IDictionary<TVertex, Point> vertexPositions = null,
-            IDictionary<TVertex, Rect> vertexSizes = null,
+            TGraph graph, 
+            IDictionary<TVertex, Point> vertexPositions = null, 
+            IDictionary<TVertex, Rect> vertexSizes = null, 
             IEdgeRoutingParameters parameters = null)
             : base(graph, vertexPositions, vertexSizes, parameters)
         {
@@ -45,7 +47,6 @@
             var edgesSortedByDistanceBetweenVertices = distancesBetweenEdgeVertices.ToList();
             edgesSortedByDistanceBetweenVertices.Sort((left, right) => left.Value.CompareTo(right.Value));
 
-
             var numberOfEdgesPerVertex = new Dictionary<TVertex, int>();
             var numberOfEdgesDrawnPerVertex = new Dictionary<TVertex, int>();
 
@@ -69,14 +70,19 @@
                     numberOfEdgesPerVertex.Add(edge.Key.Target, 1);
                 }
 
-                numberOfEdgesDrawnPerVertex[edge.Key.Source] = 0;
-                numberOfEdgesDrawnPerVertex[edge.Key.Target] = 0;
+                numberOfEdgesDrawnPerVertex[edge.Key.Source] = 1;
+                numberOfEdgesDrawnPerVertex[edge.Key.Target] = 1;
             }
 
             var offset = -10;
             foreach (var item in edgesSortedByDistanceBetweenVertices)
             {
-                ComputeEdgeRoutePoints(item.Key, offset, cancellationToken, numberOfEdgesPerVertex, numberOfEdgesDrawnPerVertex);
+                ComputeEdgeRoutePoints(
+                    item.Key, 
+                    offset, 
+                    cancellationToken, 
+                    numberOfEdgesPerVertex, 
+                    numberOfEdgesDrawnPerVertex);
                 offset -= 10;
             }
         }
@@ -90,15 +96,21 @@
                 var fromPoint = VertexPositions[edge.Source];
                 var toPoint = VertexPositions[edge.Target];
 
-                var distance = (fromPoint.X - toPoint.X)*(fromPoint.X - toPoint.X)
-                               + (fromPoint.X - toPoint.X)*(fromPoint.X - toPoint.X);
+                var distance = ((fromPoint.X - toPoint.X) * (fromPoint.X - toPoint.X))
+                               + ((fromPoint.X - toPoint.X) * (fromPoint.X - toPoint.X));
 
                 distancesBetweenEdgeNodes.Add(edge, distance);
             }
+
             return distancesBetweenEdgeNodes;
         }
 
-        private void ComputeEdgeRoutePoints(TEdge edge, double offset, CancellationToken cancellationToken, IDictionary<TVertex, int> edgesPerVertex, IDictionary<TVertex, int> edgesDrawnPerVertex)
+        private void ComputeEdgeRoutePoints(
+            TEdge edge, 
+            double offset, 
+            CancellationToken cancellationToken, 
+            IDictionary<TVertex, int> edgesPerVertex, 
+            IDictionary<TVertex, int> edgesDrawnPerVertex)
         {
             if ((edge.Source.ID == -1) || (edge.Target.ID == -1))
             {
@@ -111,37 +123,66 @@
                 return;
             }
 
-            var startPoint = VertexPositions[edge.Source];
+            cancellationToken.ThrowIfCancellationRequested();
 
-            var endPoint = VertexPositions[edge.Target];
+            if (edge.Source.ID < edge.Target.ID)
+            {
+                ComputeFirstCase(edge, offset, edgesPerVertex, edgesDrawnPerVertex, 1);
+            }
+            else
+            {
+                ComputeFirstCase(edge, offset, edgesPerVertex, edgesDrawnPerVertex, -1);
+            }
+        }
 
-            if (startPoint == endPoint)
+        private void ComputeFirstCase(
+            TEdge edge, 
+            double offset, 
+            IDictionary<TVertex, int> edgesPerVertex, 
+            IDictionary<TVertex, int> edgesDrawnPerVertex, 
+            int direction)
+        {
+            var sourcePoint = VertexPositions[edge.Source];
+
+            var targetPoint = VertexPositions[edge.Target];
+
+            if (sourcePoint == targetPoint)
             {
                 return;
             }
 
-            var sourceVertexWidth = VertexSizes[edge.Source];
-            var targetVertexWidth = VertexSizes[edge.Target];
+            var sourceVertexWidth = VertexSizes[edge.Source].Width;
+            var targetVertexWidth = VertexSizes[edge.Target].Width;
 
-            var adjustedStartPoint =
-                new Point(
-                    startPoint.X +
-                    ((sourceVertexWidth.Width/edgesPerVertex[edge.Source])*edgesDrawnPerVertex[edge.Source]),
-                    startPoint.Y);
+            var x = sourcePoint.X
+                    + ((sourceVertexWidth / edgesPerVertex[edge.Source])
+                       * (edgesPerVertex[edge.Source] + direction * edgesDrawnPerVertex[edge.Source]));
+            var y = sourcePoint.Y + offset;
 
-            var adjustedEndPoint =
-                new Point(
-                    endPoint.X +
-                    ((targetVertexWidth.Width/edgesPerVertex[edge.Target])*edgesDrawnPerVertex[edge.Target]),
-                    endPoint.Y);
+            var adjustedSourcePoint = new Point(x - 100.0, y);
 
-            var tempList = new List<Point> { adjustedStartPoint };
+            var tempList = new List<Point> { adjustedSourcePoint };
 
-            tempList.Add(new Point(startPoint.X + ((sourceVertexWidth.Width/edgesPerVertex[edge.Source]) * edgesDrawnPerVertex[edge.Source]), startPoint.Y + offset));
+            x = targetPoint.X
+                + (direction * ((targetVertexWidth / edgesPerVertex[edge.Target]) * edgesDrawnPerVertex[edge.Target]));
+            y = targetPoint.Y + offset;
 
-            tempList.Add(new Point(endPoint.X + ((targetVertexWidth.Width/edgesPerVertex[edge.Target])*edgesDrawnPerVertex[edge.Target]), startPoint.Y + offset));
+            var adjustedTargetPoint = new Point(x, y);
 
-            tempList.Add(adjustedEndPoint);
+            x = sourcePoint.X
+                + ((sourceVertexWidth / edgesPerVertex[edge.Source])
+                   * (edgesPerVertex[edge.Source] + direction * edgesDrawnPerVertex[edge.Source]));
+            y = sourcePoint.Y + offset;
+
+            tempList.Add(new Point(x, y));
+
+            x = targetPoint.X
+                + (direction * ((targetVertexWidth / edgesPerVertex[edge.Target]) * edgesDrawnPerVertex[edge.Target]));
+            y = sourcePoint.Y + offset;
+
+            tempList.Add(new Point(x, y));
+
+            tempList.Add(adjustedTargetPoint);
 
             if (EdgeRoutes.ContainsKey(edge))
             {
