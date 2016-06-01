@@ -9,6 +9,7 @@
         <GradientStop Color="#630303" Offset="1"/>
     </LinearGradientBrush>
 
+    <!-- VERTEX CONTROL -->
     <Style TargetType="{x:Type graphx:VertexControl}">
         <Setter Property="Background" Value="#FFE3E3E3"/>
         <Setter Property="BorderThickness" Value="2,2,2,2"/>
@@ -42,4 +43,59 @@
         </Style.Triggers>
     </Style>
 
+
+    <!-- EDGE CONTROL -->
+    <Style TargetType="{x:Type graphx:EdgeControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type graphx:EdgeControl}">
+                    <Grid>
+                        <Path Stroke="{TemplateBinding Foreground}"
+                          StrokeThickness="2" MinWidth="1" MinHeight="1"
+                          ToolTip="{TemplateBinding ToolTip}" 
+                            x:Name="PART_edgePath"/>
+                        <graphx:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget" >
+                            <Path Data="M0,0.5 L1,1 1,0" Fill="Black" Stretch="Uniform" Width="10" Height="10"/>
+                        </graphx:DefaultEdgePointer>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="MinWidth"
+                Value="1" />
+        <Setter Property="MinHeight"
+                Value="1" />
+        <Setter Property="Background"
+                Value="Red" />
+        <Setter Property="Foreground"
+                Value="Black" />
+        <Setter Property="Opacity"
+                Value="1" />
+
+        <Setter Property="graphx:HighlightBehaviour.IsHighlightEnabled" Value="False"/>
+
+
+        <Style.Triggers>
+            <Trigger Property="graphx:HighlightBehaviour.Highlighted" Value="True">
+                <Setter Property="Foreground" Value="Red"/>
+                <Setter Property="StrokeThickness" Value="5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--EDGE LABLE CONTROL -->
+    <Style TargetType="{x:Type graphx:AttachableEdgeLabelControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type graphx:AttachableEdgeLabelControl}">
+                    <Border BorderBrush="Black" BorderThickness="1" Background="White" CornerRadius="4">
+                        <ContentPresenter Margin="3" Content="{Binding AttachNode.Edge.Text, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="DisplayForSelfLoopedEdges" Value="False"/>
+    </Style>
 </ResourceDictionary>

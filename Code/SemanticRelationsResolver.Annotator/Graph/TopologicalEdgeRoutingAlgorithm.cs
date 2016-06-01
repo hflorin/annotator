@@ -137,7 +137,7 @@
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            ComputeSecondCase(edge, offset, edgesPerVertex, edgesDrawnPerVertex);
+            ComputeSecondCase(edge, offset);
 
             //if (edge.Source.ID < edge.Target.ID)
             //{
@@ -204,9 +204,9 @@
 
         private void ComputeSecondCase(
             TEdge edge,
-            double offset,
-            IDictionary<TVertex, int> edgesPerVertex,
-            IDictionary<TVertex, int> edgesDrawnPerVertex)
+            double offset
+            //IDictionary<TVertex, int> edgesPerVertex,
+            /*IDictionary<TVertex, int> edgesDrawnPerVertex*/)
         {
             var sourcePoint = VertexPositions[edge.Source];
 
@@ -263,8 +263,8 @@
                 EdgeRoutes.Add(edge, tempList.Count > 2 ? tempList.ToArray() : null);
             }
 
-            edgesDrawnPerVertex[edge.Source]++;
-            edgesDrawnPerVertex[edge.Target]++;
+           // edgesDrawnPerVertex[edge.Source]++;
+           // edgesDrawnPerVertex[edge.Target]++;
         }
     }
 }
