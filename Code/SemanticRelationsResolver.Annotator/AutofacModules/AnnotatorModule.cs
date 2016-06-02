@@ -19,10 +19,10 @@
             builder.RegisterType<ShowMessageBoxInfo>().As<IShowInfoMessage>();
             builder.RegisterType<AppConfigMapper>().As<IAppConfigMapper>().PropertiesAutowired();
             builder.RegisterType<SentenceEditorViewModel>().AsSelf();
-            builder.RegisterType<MainViewModel>().AsSelf();
             builder.RegisterType<AddWordViewModel>().AsSelf();
             builder.RegisterType<WordReorderingViewModel>().AsSelf();
             builder.RegisterType<ElementAttributeEditorViewModel>().AsSelf();
+            builder.RegisterType<MainViewModel>().AsSelf();
         }
     }
 }

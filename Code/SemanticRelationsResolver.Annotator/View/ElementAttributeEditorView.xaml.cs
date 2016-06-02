@@ -12,9 +12,8 @@
             InitializeComponent();
         }
 
-        public ElementAttributeEditorView(ElementAttributeEditorViewModel viewModel)
+        public ElementAttributeEditorView(ElementAttributeEditorViewModel viewModel):this()
         {
-            InitializeComponent();
             this.viewModel = viewModel;
 
             DataContext = this.viewModel;
