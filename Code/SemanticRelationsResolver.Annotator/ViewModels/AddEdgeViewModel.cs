@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Windows.Input;
     using Commands;
-    using Domain;
     using Wrapper;
     using Wrapper.Base;
     using Attribute = Domain.Attribute;
@@ -19,7 +17,11 @@
                 throw new ArgumentNullException("attribute");
             }
             attribute.IsEditable = true;
-            Attributes = new ChangeTrackingCollection<AttributeWrapper>(new List<AttributeWrapper> { new AttributeWrapper(attribute) });
+            Attributes =
+                new ChangeTrackingCollection<AttributeWrapper>(new List<AttributeWrapper>
+                {
+                    new AttributeWrapper(attribute)
+                });
 
             OkButtonCommand = new DelegateCommand(OkButtonCommandExecute, OkButtonCommandCanExecute);
         }

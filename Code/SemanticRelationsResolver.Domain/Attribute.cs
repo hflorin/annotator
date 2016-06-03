@@ -11,6 +11,8 @@
             AllowedValuesSet = new List<string>();
         }
 
+        public string Entity { get; set; }
+
         public bool IsEditable { get; set; }
 
         public bool IsOptional { get; set; }

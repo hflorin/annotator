@@ -59,7 +59,23 @@ namespace SemanticRelationsResolver.Annotator.Wrapper
             get { return GetIsChanged("Name"); }
         }
 
-		public System.String DisplayName
+        public System.String Entity
+        {
+            get { return GetValue<System.String>(); }
+            set { SetValue(value); }
+        }
+
+        public System.String EntityOriginalValue
+        {
+            get { return GetOriginalValue<System.String>("Entity"); }
+        }
+
+        public bool EntityIsChanged
+        {
+            get { return GetIsChanged("Entity"); }
+        }
+
+        public System.String DisplayName
         {
             get { return GetValue<System.String>(); }
             set { SetValue(value); }

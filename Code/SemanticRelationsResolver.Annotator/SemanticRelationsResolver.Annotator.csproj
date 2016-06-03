@@ -149,6 +149,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="ViewModels\AddAttributeViewModel.cs" />
     <Compile Include="ViewModels\AddEdgeViewModel.cs" />
     <Compile Include="ViewModels\AddWordViewModel.cs" />
     <Compile Include="ViewModels\ElementAttributeEditorViewModel.cs" />
@@ -156,6 +157,9 @@
     <Compile Include="ViewModels\SentenceEditorViewModel.cs" />
     <Compile Include="ViewModels\WordEditorViewModel.cs" />
     <Compile Include="ViewModels\WordReorderingViewModel.cs" />
+    <Compile Include="View\AddAttributeWindow.xaml.cs">
+      <DependentUpon>AddAttributeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AddEdgeWindow .xaml.cs">
       <DependentUpon>AddEdgeWindow .xaml</DependentUpon>
     </Compile>
@@ -164,6 +168,9 @@
     </Compile>
     <Compile Include="View\ElementAttributeEditorView.xaml.cs">
       <DependentUpon>ElementAttributeEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\InputDialog.xaml.cs">
+      <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SentenceEditorView.xaml.cs">
       <DependentUpon>SentenceEditorView.xaml</DependentUpon>
@@ -203,6 +210,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\AddAttributeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AddEdgeWindow .xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -212,6 +223,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ElementAttributeEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

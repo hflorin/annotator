@@ -3,7 +3,7 @@
     using System.Linq;
     using System.Windows.Input;
     using Commands;
-    using Domain;
+    using View;
     using Wrapper;
     using Wrapper.Base;
 
@@ -73,13 +73,16 @@
 
         private void AddAttributeCommandExecute(object obj)
         {
-            //todo: display add attribute input window and then add the create attribute
-            Attributes.Add(new AttributeWrapper(new Attribute
+            var addAttributeWindow = new AddAttributeWindow(new AddAttributeViewModel());
+
+            if (!addAttributeWindow.ShowDialog().GetValueOrDefault())
+                return;
+
+            var dataContext = addAttributeWindow.DataContext as AddAttributeViewModel;
+            if (dataContext != null)
             {
-                DisplayName = "Ciuciu",
-                Name = "Muciu",
-                Value = "Zewa"
-            }));
+                Attributes.Add(dataContext.Attribute);
+            }
 
             InvalidateCommands();
         }

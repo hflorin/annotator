@@ -70,7 +70,7 @@
                 yield break;
             }
 
-            if (string.IsNullOrWhiteSpace(Attributes.Single(a => a.Name.Equals("parser")).Value))
+            if (string.IsNullOrWhiteSpace(Attributes.Single(a => (a.Name != null) && a.Name.Equals("parser")).Value))
             {
                 yield return new ValidationResult("Parser is required.", new[] {"Parser"});
             }
