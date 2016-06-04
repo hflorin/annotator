@@ -7,8 +7,8 @@
     <ProjectGuid>{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SemanticRelationsResolver.Annotator</RootNamespace>
-    <AssemblyName>SemanticRelationsResolver.Annotator</AssemblyName>
+    <RootNamespace>Treebank.Annotator</RootNamespace>
+    <AssemblyName>Treebank.Annotator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -276,21 +276,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SemanticRelationsResolver.Domain\SemanticRelationsResolver.Domain.csproj">
+    <ProjectReference Include="..\SemanticRelationsResolver.Domain\Treebank.Domain.csproj">
       <Project>{34c8855b-c3ba-4e0e-a4f2-68c5406f1382}</Project>
-      <Name>SemanticRelationsResolver.Domain</Name>
+      <Name>Treebank.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SemanticRelationsResolver.Events\SemanticRelationsResolver.Events.csproj">
+    <ProjectReference Include="..\SemanticRelationsResolver.Events\Treebank.Events.csproj">
       <Project>{2d54bbe5-f2df-4ca2-96e5-e33b1757d2ad}</Project>
-      <Name>SemanticRelationsResolver.Events</Name>
+      <Name>Treebank.Events</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SemanticRelationsResolver.Loader\SemanticRelationsResolver.Loaders.csproj">
+    <ProjectReference Include="..\SemanticRelationsResolver.Loader\Treebank.Loaders.csproj">
       <Project>{0a14e08c-bbfb-4e62-86e2-6211f9b475f5}</Project>
-      <Name>SemanticRelationsResolver.Loaders</Name>
+      <Name>Treebank.Loaders</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SemanticRelationsResolver.Mappers\SemanticRelationsResolver.Mappers.csproj">
+    <ProjectReference Include="..\SemanticRelationsResolver.Mappers\Treebank.Mappers.csproj">
       <Project>{d44f6763-2ee1-4c6d-8fff-1f01759c7897}</Project>
-      <Name>SemanticRelationsResolver.Mappers</Name>
+      <Name>Treebank.Mappers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

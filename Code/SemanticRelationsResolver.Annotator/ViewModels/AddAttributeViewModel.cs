@@ -15,8 +15,7 @@
             Attribute = new AttributeWrapper(new Attribute
             {
                 IsEditable = true,
-                IsOptional = true,
-                AllowedValuesSet = new List<string>()
+                IsOptional = true
             });
 
             OkButtonCommand = new DelegateCommand(OkButtonCommandExecute, OkButtonCommandCanExecute);

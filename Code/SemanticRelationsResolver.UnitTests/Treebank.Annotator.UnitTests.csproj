@@ -60,13 +60,13 @@
     <Compile Include="Wrapper\ValidationSimpleProperty.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SemanticRelationsResolver.Annotator\SemanticRelationsResolver.Annotator.csproj">
+    <ProjectReference Include="..\SemanticRelationsResolver.Annotator\Treebank.Annotator.csproj">
       <Project>{e51a2f37-743b-4b66-9df2-e8dd7c659e7d}</Project>
-      <Name>SemanticRelationsResolver.Annotator</Name>
+      <Name>Treebank.Annotator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SemanticRelationsResolver.Domain\SemanticRelationsResolver.Domain.csproj">
+    <ProjectReference Include="..\SemanticRelationsResolver.Domain\Treebank.Domain.csproj">
       <Project>{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}</Project>
-      <Name>SemanticRelationsResolver.Domain</Name>
+      <Name>Treebank.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

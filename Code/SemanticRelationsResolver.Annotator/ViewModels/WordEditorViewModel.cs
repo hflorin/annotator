@@ -2,14 +2,13 @@
 {
     using System;
     using System.Windows.Input;
-
+    using Commands;
     using Prism.Events;
-
-    using SemanticRelationsResolver.Annotator.Commands;
-    using SemanticRelationsResolver.Annotator.Wrapper;
     using SemanticRelationsResolver.Events;
+    using Wrapper;
+    using Wrapper.Base;
 
-    public class WordEditorViewModel : Observable
+    public class WordEditorViewModel : Observable, IValidatableTrackingObject
     {
         private readonly IEventAggregator eventAggregator;
 
@@ -39,14 +38,28 @@
 
         public string Form
         {
-            get
-            {
-                return wordWrapper.GetAttributeByName("form");
-            }
-            set
-            {
-                wordWrapper.SetAttributeByName("form", value);
-            }
+            get { return wordWrapper.GetAttributeByName("form"); }
+            set { wordWrapper.SetAttributeByName("form", value); }
+        }
+
+        public void AcceptChanges()
+        {
+            wordWrapper.AcceptChanges();
+        }
+
+        public bool IsChanged
+        {
+            get { return wordWrapper.IsChanged; }
+        }
+
+        public void RejectChanges()
+        {
+            wordWrapper.RejectChanges();
+        }
+
+        public bool IsValid
+        {
+            get { return wordWrapper.IsValid; }
         }
 
         private bool WordGotFocusCommandCanExecute(object arg)
@@ -57,7 +70,7 @@
         private void WordGotFocusCommandExecute(object obj)
         {
             eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
-                .Publish(new ElementAttributeEditorViewModel { Attributes = wordWrapper.Attributes });
+                .Publish(new ElementAttributeEditorViewModel {Attributes = wordWrapper.Attributes});
         }
 
         private void WordChangedCommandExecute(object obj)

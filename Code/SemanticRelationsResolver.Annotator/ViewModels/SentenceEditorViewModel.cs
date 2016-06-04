@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Input;
@@ -15,9 +16,11 @@
     using Mappers;
     using Prism.Events;
     using SemanticRelationsResolver.Events;
+    using Treebank.Annotator.Graph;
     using View;
     using View.Services;
     using Wrapper;
+    using Wrapper.Base;
 
     public class SentenceEditorViewModel : Observable
     {
@@ -112,7 +115,7 @@
             }
         }
 
-        public ObservableCollection<WordEditorViewModel> Words { get; set; }
+        public ChangeTrackingCollection<WordEditorViewModel> Words { get; set; }
 
         public SentenceGxLogicCore SentenceGraphLogicCore
         {
@@ -145,15 +148,17 @@
 
         private void PopulateWords(IEventAggregator eventAggregator, SentenceWrapper sentence)
         {
-            Words = new ObservableCollection<WordEditorViewModel>();
-
             var sortedWords = sentence.Words.ToList();
             sortedWords.Sort(Comparison);
 
+            IList<WordEditorViewModel> w = new List<WordEditorViewModel>();
+
             foreach (var word in sortedWords)
             {
-                Words.Add(new WordEditorViewModel(word, eventAggregator));
+                w.Add(new WordEditorViewModel(word, eventAggregator));
             }
+
+            Words = new ChangeTrackingCollection<WordEditorViewModel>(w);
         }
 
         private int Comparison(WordWrapper left, WordWrapper right)
@@ -214,9 +219,10 @@
                 }
 
                 // todo: ensure tree and id ordering is in place
-                Words.Add(new WordEditorViewModel(word, EventAggregator));
                 EventAggregator.GetEvent<AddWordVertexEvent>().Publish(word);
             }
+
+            PopulateWords(EventAggregator, Sentence);
         }
 
         private bool AddWordCommandCanExecute(object arg)

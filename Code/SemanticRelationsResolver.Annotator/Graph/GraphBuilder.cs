@@ -1,10 +1,11 @@
-﻿namespace SemanticRelationsResolver.Annotator.Graph
+﻿namespace Treebank.Annotator.Graph
 {
     using System.Linq;
-    using Domain.Configuration;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
-    using Wrapper;
+    using SemanticRelationsResolver.Annotator.Graph;
+    using SemanticRelationsResolver.Annotator.Wrapper;
+    using SemanticRelationsResolver.Domain.Configuration;
 
     public class GraphBuilder
     {

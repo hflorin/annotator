@@ -51,7 +51,7 @@ namespace SemanticRelationsResolver.Annotator {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/SemanticRelationsResolver.Annotator;component/app.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Treebank.Annotator;component/app.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\App.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
