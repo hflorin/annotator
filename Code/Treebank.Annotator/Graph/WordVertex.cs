@@ -6,9 +6,10 @@
 
     public class WordVertex : VertexBase
     {
+        private readonly string vertexValueAttribute;
         private readonly WordWrapper wordWrapper;
 
-        public WordVertex(WordWrapper wordWrapper)
+        public WordVertex(WordWrapper wordWrapper, string vertexValueAttribute)
         {
             if (wordWrapper == null)
             {
@@ -16,6 +17,7 @@
             }
 
             this.wordWrapper = wordWrapper;
+            this.vertexValueAttribute = string.IsNullOrEmpty(vertexValueAttribute) ? "form" : vertexValueAttribute;
             SetVertexId();
         }
 
@@ -24,10 +26,10 @@
             get { return wordWrapper; }
         }
 
-        public string Form
+        public string VertexLabel
         {
-            get { return wordWrapper.GetAttributeByName("form"); }
-            set { wordWrapper.SetAttributeByName("form", value); }
+            get { return wordWrapper.GetAttributeByName(vertexValueAttribute); }
+            set { wordWrapper.SetAttributeByName(vertexValueAttribute, value); }
         }
 
         private void SetVertexId()
@@ -37,7 +39,7 @@
 
         public override string ToString()
         {
-            return Form;
+            return VertexLabel;
         }
     }
 }

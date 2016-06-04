@@ -82,21 +82,13 @@
                     numberOfEdgesPerVertex,
                     numberOfEdgesDrawnPerVertex);
 
-                if ((i+1 < edgesSortedByDistanceBetweenVertices.Count) && edgesSortedByDistanceBetweenVertices[i].Value.CompareTo(edgesSortedByDistanceBetweenVertices[i+1].Value) != 0)
+                if ((i + 1 < edgesSortedByDistanceBetweenVertices.Count) &&
+                    (edgesSortedByDistanceBetweenVertices[i].Value.CompareTo(
+                        edgesSortedByDistanceBetweenVertices[i + 1].Value) != 0))
                 {
                     offset -= 15;
                 }
             }
-            //foreach (var item in edgesSortedByDistanceBetweenVertices)
-            //{
-            //    ComputeEdgeRoutePoints(
-            //        item.Key,
-            //        offset,
-            //        cancellationToken,
-            //        numberOfEdgesPerVertex,
-            //        numberOfEdgesDrawnPerVertex);
-            //    offset -= 10;
-            //}
         }
 
         private Dictionary<TEdge, double> ComputeDistancesBetweenEdgeVertices()
@@ -228,23 +220,21 @@
             var x = sourcePoint.X;
             var y = sourcePoint.Y;
 
-            var tempList = new List<Point> { new Point(x, y) };
+            var tempList = new List<Point> {new Point(x, y)};
 
             //x = sourcePoint.X
             //    + (sourceVertexWidth/edgesPerVertex[edge.Source]
             //       *edgesPerVertex[edge.Source] + edgesDrawnPerVertex[edge.Source]);
-            x = sourcePoint.X + sourceVertexWidth / 2;
+            x = sourcePoint.X + sourceVertexWidth/2;
             y = sourcePoint.Y + offset;
             tempList.Add(new Point(x, y));
-
 
 
             //x = targetPoint.X
-              //  + targetVertexWidth/edgesPerVertex[edge.Target]*edgesDrawnPerVertex[edge.Target];
+            //  + targetVertexWidth/edgesPerVertex[edge.Target]*edgesDrawnPerVertex[edge.Target];
             x = targetPoint.X + targetVertexWidth/2;
             y = sourcePoint.Y + offset;
             tempList.Add(new Point(x, y));
-
 
 
             //x = targetPoint.X + targetVertexWidth / edgesPerVertex[edge.Target] * edgesDrawnPerVertex[edge.Target];
@@ -252,7 +242,7 @@
             x = targetPoint.X;
             y = targetPoint.Y;
 
-            tempList.Add(new Point(x+100, y));
+            tempList.Add(new Point(x + 100, y));
 
             if (EdgeRoutes.ContainsKey(edge))
             {
@@ -263,8 +253,8 @@
                 EdgeRoutes.Add(edge, tempList.Count > 2 ? tempList.ToArray() : null);
             }
 
-           // edgesDrawnPerVertex[edge.Source]++;
-           // edgesDrawnPerVertex[edge.Target]++;
+            // edgesDrawnPerVertex[edge.Source]++;
+            // edgesDrawnPerVertex[edge.Target]++;
         }
     }
 }

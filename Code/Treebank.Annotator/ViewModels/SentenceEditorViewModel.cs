@@ -7,7 +7,6 @@
     using System.Windows.Input;
     using Commands;
     using Domain;
-    using Events;
     using Graph;
     using Graph.Algos;
     using GraphX.PCL.Common.Enums;
@@ -26,8 +25,6 @@
         private readonly IAppConfig appConfig;
 
         private readonly GraphBuilder graphBuilder;
-
-        private readonly SentenceGraph sentenceGraph;
 
         private readonly IShowInfoMessage showMessage;
 
@@ -79,7 +76,7 @@
 
             PopulateWords(eventAggregator, sentence);
 
-            sentenceGraph = new SentenceGraph();
+            var sentenceGraph = new SentenceGraph();
             sentenceLogicCore = new SentenceGxLogicCore();
             sentenceLogicCore.Graph = sentenceGraph;
         }
@@ -158,6 +155,7 @@
             }
 
             Words = new ChangeTrackingCollection<WordEditorViewModel>(w);
+            OnPropertyChanged("Words");
         }
 
         private int Comparison(WordWrapper left, WordWrapper right)
@@ -216,11 +214,10 @@
                 if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
                 {
                 }
-
-                // todo: ensure tree and id ordering is in place
-                EventAggregator.GetEvent<AddWordVertexEvent>().Publish(word);
+                //todo: remove if not used anymore or bring it back if performance becomes an issue
+                //EventAggregator.GetEvent<AddWordVertexEvent>().Publish(word);
             }
-
+            CreateSentenceGraph();
             PopulateWords(EventAggregator, Sentence);
         }
 

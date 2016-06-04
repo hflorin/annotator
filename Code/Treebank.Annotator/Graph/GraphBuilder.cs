@@ -63,7 +63,7 @@
 
             foreach (var word in sentence.Words)
             {
-                sentenceGraph.AddVertex(new WordVertex(word));
+                sentenceGraph.AddVertex(new WordVertex(word, definition.Vertex.LabelAttributeName));
             }
 
             var vertices = sentenceGraph.Vertices.ToList();

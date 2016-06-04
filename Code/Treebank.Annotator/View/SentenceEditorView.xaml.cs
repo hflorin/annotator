@@ -106,9 +106,9 @@
         private void OnAddWordVertexControl(WordWrapper word)
         {
             var vertexControl = AddWordVertexControl(word);
-            var headWordId = word.GetAttributeByName("head");
+            var headWordId = word.GetAttributeByName(currentDefinition.Vertex.FromAttributeName);
             var headWordVertexControl =
-                GgArea.VertexList.Where(p => p.Key.WordWrapper.GetAttributeByName("id").Equals(headWordId))
+                GgArea.VertexList.Where(p => p.Key.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName).Equals(headWordId))
                     .Select(p => p.Value)
                     .SingleOrDefault();
 
@@ -273,7 +273,7 @@
 
         private VertexControl AddWordVertexControl(WordWrapper wordWrapper)
         {
-            var vertex = new WordVertex(wordWrapper);
+            var vertex = new WordVertex(wordWrapper, currentDefinition.Vertex.LabelAttributeName);
             var vertexControl = new VertexControl(vertex);
             GgArea.AddVertexAndData(vertex, vertexControl, true);
             return vertexControl;
