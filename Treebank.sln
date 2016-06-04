@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Annotator.UnitTests", "Code\SemanticRelationsResolver.UnitTests\Treebank.Annotator.UnitTests.csproj", "{F7938232-E8F0-4F5D-851A-31EF0DAD1F1A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Annotator", "Code\Treebank.Annotator\Treebank.Annotator.csproj", "{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Domain", "Code\SemanticRelationsResolver.Domain\Treebank.Domain.csproj", "{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Annotator.UnitTests", "Code\Treebank.UnitTests\Treebank.Annotator.UnitTests.csproj", "{F7938232-E8F0-4F5D-851A-31EF0DAD1F1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Loaders", "Code\SemanticRelationsResolver.Loader\Treebank.Loaders.csproj", "{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Domain", "Code\Treebank.Domain\Treebank.Domain.csproj", "{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Mappers", "Code\SemanticRelationsResolver.Mappers\Treebank.Mappers.csproj", "{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Domain.UnitTests", "Code\Treebank.Domain.UnitTests\Treebank.Domain.UnitTests.csproj", "{7F223342-0C61-426D-BFF2-6B316C08517F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Annotator", "Code\SemanticRelationsResolver.Annotator\Treebank.Annotator.csproj", "{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Events", "Code\Treebank.Events\Treebank.Events.csproj", "{2D54BBE5-F2DF-4CA2-96E5-E33B1757D2AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Domain.UnitTests", "Code\SemanticRelationsResolver.Domain.UnitTests\Treebank.Domain.UnitTests.csproj", "{7F223342-0C61-426D-BFF2-6B316C08517F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Loaders", "Code\Treebank.Loaders\Treebank.Loaders.csproj", "{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Events", "Code\SemanticRelationsResolver.Events\Treebank.Events.csproj", "{2D54BBE5-F2DF-4CA2-96E5-E33B1757D2AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Mappers", "Code\Treebank.Mappers\Treebank.Mappers.csproj", "{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +23,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F7938232-E8F0-4F5D-851A-31EF0DAD1F1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F7938232-E8F0-4F5D-851A-31EF0DAD1F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7938232-E8F0-4F5D-851A-31EF0DAD1F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -31,18 +35,6 @@ Global
 		{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34C8855B-C3BA-4E0E-A4F2-68C5406F1382}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E51A2F37-743B-4B66-9DF2-E8DD7C659E7D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F223342-0C61-426D-BFF2-6B316C08517F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F223342-0C61-426D-BFF2-6B316C08517F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F223342-0C61-426D-BFF2-6B316C08517F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +43,14 @@ Global
 		{2D54BBE5-F2DF-4CA2-96E5-E33B1757D2AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D54BBE5-F2DF-4CA2-96E5-E33B1757D2AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D54BBE5-F2DF-4CA2-96E5-E33B1757D2AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
