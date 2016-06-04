@@ -24,13 +24,13 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
-                <Label Content="Edge routing" HorizontalAlignment="Left" FontWeight="Bold" />
-                <ComboBox Name="EdgeRoutingAlgos" SelectedItem="{Binding SelectedEdgeRoutingAlgorithmType}"
-                          ItemsSource="{Binding EdgeRoutingAlgorithmTypes}" IsReadOnly="True"
-                          HorizontalAlignment="Stretch">
+                <Label Content="Graph Configs" HorizontalAlignment="Left" FontWeight="Bold" />
+                <ComboBox Name="GraphConfigurations" SelectedItem="{Binding SelectedGraphConfiguration}"
+                          ItemsSource="{Binding GraphConfigurations}" IsReadOnly="True"
+                          HorizontalAlignment="Stretch" SelectedValuePath="Name" DisplayMemberPath="Name">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding EdgeRoutingAlgorithmChangedCommand}" />
+                            <i:InvokeCommandAction Command="{Binding GraphConfigurationChangedCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>

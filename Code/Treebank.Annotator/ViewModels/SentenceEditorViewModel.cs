@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Input;
     using Commands;
@@ -27,9 +28,6 @@
         private readonly GraphBuilder graphBuilder;
 
         private readonly IShowInfoMessage showMessage;
-
-        private IEnumerable edgeRoutingAlgorithmTypes =
-            Enum.GetValues(typeof(EdgeRoutingAlgorithmTypeEnum)).Cast<EdgeRoutingAlgorithmTypeEnum>();
 
         private IEnumerable layoutAlgorithmTypes =
             Enum.GetValues(typeof(LayoutAlgorithmTypeEnum)).Cast<LayoutAlgorithmTypeEnum>();
@@ -73,6 +71,8 @@
             graphBuilder = new GraphBuilder(appConfig, appConfig.Definitions.First());
             this.appConfig = appConfig;
             this.showMessage = showMessage;
+            GraphConfigurations = new ObservableCollection<Definition>(this.appConfig.Definitions);
+            SelectedGraphConfiguration = GraphConfigurations.First();
 
             PopulateWords(eventAggregator, sentence);
 
@@ -96,7 +96,7 @@
 
         public ICommand AddWordCommand { get; set; }
 
-        public ICommand EdgeRoutingAlgorithmChangedCommand { get; set; }
+        public ICommand GraphConfigurationChangedCommand { get; set; }
 
         public ICommand ToggleEditModeCommand { get; set; }
 
@@ -126,7 +126,7 @@
 
         public LayoutAlgorithmTypeEnum SelectedLayoutAlgorithmType { get; set; }
 
-        public EdgeRoutingAlgorithmTypeEnum SelectedEdgeRoutingAlgorithmType { get; set; }
+        public Definition SelectedGraphConfiguration { get; set; }
 
         public IEnumerable LayoutAlgorithmTypes
         {
@@ -135,12 +135,7 @@
             set { layoutAlgorithmTypes = value; }
         }
 
-        public IEnumerable EdgeRoutingAlgorithmTypes
-        {
-            get { return edgeRoutingAlgorithmTypes; }
-
-            set { edgeRoutingAlgorithmTypes = value; }
-        }
+        public ObservableCollection<Definition> GraphConfigurations { get; set; }
 
         private void PopulateWords(IEventAggregator eventAggregator, SentenceWrapper sentence)
         {
@@ -176,9 +171,9 @@
             LayoutAlgorithmChangedCommand = new DelegateCommand(
                 LayoutAlgorithmChangedCommandExecute,
                 LayoutAlgorithmChangedCommandCanExecute);
-            EdgeRoutingAlgorithmChangedCommand = new DelegateCommand(
-                EdgeRoutingAlgorithmChangedCommandExecute,
-                EdgeRoutingAlgorithmChangedCommandCanExecute);
+            GraphConfigurationChangedCommand = new DelegateCommand(
+                GraphConfigurationChangedCommandExecute,
+                GraphConfigurationChangedCommandCanExecute);
             ToggleEditModeCommand = new DelegateCommand(ToggleEditModeCommandExecute, ToggleEditModeCommandCanExecute);
             AddWordCommand = new DelegateCommand(AddWordCommandExecute, AddWordCommandCanExecute);
             CheckIsTreeCommand = new DelegateCommand(CheckIsTreeCommandExecute, CheckIsTreeCommandCanExecute);
@@ -244,15 +239,14 @@
                     });
         }
 
-        private bool EdgeRoutingAlgorithmChangedCommandCanExecute(object arg)
+        private bool GraphConfigurationChangedCommandCanExecute(object arg)
         {
             return true;
         }
 
-        private void EdgeRoutingAlgorithmChangedCommandExecute(object obj)
+        private void GraphConfigurationChangedCommandExecute(object obj)
         {
-            var newEdgeRoutingAlgorithmType = SelectedEdgeRoutingAlgorithmType;
-            SentenceGraphLogicCore.DefaultEdgeRoutingAlgorithm = newEdgeRoutingAlgorithmType;
+            //todo: set the new definiton as current and also rebuild the graph with this new definition
         }
 
         private void LayoutAlgorithmChangedCommandExecute(object obj)
@@ -274,7 +268,10 @@
                     SentenceGraphLogicCore.DefaultLayoutAlgorithmParams = parameters;
                 }
 
-                SelectedEdgeRoutingAlgorithmType = EdgeRoutingAlgorithmTypeEnum.None;
+                if (SelectedGraphConfiguration == null)
+                {
+                    SelectedGraphConfiguration = appConfig.Definitions.Any() ? appConfig.Definitions.First(): MotherObjects.DefaultDefinition;
+                }
             }
             else
             {
@@ -301,12 +298,10 @@
 
         public void CreateSentenceGraph()
         {
+            graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
             var logicCore = graphBuilder.SetupGraphLogic(Sentence);
 
             SentenceGraphLogicCore = logicCore;
-
-            SelectedLayoutAlgorithmType = LayoutAlgorithmTypeEnum.EfficientSugiyama;
-            SelectedEdgeRoutingAlgorithmType = EdgeRoutingAlgorithmTypeEnum.None;
         }
     }
 }

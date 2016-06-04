@@ -8,26 +8,26 @@
 
     public class GraphBuilder
     {
-        private readonly Definition definition;
-
         public GraphBuilder(IAppConfig appConfig, Definition definition = null)
         {
             if (definition == null)
             {
                 if ((appConfig != null) && appConfig.Definitions.Any())
                 {
-                    this.definition = appConfig.Definitions.First();
+                    CurrentDefinition = appConfig.Definitions.First();
                 }
                 else
                 {
-                    this.definition = MotherObjects.DefaultDefinition;
+                    CurrentDefinition = MotherObjects.DefaultDefinition;
                 }
             }
             else
             {
-                this.definition = definition;
+                CurrentDefinition = definition;
             }
         }
+
+        public Definition CurrentDefinition { get; set; }
 
         public SentenceGxLogicCore SetupGraphLogic(SentenceWrapper sentence)
         {
@@ -63,32 +63,33 @@
 
             foreach (var word in sentence.Words)
             {
-                sentenceGraph.AddVertex(new WordVertex(word, definition.Vertex.LabelAttributeName));
+                sentenceGraph.AddVertex(new WordVertex(word, CurrentDefinition.Vertex.LabelAttributeName));
             }
 
             var vertices = sentenceGraph.Vertices.ToList();
 
             foreach (var word in sentence.Words)
             {
-                from = word.GetAttributeByName(definition.Vertex.FromAttributeName);
+                from = word.GetAttributeByName(CurrentDefinition.Vertex.FromAttributeName);
 
                 if (from == "0")
                 {
                     continue;
                 }
 
-                to = word.GetAttributeByName(definition.Vertex.ToAttributeName);
+                to = word.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName);
 
                 var toWordVertex =
-                    vertices.Single(v => v.WordWrapper.GetAttributeByName(definition.Vertex.ToAttributeName).Equals(to));
+                    vertices.Single(
+                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(to));
                 var fromWordVertex =
                     vertices.Single(
-                        v => v.WordWrapper.GetAttributeByName(definition.Vertex.ToAttributeName).Equals(from));
+                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(from));
 
                 sentenceGraph.AddEdge(
                     new WordEdge(fromWordVertex, toWordVertex)
                     {
-                        Text = word.GetAttributeByName(definition.Edge.LabelAttributeName)
+                        Text = word.GetAttributeByName(CurrentDefinition.Edge.LabelAttributeName)
                     });
             }
 
