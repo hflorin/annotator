@@ -38,7 +38,7 @@
             sentencePrototype = appConfig.Elements.OfType<Sentence>().Single();
             documentPrototype = appConfig.Elements.OfType<Document>().Single();
 
-            var document = CreateDocument(filepath, appConfig);
+            var document = await CreateDocument(filepath, appConfig);
 
             document.FilePath = filepath;
 
@@ -50,24 +50,24 @@
             return appConfig.Elements.Single(e => e.Name.Equals(item.ElementName)).Entity;
         }
 
-        private Document CreateDocument(string filepath, IAppConfig appConfig)
+        private async Task<Document> CreateDocument(string filepath, IAppConfig appConfig)
         {
             var document = ObjectCopier.Clone(documentPrototype);
 
-            ParseDocument(filepath, appConfig, document);
+            await ParseDocument(filepath, appConfig, document);
 
-            AddInternalAttributes(document);
+            await Task.Run(() => AddInternalAttributes(document));
 
             return document;
         }
 
-        private void ParseDocument(string filepath, IAppConfig appConfig, Document document)
+        private async Task ParseDocument(string filepath, IAppConfig appConfig, Document document)
         {
             var reader = new XmlTextReader(filepath);
 
             var queue = new List<ConfigurationPair>();
 
-            while (reader.Read())
+            while (await Task.Run(() => reader.Read()))
             {
                 switch (reader.NodeType)
                 {
