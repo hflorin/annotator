@@ -77,8 +77,7 @@
             PopulateWords(eventAggregator, sentence);
 
             var sentenceGraph = new SentenceGraph();
-            sentenceLogicCore = new SentenceGxLogicCore();
-            sentenceLogicCore.Graph = sentenceGraph;
+            sentenceLogicCore = new SentenceGxLogicCore {Graph = sentenceGraph};
         }
 
         public SenteceGraphOperationMode SenteceGraphOperationMode
@@ -181,7 +180,34 @@
 
         private void CheckIsTreeCommandExecute(object obj)
         {
-            var isTree = GraphOperations.GetGraph(Sentence, appConfig.Definitions.First()).IsTree();
+            var validationResult = new CheckGraphResult();
+            var isTree =
+                GraphOperations.GetGraph(Sentence, appConfig.Definitions.First(), EventAggregator)
+                    .IsTree(validationResult);
+
+            if (!isTree)
+            {
+                foreach (var disconnectedWordId in validationResult.DisconnectedWordIds)
+                {
+                    EventAggregator.GetEvent<ValidationExceptionEvent>()
+                        .Publish(string.Format("The word with id: {0}, is not connected to another word.",
+                            disconnectedWordId));
+                }
+
+                foreach (var cycle in validationResult.Cycles)
+                {
+                    EventAggregator.GetEvent<ValidationExceptionEvent>()
+                        .Publish(string.Format("The sentence with id {0} has cycle: {1}",
+                            Sentence.Id.Value, string.Join(",", cycle)));
+                }
+
+                if (validationResult.DisconnectedWordIds.Any() || validationResult.Cycles.Any())
+                {
+                    EventAggregator.GetEvent<StatusNotificationEvent>()
+                        .Publish("Please check warnings in the Output panel.");
+                }
+            }
+
             showMessage.ShowInfoMessage(
                 string.Format("Graph for sentence with id {0} is tree: {1}", Sentence.Id.Value, isTree));
         }
@@ -247,6 +273,7 @@
         private void GraphConfigurationChangedCommandExecute(object obj)
         {
             //todo: set the new definiton as current and also rebuild the graph with this new definition
+            CreateSentenceGraph();
         }
 
         private void LayoutAlgorithmChangedCommandExecute(object obj)
@@ -270,7 +297,9 @@
 
                 if (SelectedGraphConfiguration == null)
                 {
-                    SelectedGraphConfiguration = appConfig.Definitions.Any() ? appConfig.Definitions.First(): MotherObjects.DefaultDefinition;
+                    SelectedGraphConfiguration = appConfig.Definitions.Any()
+                        ? appConfig.Definitions.First()
+                        : MotherObjects.DefaultDefinition;
                 }
             }
             else

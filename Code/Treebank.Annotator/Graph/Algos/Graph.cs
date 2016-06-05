@@ -1,16 +1,21 @@
 ﻿namespace Treebank.Annotator.Graph.Algos
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Prism.Events;
 
     public class Graph
     {
         private readonly IDictionary<int, IList<int>> adjencyList;
         private readonly int verticesNumber;
+        private readonly Dictionary<string, int> wordToVertexMapping;
 
-        public Graph(int numberOfVertices)
+        public Graph(int numberOfVertices, Dictionary<string, int> wordToVertexMapping = null)
         {
             verticesNumber = numberOfVertices;
             adjencyList = new Dictionary<int, IList<int>>(verticesNumber);
+            this.wordToVertexMapping = wordToVertexMapping;
         }
 
         public void AddEdge(int fromVertex, int toVertex)
@@ -28,19 +33,21 @@
             adjencyList[toVertex].Add(fromVertex);
         }
 
-        public bool IsTree()
+        public bool IsTree(CheckGraphResult validation)
         {
             var visited = new bool[verticesNumber];
 
-            if (HasCycle(0, visited, -1))
+            if (HasCycle(0, visited, -1, validation))
             {
                 return false;
             }
 
-            foreach (var isVisited in visited)
+            for (var i = 0; i < visited.Length; i++)
             {
-                if (!isVisited)
+                if (!visited[i])
                 {
+                    validation.DisconnectedWordIds.Add(wordToVertexMapping.Single(p => p.Value == i).Key);
+
                     return false;
                 }
             }
@@ -48,7 +55,7 @@
             return true;
         }
 
-        private bool HasCycle(int vertex, bool[] visited, int parent)
+        private bool HasCycle(int vertex, bool[] visited, int parent, CheckGraphResult validation)
         {
             visited[vertex] = true;
 
@@ -61,8 +68,19 @@
             {
                 if (!visited[v])
                 {
-                    if (HasCycle(v, visited, vertex))
+                    if (HasCycle(v, visited, vertex, validation))
                     {
+                        var cycle = new List<string>();
+
+                        for (var i = 0; i < visited.Length; i++)
+                        {
+                            if (visited[i])
+                                cycle.Add(wordToVertexMapping.Single(p => p.Value == i).Key);
+                        }
+
+                        cycle.Add(wordToVertexMapping.Single(p => p.Value == v).Key);
+
+                        validation.Cycles.Add(cycle);
                         return true;
                     }
                 }
@@ -74,5 +92,17 @@
 
             return false;
         }
+    }
+
+    public class CheckGraphResult
+    {
+        public CheckGraphResult()
+        {
+            DisconnectedWordIds = new List<string>();
+            Cycles = new List<List<string>>();
+        }
+
+        public List<string> DisconnectedWordIds { get; set; }
+        public List<List<string>> Cycles { get; set; }
     }
 }

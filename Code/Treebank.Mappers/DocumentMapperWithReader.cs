@@ -249,6 +249,8 @@
             const string MissingNonOptionalAttributeErrorMessage =
                 "Value missing for: attribute {0}, word id {1}, sentence id: {2}, document id: {3}";
 
+            bool exceptionsFound = false;
+
             foreach (var wordPrototypeAttribute in elementPrototype.Attributes)
             {
                 if (!wordPrototypeAttribute.IsOptional)
@@ -262,7 +264,7 @@
                         var sentenceId = lastSentence.Attributes.Single(a => a.Name.Equals("id")).Value;
                         var documentId = document.Attributes.Single(a => a.Name.Equals("id")).Value;
 
-                        EventAggregator.GetEvent<DocumentLoadExceptionEvent>()
+                        EventAggregator.GetEvent<ValidationExceptionEvent>()
                             .Publish(
                                 string.Format(
                                     MissingNonOptionalAttributeErrorMessage,
@@ -270,8 +272,15 @@
                                     newWordId,
                                     sentenceId,
                                     documentId));
+                        exceptionsFound = true;
                     }
                 }
+            }
+
+            if (exceptionsFound)
+            {
+                EventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish("Please check warnings in the Output panel.");
             }
         }
     }

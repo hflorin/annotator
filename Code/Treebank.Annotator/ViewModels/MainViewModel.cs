@@ -167,7 +167,7 @@
 
         private void SubscribeToEvents()
         {
-            eventAggregator.GetEvent<DocumentLoadExceptionEvent>().Subscribe(OnDocumentLoadException);
+            eventAggregator.GetEvent<ValidationExceptionEvent>().Subscribe(OnDocumentLoadException);
             eventAggregator.GetEvent<StatusNotificationEvent>().Subscribe(OnStatusNotification);
             eventAggregator.GetEvent<ChangeAttributesEditorViewModel>().Subscribe(OnAttributesChanged);
             eventAggregator.GetEvent<CheckIsTreeOnSentenceEvent>().Subscribe(OnCheckIsTreeOnSentence);
@@ -175,7 +175,37 @@
 
         private void OnCheckIsTreeOnSentence(SentenceWrapper sentenceWrapper)
         {
-            sentenceWrapper.IsTree = GraphOperations.GetGraph(sentenceWrapper, appConfig.Definitions.First()).IsTree();
+            if (sentenceWrapper == null)
+                return;
+
+            var validationResult = new CheckGraphResult();
+            sentenceWrapper.IsTree =
+                GraphOperations.GetGraph(sentenceWrapper, appConfig.Definitions.First(), eventAggregator)
+                    .IsTree(validationResult);
+
+            if (!sentenceWrapper.IsTree)
+            {
+                foreach (var disconnectedWordId in validationResult.DisconnectedWordIds)
+                {
+                    eventAggregator.GetEvent<ValidationExceptionEvent>()
+                        .Publish(
+                            string.Format("The word id: {0}, in sentence id: {1}, is not connected to another word.",
+                                disconnectedWordId, sentenceWrapper.Id.Value));
+                }
+
+                foreach (var cycle in validationResult.Cycles)
+                {
+                    eventAggregator.GetEvent<ValidationExceptionEvent>()
+                        .Publish(string.Format("The sentence with id {0} has cycle: {1}",
+                            sentence.Id.Value, string.Join(",", cycle)));
+                }
+
+                if (validationResult.DisconnectedWordIds.Any() || validationResult.Cycles.Any())
+                {
+                    eventAggregator.GetEvent<StatusNotificationEvent>()
+                        .Publish("Please check warnings in the Output panel.");
+                }
+            }
         }
 
         private void OnAttributesChanged(ElementAttributeEditorViewModel newViewModel)

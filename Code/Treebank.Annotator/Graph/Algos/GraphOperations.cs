@@ -2,22 +2,23 @@
 {
     using System.Collections.Generic;
     using Mappers.Configuration;
+    using Prism.Events;
     using Wrapper;
 
     public static class GraphOperations
     {
-        public static Graph GetGraph(SentenceWrapper sentence, Definition definition)
+        public static Graph GetGraph(SentenceWrapper sentence, Definition definition, IEventAggregator eventAggregator)
         {
-            var result = new Graph(sentence.Words.Count);
-
             var wordToVertexMapping = new Dictionary<string, int>();
 
             var vertexId = 0;
 
             foreach (var word in sentence.Words)
             {
-                wordToVertexMapping.Add(word.GetAttributeByName("id"), vertexId++);
+                wordToVertexMapping.Add(word.GetAttributeByName(definition.Vertex.ToAttributeName), vertexId++);
             }
+
+            var result = new Graph(sentence.Words.Count, wordToVertexMapping);
 
             foreach (var word in sentence.Words)
             {

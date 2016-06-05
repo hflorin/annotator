@@ -2,7 +2,7 @@
 {
     using Prism.Events;
 
-    public class DocumentLoadExceptionEvent : PubSubEvent<string>
+    public class ValidationExceptionEvent : PubSubEvent<string>
     {
     }
 }

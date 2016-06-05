@@ -80,17 +80,19 @@
                 to = word.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName);
 
                 var toWordVertex =
-                    vertices.Single(
+                    vertices.FirstOrDefault(
                         v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(to));
                 var fromWordVertex =
-                    vertices.Single(
+                    vertices.FirstOrDefault(
                         v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(from));
-
-                sentenceGraph.AddEdge(
-                    new WordEdge(fromWordVertex, toWordVertex)
-                    {
-                        Text = word.GetAttributeByName(CurrentDefinition.Edge.LabelAttributeName)
-                    });
+                if ((toWordVertex != null) && (fromWordVertex != null))
+                {
+                    sentenceGraph.AddEdge(
+                        new WordEdge(fromWordVertex, toWordVertex)
+                        {
+                            Text = word.GetAttributeByName(CurrentDefinition.Edge.LabelAttributeName)
+                        });
+                }
             }
 
             return sentenceGraph;

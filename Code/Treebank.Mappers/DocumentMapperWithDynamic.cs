@@ -61,7 +61,7 @@
                     int wordId;
                     if (!int.TryParse(word.id, out wordId))
                     {
-                        EventAggregator.GetEvent<DocumentLoadExceptionEvent>()
+                        EventAggregator.GetEvent<ValidationExceptionEvent>()
                             .Publish(string.Format("[Exception] Invalid word id: {0}", word.id));
                         continue;
                     }
@@ -69,7 +69,7 @@
                     int headWordId;
                     if (!int.TryParse(word.head, out headWordId))
                     {
-                        EventAggregator.GetEvent<DocumentLoadExceptionEvent>()
+                        EventAggregator.GetEvent<ValidationExceptionEvent>()
                             .Publish(string.Format("[Exception] Invalid head word id: {0}", word.head));
                         continue;
                     }
@@ -125,7 +125,7 @@
                 int sentenceId;
                 if (!int.TryParse(sentence.id, out sentenceId))
                 {
-                    EventAggregator.GetEvent<DocumentLoadExceptionEvent>()
+                    EventAggregator.GetEvent<ValidationExceptionEvent>()
                         .Publish(string.Format("[Exception] Invalid sentence id: {0}", sentence.id));
                     continue;
                 }
@@ -133,7 +133,7 @@
                 DateTime date;
                 if (!DateTime.TryParse(sentence.date, out date))
                 {
-                    EventAggregator.GetEvent<DocumentLoadExceptionEvent>()
+                    EventAggregator.GetEvent<ValidationExceptionEvent>()
                         .Publish(string.Format("[Exception] Invalid sentence date: {0}", sentence.date));
                     continue;
                 }

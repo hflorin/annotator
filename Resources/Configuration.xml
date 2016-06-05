@@ -34,9 +34,13 @@ value28="narativ." value29="neg." value30="part." value31="prep." value32="punct
 	</dataStructure>
 	<treeStructure>
 		<definitions>
-			<definition name="GraphFromWordsWithEdgesFromHeadIdToWordId">
+			<definition name="Configuration 1">
 				<vertex entity="word" labelAttributeName="form" fromAttributeName="head" toAttributeName="id" />
 				<edge entity="word" labelAttributeName="deprel" />
+			</definition>
+			<definition name="Configuration 2">
+				<vertex entity="word" labelAttributeName="lemma" fromAttributeName="head" toAttributeName="id" />
+				<edge entity="word" labelAttributeName="postag" />
 			</definition>
 		</definitions>
 	</treeStructure>
