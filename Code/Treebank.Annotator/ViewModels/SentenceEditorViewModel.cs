@@ -1,7 +1,6 @@
 ﻿namespace Treebank.Annotator.ViewModels
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -29,8 +28,9 @@
 
         private readonly IShowInfoMessage showMessage;
 
-        private IEnumerable layoutAlgorithmTypes =
-            Enum.GetValues(typeof(LayoutAlgorithmTypeEnum)).Cast<LayoutAlgorithmTypeEnum>();
+        private ObservableCollection<GraphLayoutAlgorithmTypeEnum> layoutAlgorithmTypes = new ObservableCollection
+            <GraphLayoutAlgorithmTypeEnum>(
+            Enum.GetValues(typeof(GraphLayoutAlgorithmTypeEnum)).Cast<GraphLayoutAlgorithmTypeEnum>());
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
@@ -123,18 +123,27 @@
             }
         }
 
-        public LayoutAlgorithmTypeEnum SelectedLayoutAlgorithmType { get; set; }
+        public GraphLayoutAlgorithmTypeEnum SelectedLayoutAlgorithmType { get; set; }
 
         public Definition SelectedGraphConfiguration { get; set; }
 
-        public IEnumerable LayoutAlgorithmTypes
+        public ObservableCollection<GraphLayoutAlgorithmTypeEnum> LayoutAlgorithmTypes
         {
             get { return layoutAlgorithmTypes; }
 
-            set { layoutAlgorithmTypes = value; }
+            set
+            {
+                layoutAlgorithmTypes = value;
+                OnPropertyChanged();
+            }
         }
 
         public ObservableCollection<Definition> GraphConfigurations { get; set; }
+
+        public void PopulateWords()
+        {
+            PopulateWords(EventAggregator, sentenceWrapper);
+        }
 
         private void PopulateWords(IEventAggregator eventAggregator, SentenceWrapper sentence)
         {
@@ -272,52 +281,12 @@
 
         private void GraphConfigurationChangedCommandExecute(object obj)
         {
-            //todo: set the new definiton as current and also rebuild the graph with this new definition
             CreateSentenceGraph();
         }
 
         private void LayoutAlgorithmChangedCommandExecute(object obj)
         {
-            var newLayoutAlgorithmType = SelectedLayoutAlgorithmType;
-            SentenceGraphLogicCore.DefaultLayoutAlgorithm = newLayoutAlgorithmType;
-
-            if (newLayoutAlgorithmType == LayoutAlgorithmTypeEnum.EfficientSugiyama)
-            {
-                var parameters =
-                    SentenceGraphLogicCore.AlgorithmFactory.CreateLayoutParameters(
-                        LayoutAlgorithmTypeEnum.EfficientSugiyama) as EfficientSugiyamaLayoutParameters;
-
-                if (parameters != null)
-                {
-                    parameters.EdgeRouting = SugiyamaEdgeRoutings.Orthogonal;
-                    parameters.LayerDistance = parameters.VertexDistance = 50;
-                    SentenceGraphLogicCore.EdgeCurvingEnabled = false;
-                    SentenceGraphLogicCore.DefaultLayoutAlgorithmParams = parameters;
-                }
-
-                if (SelectedGraphConfiguration == null)
-                {
-                    SelectedGraphConfiguration = appConfig.Definitions.Any()
-                        ? appConfig.Definitions.First()
-                        : MotherObjects.DefaultDefinition;
-                }
-            }
-            else
-            {
-                SentenceGraphLogicCore.EdgeCurvingEnabled = true;
-            }
-
-            if (newLayoutAlgorithmType == LayoutAlgorithmTypeEnum.BoundedFR)
-            {
-                SentenceGraphLogicCore.DefaultLayoutAlgorithmParams =
-                    SentenceGraphLogicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.BoundedFR);
-            }
-
-            if (newLayoutAlgorithmType == LayoutAlgorithmTypeEnum.FR)
-            {
-                SentenceGraphLogicCore.DefaultLayoutAlgorithmParams =
-                    SentenceGraphLogicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.FR);
-            }
+            SetLayoutAlgorithm(SentenceGraphLogicCore);
         }
 
         private bool LayoutAlgorithmChangedCommandCanExecute(object arg)
@@ -329,8 +298,97 @@
         {
             graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
             var logicCore = graphBuilder.SetupGraphLogic(Sentence);
-
             SentenceGraphLogicCore = logicCore;
+
+            SetLayoutAlgorithm(logicCore);
+        }
+
+        private void SetLayoutAlgorithm(SentenceGxLogicCore logicCore)
+        {
+            switch (SelectedLayoutAlgorithmType)
+            {
+                case GraphLayoutAlgorithmTypeEnum.Liniar :
+
+                    logicCore.ExternalEdgeRoutingAlgorithm =
+                        new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                            logicCore.Graph as SentenceGraph);
+
+                    logicCore.ExternalLayoutAlgorithm =
+                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                            logicCore.Graph as SentenceGraph,
+                            50);
+
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.DiagonalLiniar :
+                    logicCore.ExternalEdgeRoutingAlgorithm =
+                        new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                            logicCore.Graph as SentenceGraph);
+
+                    logicCore.ExternalLayoutAlgorithm =
+                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                            logicCore.Graph as SentenceGraph,
+                            50, 25);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.EfficientSugiyama :
+                    SetEfficientSugiyamaLayout(logicCore);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.TopBottomTree :
+                    SetTreeLayout(logicCore, LayoutDirection.TopToBottom);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.BottomTopTree :
+                    SetTreeLayout(logicCore, LayoutDirection.BottomToTop);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.LeftRightTree :
+                    SetTreeLayout(logicCore, LayoutDirection.LeftToRight);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.RightLeftTree :
+                    SetTreeLayout(logicCore, LayoutDirection.RightToLeft);
+                    break;
+                default :
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            EventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
+        }
+
+        private void SetTreeLayout(SentenceGxLogicCore logicCore, LayoutDirection direction)
+        {
+            logicCore.ExternalEdgeRoutingAlgorithm = null;
+            logicCore.ExternalLayoutAlgorithm = null;
+
+            var parameters =
+                logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.Tree) as
+                    SimpleTreeLayoutParameters;
+
+            if (parameters != null)
+            {
+                parameters.Direction = direction;
+                parameters.LayerGap = 150;
+                parameters.SpanningTreeGeneration = SpanningTreeGeneration.BFS;
+                parameters.VertexGap = 75;
+                logicCore.EdgeCurvingEnabled = false;
+                logicCore.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.Tree;
+                logicCore.DefaultLayoutAlgorithmParams = parameters;
+            }
+        }
+
+        private void SetEfficientSugiyamaLayout(SentenceGxLogicCore logicCore)
+        {
+            logicCore.ExternalEdgeRoutingAlgorithm = null;
+            logicCore.ExternalLayoutAlgorithm = null;
+
+            var layoutParameters =
+                logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.EfficientSugiyama) as
+                    EfficientSugiyamaLayoutParameters;
+
+            if (layoutParameters != null)
+            {
+                layoutParameters.EdgeRouting = SugiyamaEdgeRoutings.Traditional;
+                layoutParameters.LayerDistance = layoutParameters.VertexDistance = 75;
+                logicCore.EdgeCurvingEnabled = false;
+                logicCore.DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.EfficientSugiyama;
+                logicCore.DefaultLayoutAlgorithmParams = layoutParameters;
+            }
         }
     }
 }

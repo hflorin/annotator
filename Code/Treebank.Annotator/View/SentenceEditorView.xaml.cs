@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
     using Domain;
@@ -66,7 +65,17 @@
 
             viewModel = sentenceEditorViewModel;
             DataContext = viewModel;
-            currentDefinition = definition ?? this.appConfig.Definitions.First();
+
+            if (definition == null)
+            {
+                currentDefinition = appConfig.Definitions.Any()
+                    ? this.appConfig.Definitions.First()
+                    : MotherObjects.DefaultDefinition;
+            }
+            else
+            {
+                currentDefinition = definition;
+            }
 
             viewModel.CreateSentenceGraph();
             GgZoomCtrl.MouseLeftButtonUp += GgZoomCtrl_MouseLeftButtonUp;
@@ -108,7 +117,10 @@
             var vertexControl = AddWordVertexControl(word);
             var headWordId = word.GetAttributeByName(currentDefinition.Vertex.FromAttributeName);
             var headWordVertexControl =
-                GgArea.VertexList.Where(p => p.Key.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName).Equals(headWordId))
+                GgArea.VertexList.Where(
+                    p =>
+                        p.Key.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName)
+                            .Equals(headWordId))
                     .Select(p => p.Value)
                     .SingleOrDefault();
 
@@ -133,6 +145,7 @@
                 operationMode = SenteceGraphOperationMode.Delete;
                 ClearEditMode();
                 ClearSelectMode();
+                GgArea.SetVerticesDrag(false);
                 return;
             }
 
@@ -145,6 +158,7 @@
                 viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Edit;
                 operationMode = SenteceGraphOperationMode.Edit;
                 ClearSelectMode();
+                GgArea.SetVerticesDrag(false);
                 return;
             }
 
@@ -158,6 +172,10 @@
                 operationMode = SenteceGraphOperationMode.Select;
                 ClearEditMode();
                 GgArea.SetVerticesDrag(true, true);
+            }
+            else
+            {
+                GgArea.SetVerticesDrag(false);
             }
         }
 
@@ -314,7 +332,10 @@
             if (vertex != null)
             {
                 eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
-                    .Publish(new ElementAttributeEditorViewModel {Attributes = vertex.WordWrapper.Attributes});
+                    .Publish(new ElementAttributeEditorViewModel(eventAggregator)
+                    {
+                        Attributes = vertex.WordWrapper.Attributes
+                    });
             }
 
             ClearAllSelectedVertices();
@@ -336,6 +357,7 @@
             if (relayout)
             {
                 DisplayGraph();
+                viewModel.PopulateWords();
             }
         }
 
@@ -374,11 +396,6 @@
             GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
 
-        private void viewModel_SentenceGraphChanged(object sender, EventArgs e)
-        {
-            DisplayGraph();
-        }
-
         private void DisplayGraph()
         {
             GgArea.GenerateGraph();
@@ -392,18 +409,6 @@
 
             GgZoomCtrl.ZoomToFill();
             GgZoomCtrl.Mode = ZoomControlModes.Custom;
-        }
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            GgArea.LogicCore.ExternalEdgeRoutingAlgorithm =
-                new TopologicalEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
-                    GgArea.LogicCore.Graph as SentenceGraph);
-
-            GgArea.LogicCore.ExternalLayoutAlgorithm =
-                new TopologicalLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
-                    GgArea.LogicCore.Graph as SentenceGraph,
-                    50);
         }
     }
 }

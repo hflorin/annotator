@@ -1,9 +1,7 @@
 ﻿namespace Treebank.Annotator.Graph.Algos
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Prism.Events;
 
     public class Graph
     {
@@ -47,7 +45,6 @@
                 if (!visited[i])
                 {
                     validation.DisconnectedWordIds.Add(wordToVertexMapping.Single(p => p.Value == i).Key);
-
                     return false;
                 }
             }
@@ -92,17 +89,5 @@
 
             return false;
         }
-    }
-
-    public class CheckGraphResult
-    {
-        public CheckGraphResult()
-        {
-            DisconnectedWordIds = new List<string>();
-            Cycles = new List<List<string>>();
-        }
-
-        public List<string> DisconnectedWordIds { get; set; }
-        public List<List<string>> Cycles { get; set; }
     }
 }

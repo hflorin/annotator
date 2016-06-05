@@ -6,10 +6,10 @@
     using System.Text;
     using System.Threading.Tasks;
     using Configuration;
+    using Domain;
+    using Events;
+    using Loaders;
     using Prism.Events;
-    using Treebank.Domain;
-    using Treebank.Events;
-    using Treebank.Loaders;
     using Attribute = Domain.Attribute;
 
     public class DocumentMapperWithDynamic : IDocumentMapper
@@ -117,7 +117,7 @@
                     }
 
                     newWord.Attributes.Add(
-                        new Attribute { Name = "content", DisplayName = "Content", Value = word.form });
+                        new Attribute {Name = "content", DisplayName = "Content", Value = word.form});
 
                     words.Add(newWord);
                 }
@@ -163,11 +163,11 @@
 
                 newSentence.Attributes.Add(
                     new Attribute
-                        {
-                            Name = "content", 
-                            DisplayName = "Content", 
-                            Value = sentenceBody.ToString(0, sentenceBody.Length - 1)
-                        });
+                    {
+                        Name = "content",
+                        DisplayName = "Content",
+                        Value = sentenceBody.ToString(0, sentenceBody.Length - 1)
+                    });
 
                 newSentence.Words = words;
 

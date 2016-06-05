@@ -15,7 +15,7 @@
     <DockPanel LastChildFill="True">
         <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
             <WrapPanel Orientation="Horizontal">
-                <Label Content="Layout" HorizontalAlignment="Left" FontWeight="Bold" />
+                <Label Content="Layouts:" HorizontalAlignment="Left" FontWeight="Bold" />
                 <ComboBox Name="LayoutAlgos" SelectedItem="{Binding SelectedLayoutAlgorithmType}"
                           ItemsSource="{Binding LayoutAlgorithmTypes}" IsReadOnly="True" HorizontalAlignment="Stretch">
                     <i:Interaction.Triggers>
@@ -24,7 +24,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
-                <Label Content="Graph Configs" HorizontalAlignment="Left" FontWeight="Bold" />
+                <Label Content="Configurations:" HorizontalAlignment="Left" FontWeight="Bold" />
                 <ComboBox Name="GraphConfigurations" SelectedItem="{Binding SelectedGraphConfiguration}"
                           ItemsSource="{Binding GraphConfigurations}" IsReadOnly="True"
                           HorizontalAlignment="Stretch" SelectedValuePath="Name" DisplayMemberPath="Name">
@@ -34,15 +34,13 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
-                <Button Click="ButtonBase_OnClick" Content="Custom Layout Algo" Width="70" />
-                <Button Click="viewModel_SentenceGraphChanged" Content="Refresh" Width="70" />
-                <Button Content="Validate" Width="70" Command="{Binding CheckIsTreeCommand}" />
+                <Button Content="Is Tree?" Width="70" Command="{Binding CheckIsTreeCommand}" />
                 <Button Content="Save" Width="70" IsEnabled="{Binding Sentence.IsChanged}" />
                 <ToggleButton Name="butSelect" Content="Select" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events1:SenteceGraphOperationMode.Select}"
                               ToolTip="Selection mode: drag vertices, Ctrl+Click to group them"
                               x:FieldModifier="private" Width="70" />
-                <ToggleButton Name="butEdit" Content="Edit" Command="{Binding ToggleEditModeCommand}"
+                <ToggleButton Name="butEdit" Content="Set Edges" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events1:SenteceGraphOperationMode.Edit}"
                               ToolTip="Edit mode: click to place vertices, click vertices to add edges"
                               x:FieldModifier="private" Width="70" />

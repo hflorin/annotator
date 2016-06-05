@@ -3,30 +3,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d">
+             xmlns:viewModels="clr-namespace:Treebank.Annotator.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignData ElementAttributeEditorViewModel}">
+
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <DataGrid ItemsSource="{Binding Attributes}" Margin="0 5 0 0" SelectedItem="{Binding SelectedAttribute}" SelectionUnit="FullRow"
-                  AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2">
+        <DataGrid ItemsSource="{Binding Attributes}" Margin="0 5 0 0" SelectedItem="{Binding SelectedAttribute}"
+                  SelectionUnit="FullRow"
+                  AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2"
+                  LostKeyboardFocus="DataGrid_LostKeyboardFocus">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name"
                                     Binding="{Binding DisplayName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                    Width="Auto" IsReadOnly="True"/>
-                <DataGridTemplateColumn CellStyle="{StaticResource DataGridCellStyle1}" Header="Value" Width="*"/>
+                                    Width="Auto" IsReadOnly="True" />
+                <DataGridTemplateColumn CellStyle="{StaticResource DataGridCellStyle1}" Header="Value" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
         <Button Grid.Row="1" Grid.Column="0" Content="Add" IsEnabled="True" Command="{Binding AddAttributeCommand}" />
-        <Button Grid.Row="1" Grid.Column="1" Content="Remove" IsEnabled="{Binding AnyAttributes}" Command="{Binding RemoveAttributeCommand}" />
-        <Button Grid.Row="2" Grid.Column="0" Content="Save" IsEnabled="{Binding Attributes.IsChanged}" Command="{Binding SaveAttributeCommand}" />
-        <Button Grid.Row="2" Grid.Column="1" Content="Cancel" IsEnabled="{Binding Attributes.IsChanged}" Command="{Binding CancelAttributeCommand}" />
+        <Button Grid.Row="1" Grid.Column="1" Content="Remove" IsEnabled="{Binding AnyAttributes}"
+                Command="{Binding RemoveAttributeCommand}" />
+        <Button Grid.Row="2" Grid.Column="0" Content="Save" IsEnabled="{Binding Attributes.IsChanged}"
+                Command="{Binding SaveAttributeCommand}" />
+        <Button Grid.Row="2" Grid.Column="1" Content="Cancel" IsEnabled="{Binding Attributes.IsChanged}"
+                Command="{Binding CancelAttributeCommand}" />
     </Grid>
 </UserControl>

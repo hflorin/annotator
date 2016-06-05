@@ -71,7 +71,7 @@
         private void WordGotFocusCommandExecute(object obj)
         {
             eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
-                .Publish(new ElementAttributeEditorViewModel {Attributes = wordWrapper.Attributes});
+                .Publish(new ElementAttributeEditorViewModel(eventAggregator) {Attributes = wordWrapper.Attributes});
         }
 
         private void WordChangedCommandExecute(object obj)

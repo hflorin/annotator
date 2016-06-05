@@ -9,8 +9,8 @@
         public static readonly DependencyProperty ItemsProperty =
             DependencyProperty.Register(
                 "GraphLogicCoreData",
-                typeof (SentenceGxLogicCore),
-                typeof (SentenceGraphArea),
+                typeof(SentenceGxLogicCore),
+                typeof(SentenceGraphArea),
                 new PropertyMetadata(default(SentenceGxLogicCore), OnItemsPropertyChanged));
 
         public SentenceGxLogicCore GraphLogicCoreData
@@ -22,8 +22,6 @@
         private static void OnItemsPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             var graph = (SentenceGraphArea) obj;
-
-            graph.SetVerticesDrag(true, true);
 
             graph.RelayoutGraph(true);
             graph.GenerateGraph();

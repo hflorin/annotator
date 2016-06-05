@@ -1,8 +1,6 @@
 ﻿namespace Treebank.Annotator.Graph
 {
     using System.Linq;
-    using GraphX.PCL.Common.Enums;
-    using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
     using Mappers.Configuration;
     using Wrapper;
 
@@ -33,26 +31,7 @@
         {
             var sentenceGraph = BuildSentenceGraph(sentence);
 
-            var logicCore = new SentenceGxLogicCore
-            {
-                DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.EfficientSugiyama,
-                EdgeCurvingEnabled = false
-            };
-
-            var parameters =
-                logicCore.AlgorithmFactory.CreateLayoutParameters(
-                    LayoutAlgorithmTypeEnum.EfficientSugiyama) as EfficientSugiyamaLayoutParameters;
-
-            if (parameters != null)
-            {
-                parameters.EdgeRouting = SugiyamaEdgeRoutings.Traditional;
-                parameters.LayerDistance = parameters.VertexDistance = 50;
-                logicCore.EdgeCurvingEnabled = false;
-                logicCore.DefaultLayoutAlgorithmParams = parameters;
-            }
-
-            logicCore.Graph = sentenceGraph;
-            return logicCore;
+            return new SentenceGxLogicCore {EdgeCurvingEnabled = false, Graph = sentenceGraph};
         }
 
         private SentenceGraph BuildSentenceGraph(SentenceWrapper sentence)

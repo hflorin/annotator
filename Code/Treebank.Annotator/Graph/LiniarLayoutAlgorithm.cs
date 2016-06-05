@@ -8,7 +8,7 @@
     using GraphX.PCL.Common.Interfaces;
     using QuickGraph;
 
-    public class TopologicalLayoutAlgorithm<TVertex, TEdge, TGraph> : IExternalLayout<TVertex, TEdge>
+    public class LiniarLayoutAlgorithm<TVertex, TEdge, TGraph> : IExternalLayout<TVertex, TEdge>
         where TVertex : class, IIdentifiableGraphDataObject
         where TEdge : IEdge<TVertex>
         where TGraph : IVertexAndEdgeListGraph<TVertex, TEdge>, IMutableVertexAndEdgeListGraph<TVertex, TEdge>
@@ -19,7 +19,7 @@
 
         private readonly double vertexPositionYOffset;
 
-        public TopologicalLayoutAlgorithm(TGraph graph, double vertexXOffset = 0.0d, double vertexYOffset = 0.0d)
+        public LiniarLayoutAlgorithm(TGraph graph, double vertexXOffset = 0.0d, double vertexYOffset = 0.0d)
         {
             this.graph = graph;
             vertexPositionXOffset = vertexXOffset;

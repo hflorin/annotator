@@ -1,17 +1,33 @@
 ﻿namespace Treebank.Annotator.ViewModels
 {
+    using System;
     using System.Linq;
     using System.Windows.Input;
     using Commands;
+    using Prism.Events;
+    using Treebank.Events;
     using View;
     using Wrapper;
     using Wrapper.Base;
 
     public class ElementAttributeEditorViewModel : Observable
     {
-        public ElementAttributeEditorViewModel()
+        private readonly IEventAggregator eventAggregator;
+
+        public ElementAttributeEditorViewModel(IEventAggregator eventAggregator)
         {
             InitializeCommands();
+            if (eventAggregator == null)
+            {
+                throw new ArgumentNullException("eventAggregator");
+            }
+
+            this.eventAggregator = eventAggregator;
+        }
+
+        public IEventAggregator EventAggregator
+        {
+            get { return eventAggregator; }
         }
 
         public ChangeTrackingCollection<AttributeWrapper> Attributes { get; set; }
@@ -53,6 +69,7 @@
         {
             //todo: save to the file as well
             Attributes.AcceptChanges();
+            eventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
         }
 
         private bool SaveAttributeCommandCanExecute(object arg)
@@ -62,8 +79,17 @@
 
         private void RemoveAttributeCommandExecute(object obj)
         {
-            Attributes.Remove(SelectedAttribute);
-            InvalidateCommands();
+            if (SelectedAttribute.IsOptional)
+            {
+                Attributes.Remove(SelectedAttribute);
+                InvalidateCommands();
+            }
+            else
+            {
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(string.Format("Cannot delete attribute {0} because it is not optional.",
+                        SelectedAttribute.Name));
+            }
         }
 
         private bool RemoveAttributeCommandCanExecute(object arg)

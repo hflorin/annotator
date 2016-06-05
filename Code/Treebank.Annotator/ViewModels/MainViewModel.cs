@@ -308,7 +308,7 @@
 
         private void SelectedSentenceChangedCommandExecute(object obj)
         {
-            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel
+            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(eventAggregator)
             {
                 Attributes =
                     SelectedSentence
@@ -346,7 +346,7 @@
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
-            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel
+            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(eventAggregator)
             {
                 Attributes =
                     SelectedSentence
@@ -443,7 +443,7 @@
             var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
 
             eventAggregator.GetEvent<StatusNotificationEvent>()
-                .Publish(string.Format("Loading document: {0}", documentFilePath));
+                .Publish(string.Format("Loading document: {0}. Please wait...", documentFilePath));
 
             if (string.IsNullOrWhiteSpace(documentFilePath))
             {

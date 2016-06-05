@@ -10,13 +10,13 @@
     using GraphX.PCL.Logic.Algorithms.EdgeRouting;
     using QuickGraph;
 
-    public class TopologicalEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> :
+    public class LiniarEdgeRoutingAlgorithm<TVertex, TEdge, TGraph> :
         EdgeRoutingAlgorithmBase<TVertex, TEdge, TGraph>
         where TGraph : class, IMutableBidirectionalGraph<TVertex, TEdge>
         where TEdge : class, IGraphXEdge<TVertex>
         where TVertex : class, IGraphXVertex, IIdentifiableGraphDataObject
     {
-        public TopologicalEdgeRoutingAlgorithm(
+        public LiniarEdgeRoutingAlgorithm(
             TGraph graph,
             IDictionary<TVertex, Point> vertexPositions = null,
             IDictionary<TVertex, Rect> vertexSizes = null,
