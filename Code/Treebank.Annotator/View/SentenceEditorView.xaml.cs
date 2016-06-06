@@ -321,6 +321,7 @@
                 GgArea.RemoveAllVertices();
 
                 viewModel.CreateSentenceGraph();
+                viewModel.PopulateWords();
 
                 GgArea.InvalidateVisual();
             }

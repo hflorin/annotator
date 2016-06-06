@@ -33,6 +33,11 @@
 
         public bool IsTree(CheckGraphResult validation)
         {
+            if (verticesNumber <= 1)
+            {
+                return true;
+            }
+
             var visited = new bool[verticesNumber];
 
             if (HasCycle(0, visited, -1, validation))

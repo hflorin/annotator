@@ -4,6 +4,8 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
+    using Treebank.Domain;
+
     public partial class SentenceWrapper
     {
         public AttributeWrapper Id
@@ -19,11 +21,36 @@
 
         public AttributeWrapper Content
         {
-            get { return Attributes.Single(a => a.Name.Equals("content")); }
+            get
+            {
+                var contentAttribute = Attributes.FirstOrDefault(a => a.Name.Equals("content"));
+
+                if (contentAttribute == null)
+                {
+                    contentAttribute =
+                        new AttributeWrapper(
+                            new Attribute
+                                {
+                                    Value = string.Empty,
+                                    DisplayName = "Content",
+                                    Entity = "attribute",
+                                    Name = "content"
+                                });
+
+                    Attributes.Add(contentAttribute);
+                }
+
+                return Attributes.Single(a => a.Name.Equals("content"));
+            }
+
             set
             {
-                var oldId = Attributes.Single(a => a.Name.Equals("content"));
-                Attributes.Remove(oldId);
+                var oldIdAttribute = Attributes.FirstOrDefault(a => a.Name.Equals("content"));
+                if (oldIdAttribute != null)
+                {
+                    Attributes.Remove(oldIdAttribute);
+                }
+
                 Attributes.Add(value);
             }
         }
@@ -70,9 +97,11 @@
                 yield break;
             }
 
-            if (string.IsNullOrWhiteSpace(Attributes.Single(a => (a.Name != null) && a.Name.Equals("parser")).Value))
+            var attribute = Attributes.FirstOrDefault(a => (a.Name != null) && a.Name.Equals("parser"));
+
+            if (attribute == null || string.IsNullOrWhiteSpace(attribute.Value))
             {
-                yield return new ValidationResult("Parser is required.", new[] {"Parser"});
+                yield return new ValidationResult("Parser is required.", new[] { "Parser" });
             }
         }
     }

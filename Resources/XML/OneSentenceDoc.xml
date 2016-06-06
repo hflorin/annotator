@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<treebank id="test1">
+ <sentence id="111" parser="" user="Ugla" date="2016-03-02">
+  <word id="1" form="Holul" lemma="hol" postag="Ncmsry" head="3" chunk="" deprel="sbj."/>
+  <word id="2" form="blocului" lemma="bloc" postag="Ncmsoy" head="1" chunk="" deprel="a.subst."/>
+  <word id="3" form="mirosea" lemma="mirosi" postag="Vmii3s" head="0" chunk=""/>
+  <word id="4" form="a" lemma="a" postag="Spsa" head="3" chunk="" deprel="c.prep."/>
+  <word id="5" form="varză" lemma="varză" postag="Ncfsrn" head="4" chunk="" deprel="prep."/>
+  <word id="6" form="călită" lemma="călit" postag="Afpfsrn" head="5" chunk="" deprel="a.adj."/>
+  <word id="7" form="şi" lemma="şi" postag="Crssp" head="4" chunk="" deprel="coord."/>
+  <word id="8" form="a" lemma="a" postag="Spsa" head="7" chunk="" deprel="coord."/>
+  <word id="9" form="preşuri" lemma="preş" postag="Ncfp-n" head="8" chunk="" deprel="prep."/>
+  <word id="10" form="vechi" lemma="vechi" postag="Afp-p-n" head="9" chunk="" deprel="a.adj."/>
+  <word id="11" form="." lemma="." postag="punct" head="3" chunk="" deprel="punct."/>
+ </sentence>
+</treebank>

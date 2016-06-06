@@ -20,22 +20,27 @@
         <Menu x:Name="MainMenu" IsMainMenu="True">
             <MenuItem x:Name="FileMenu" Header="_FILE">
                 <MenuItem x:Name="New" Header="New">
-                    <MenuItem x:Name="Treebank" Header="_Treebank" Command="{Binding NewTreeBankCommand}" />
+                    <MenuItem x:Name="Treebank" Header="_Treebank" Command="{Binding NewTreeBankCommand}" ToolTip="Creates a new empty treebank document"/>
                 </MenuItem>
-                <MenuItem x:Name="Open" Header="_Open" Command="{Binding OpenCommand}" />
-                <MenuItem x:Name="Close" Header="_Close" Command="{Binding CloseCommand}" />
+                <MenuItem x:Name="Load" Header="_Load" Command="{Binding OpenCommand}" ToolTip="Loads the document into the application"/>
+                <MenuItem x:Name="Close" Header="_Close" Command="{Binding CloseCommand}" ToolTip="Closes the selected document from the Treebank Explorer"/>
                 <Separator />
-                <MenuItem x:Name="Save" Header="Save" Command="{Binding SaveCommand}" />
-                <MenuItem x:Name="SaveAs" Header="Save As" Command="{Binding SaveAsCommand}" />
+                <MenuItem x:Name="Save" Header="_Save" Command="{Binding SaveCommand}" ToolTip="Saves the currently selected treebank to the disk"/>
+                <MenuItem x:Name="SaveAs" Header="_Save As" Command="{Binding SaveAsCommand}" ToolTip="Saves the currently selected treebank to the disk in a new file"/>
                 <Separator />
-                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick" />
+                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick" ToolTip="Closes the application"/>
+            </MenuItem>
+            <MenuItem x:Name="EditMenu" Header="_EDIT">
+                <MenuItem x:Name="EditSentence" Header="_Sentence Graph" Command="{Binding EditSentenceCommand}" ToolTip="Opens the selected sentence graph in a new tab."/>
+                <MenuItem x:Name="EditWordOrder" Header="_Word Order" Command="{Binding EditWordOrderCommand}" ToolTip="Reorders the words of the selected sentence. Updates the IDs and head word IDs." />
+                <MenuItem x:Name="AddSentence" Header="_Add sentence" Command="{Binding AddSentenceCommand}" ToolTip="Adds a new empty sentence into the selected treebank" />
+                <MenuItem x:Name="DeleteSentence" Header="_Delete selected sentence" Command="{Binding DeleteSentenceCommand}" ToolTip="Deletes the selected sentence from the Sentence Explorer" />
             </MenuItem>
             <MenuItem x:Name="ViewMenu" Header="_VIEW">
-                <MenuItem Header="_Tree Explorer" />
-                <MenuItem Header="_Sentence List" />
-                <Separator />
-                <MenuItem x:Name="EditSentence" Header="_Edit Sentence" Command="{Binding EditSentenceCommand}" />
-                <MenuItem x:Name="EditWordOrder" Header="_Edit Word Order" Command="{Binding EditWordOrderCommand}" />
+                <MenuItem Header="_Tree Explorer" ToolTip="Shows the Tree Explorer panel"/>
+                <MenuItem Header="_Sentence List" ToolTip="Shows the Sentence List panel"/>
+                <MenuItem Header="_Attributes List" ToolTip="Shows the Attributes List panel"/>
+                <MenuItem Header="_Output Panel" ToolTip="Shows the Output panel"/>
             </MenuItem>
             <MenuItem x:Name="HelpMenu" Header="_HELP" />
         </Menu>

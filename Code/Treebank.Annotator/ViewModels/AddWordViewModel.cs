@@ -80,9 +80,12 @@
 
 
             var headwordAttribute = Word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("head"));
-            var headWordId = words.Where(p => p.Form == headwordAttribute.Value).Select(p => p.Id).Single();
+            
+
             headwordAttribute.IsEditable = originalHeadWordAttribute.IsEditable;
             headwordAttribute.AllowedValuesSet = originalHeadWordAttribute.AllowedValuesSet;
+
+            var headWordId = words.Where(p => p.Form == headwordAttribute.Value).Select(p => p.Id).FirstOrDefault();
             headwordAttribute.Value = headWordId.ToString();
             Word.AcceptChanges();
             //todo:validate the values entered
@@ -95,7 +98,7 @@
 
         private void SetAllowedValuesSetForWordIdAttribute(Word word, List<Pair> wordsParam)
         {
-            var newId = wordsParam.Max(w => w.Id) + 1;
+            var newId = wordsParam.Any() ? wordsParam.Max(w => w.Id) + 1 : 0;
             var idAttribute = word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("id"));
             idAttribute.IsEditable = false;
             idAttribute.Value = newId.ToString();
