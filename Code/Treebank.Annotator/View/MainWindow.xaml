@@ -36,13 +36,6 @@
                 <MenuItem x:Name="AddSentence" Header="_Add sentence" Command="{Binding AddSentenceCommand}" ToolTip="Adds a new empty sentence into the selected treebank" />
                 <MenuItem x:Name="DeleteSentence" Header="_Delete selected sentence" Command="{Binding DeleteSentenceCommand}" ToolTip="Deletes the selected sentence from the Sentence Explorer" />
             </MenuItem>
-            <MenuItem x:Name="ViewMenu" Header="_VIEW">
-                <MenuItem Header="_Tree Explorer" ToolTip="Shows the Tree Explorer panel"/>
-                <MenuItem Header="_Sentence List" ToolTip="Shows the Sentence List panel"/>
-                <MenuItem Header="_Attributes List" ToolTip="Shows the Attributes List panel"/>
-                <MenuItem Header="_Output Panel" ToolTip="Shows the Output panel"/>
-            </MenuItem>
-            <MenuItem x:Name="HelpMenu" Header="_HELP" />
         </Menu>
 
         <StatusBar x:Name="StatusBar" Grid.Row="2" Focusable="False" IsHitTestVisible="False">
@@ -67,23 +60,15 @@
             <xcad:LayoutRoot x:Name="LayoutRoot">
                 <xcad:LayoutPanel Orientation="Vertical">
                     <xcad:LayoutPanel Orientation="Horizontal">
-                        <xcad:LayoutAnchorablePane DockWidth="200">
-                            <xcad:LayoutAnchorable ContentId="documents" Title="Document Explorer" CanHide="False"
-                                                   CanClose="False"
-                                                   AutoHideWidth="200">
-                                <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
-                                         DisplayMemberPath="IdValue"
-                                         SelectedItem="{Binding SelectedDocument}" />
-                            </xcad:LayoutAnchorable>
-                        </xcad:LayoutAnchorablePane>
                         <xcad:LayoutDocumentPaneGroup>
                             <xcad:LayoutDocumentPane x:Name="SentenceEditors" />
                         </xcad:LayoutDocumentPaneGroup>
                     </xcad:LayoutPanel>
-                    <xcad:LayoutPanel Orientation="Horizontal" DockHeight="150">
-                        <xcad:LayoutAnchorablePane>
-                            <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False"
-                                                   CanClose="False">
+                </xcad:LayoutPanel>
+                <xcad:LayoutRoot.BottomSide>
+                    <xcad:LayoutAnchorSide>
+                        <xcad:LayoutAnchorGroup>
+                            <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False" CanClose="False">
                                 <DataGrid ItemsSource="{Binding SelectedDocument.Sentences}" LoadingRow="DataGrid_OnLoadingRow"
                                           SelectedItem="{Binding SelectedSentence,Mode=TwoWay}" Margin="0 5 0 0"
                                           AutoGenerateColumns="False" SelectionUnit="FullRow">
@@ -114,13 +99,7 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </xcad:LayoutAnchorable>
-                        </xcad:LayoutAnchorablePane>
-                    </xcad:LayoutPanel>
-                </xcad:LayoutPanel>
-                <xcad:LayoutRoot.BottomSide>
-                    <xcad:LayoutAnchorSide>
-                        <xcad:LayoutAnchorGroup>
-                            <xcad:LayoutAnchorable Title="Output" ContentId="output">
+                            <xcad:LayoutAnchorable Title="Output" ContentId="output" CanHide="False" CanClose="False">
                                 <ListBox ItemsSource="{Binding DocumentLoadExceptions}" />
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorGroup>
@@ -129,9 +108,16 @@
                 <xcad:LayoutRoot.LeftSide>
                     <xcad:LayoutAnchorSide>
                         <xcad:LayoutAnchorGroup>
-                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200">
+                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200" CanHide="False" CanClose="False">
                                 <view:ElementAttributeEditorView
                                     DataContext="{Binding SelectedElementAttributeEditorViewModel}" />
+                            </xcad:LayoutAnchorable>
+                            <xcad:LayoutAnchorable ContentId="documents" Title="Document Explorer" CanHide="False"
+                                                   CanClose="False"
+                                                   AutoHideWidth="200">
+                                <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
+                                         DisplayMemberPath="IdValue"
+                                         SelectedItem="{Binding SelectedDocument}" />
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorGroup>
                     </xcad:LayoutAnchorSide>

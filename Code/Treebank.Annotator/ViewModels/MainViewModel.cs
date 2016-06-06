@@ -119,6 +119,7 @@
             set
             {
                 selectedDocument = value;
+                InvalidateCommands();
                 OnPropertyChanged();
             }
         }
@@ -498,7 +499,11 @@
 
             var closedDocumentFilepath = SelectedDocument.Model.FilePath;
 
-            documentsWrappers.Remove(closedDocumentFilepath);
+            if (closedDocumentFilepath != null)
+            {
+                documentsWrappers.Remove(closedDocumentFilepath);
+            }
+
             SelectedDocument = null;
 
             if (documentsWrappers.Any())
@@ -548,6 +553,8 @@
                 Documents.Add(new DocumentWrapper(document));
             }
 
+            InvalidateCommands();
+
             eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Treebank created");
         }
 
@@ -577,7 +584,9 @@
             documentsWrappers[documentFilePath] = new DocumentWrapper(documentModel);
 
             RefreshDocumentsExplorerList();
+
             InvalidateCommands();
+
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(string.Format("Document loaded: {0}", documentFilePath));
         }
@@ -616,12 +625,12 @@
 
         private bool SaveCommandCanExecute(object arg)
         {
-            return true;
+            return SelectedDocument != null;
         }
 
         private bool SaveAsCommandCanExecute(object arg)
         {
-            return true;
+            return SelectedDocument != null;
         }
 
         private void SaveAsCommandExecute(object obj)

@@ -79,7 +79,7 @@
 
         private void RemoveAttributeCommandExecute(object obj)
         {
-            if (SelectedAttribute.IsOptional)
+            if (SelectedAttribute!=null && SelectedAttribute.IsOptional)
             {
                 Attributes.Remove(SelectedAttribute);
                 InvalidateCommands();
