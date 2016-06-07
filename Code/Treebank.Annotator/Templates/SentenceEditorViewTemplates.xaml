@@ -2,13 +2,68 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:graphx="http://schemas.panthernet.ru/graphx/"
-                    xmlns:graphX="clr-namespace:GraphX;assembly=GraphX.Controls">
-    
+                    xmlns:graphX="clr-namespace:GraphX;assembly=GraphX.Controls"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+
+    <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}">
+                    <Grid Height="21.96">
+                        <ComboBox x:Name="cbCondition1" ItemsSource="{Binding AllowedValuesSet}" SelectedValue="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Model" DisplayMemberPath="Model"/>
+                        <TextBox x:Name="tbCondition2" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox x:Name="tbCondition3" Text="{Binding Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsEditable}" Value="True">
+                            <Setter Value="Hidden" TargetName="cbCondition1" Property="Visibility"/>
+                            <Setter Value="Visible" TargetName="tbCondition2" Property="Visibility"/>
+                            <Setter Value="Hidden" TargetName="tbCondition3" Property="Visibility"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsEditable}" Value="False">
+                            <Setter Value="Hidden" TargetName="cbCondition1" Property="Visibility"/>
+                            <Setter Value="Hidden" TargetName="tbCondition2" Property="Visibility"/>
+                            <Setter Value="Visible" TargetName="tbCondition3" Property="Visibility"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding HasAllowedValuesSet}" Value="True">
+                            <Setter Value="Visible" TargetName="cbCondition1" Property="Visibility"/>
+                            <Setter Value="Hidden" TargetName="tbCondition2" Property="Visibility"/>
+                            <Setter Value="Hidden" TargetName="tbCondition3" Property="Visibility"/>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static DataGrid.FocusBorderBrushKey}}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <LinearGradientBrush x:Key="EdgeBrush" EndPoint="0.5,0" StartPoint="0.5,1" po:Freeze="true">
         <GradientStop Color="#500202"/>
         <GradientStop Color="#630303" Offset="1"/>
     </LinearGradientBrush>
 
+    <LinearGradientBrush x:Key="NormalBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+        <GradientStop Color="#FFA4ADBB" Offset="0.521"/>
+        <GradientStop Color="#FFD7E0EA" Offset="0.194"/>
+        <GradientStop Color="#FFBAC1CF" Offset="0.811"/>
+        <GradientStop Color="#FFBCC5D5" Offset="0.507"/>
+        <GradientStop Color="#FFE3E4E6" Offset="1"/>
+    </LinearGradientBrush>
+    
     <!-- VERTEX CONTROL -->
     <Style TargetType="{x:Type graphx:VertexControl}">
         <Setter Property="Background" Value="#FFE3E3E3"/>
@@ -32,6 +87,21 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="8" Background="{StaticResource NormalBrush}">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Attributes" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                        <StackPanel Orientation="Horizontal" Margin="3">
+                            <TextBlock MinWidth="70" Text="Name: " VerticalAlignment="Center"/>
+                            <TextBlock FontWeight="Bold" Text="{Binding VertexLabel}" Margin="3" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Setter.Value>
+        </Setter>
+
         <Style.Triggers>
             <Trigger Property="graphX:GraphAreaBase.PositioningComplete" Value="False">
                 <Setter Property="Visibility" Value="Hidden"/>
@@ -42,7 +112,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
 
     <!-- EDGE CONTROL -->
     <Style TargetType="{x:Type graphx:EdgeControl}">
@@ -73,9 +142,7 @@
                 Value="Black" />
         <Setter Property="Opacity"
                 Value="1" />
-
         <Setter Property="graphx:HighlightBehaviour.IsHighlightEnabled" Value="False"/>
-
 
         <Style.Triggers>
             <Trigger Property="graphx:HighlightBehaviour.Highlighted" Value="True">

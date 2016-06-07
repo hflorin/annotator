@@ -108,16 +108,16 @@
                 <xcad:LayoutRoot.LeftSide>
                     <xcad:LayoutAnchorSide>
                         <xcad:LayoutAnchorGroup>
-                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200" CanHide="False" CanClose="False">
-                                <view:ElementAttributeEditorView
-                                    DataContext="{Binding SelectedElementAttributeEditorViewModel}" />
-                            </xcad:LayoutAnchorable>
                             <xcad:LayoutAnchorable ContentId="documents" Title="Document Explorer" CanHide="False"
                                                    CanClose="False"
                                                    AutoHideWidth="200">
                                 <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
                                          DisplayMemberPath="IdValue"
                                          SelectedItem="{Binding SelectedDocument}" />
+                            </xcad:LayoutAnchorable>
+                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200" CanHide="False" CanClose="False">
+                                <view:ElementAttributeEditorView
+                                    DataContext="{Binding SelectedElementAttributeEditorViewModel}" />
                             </xcad:LayoutAnchorable>
                         </xcad:LayoutAnchorGroup>
                     </xcad:LayoutAnchorSide>
