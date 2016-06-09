@@ -45,7 +45,7 @@
             var edgesSortedByDistanceBetweenVertices = distancesBetweenEdgeVertices.ToList();
             edgesSortedByDistanceBetweenVertices.Sort((left, right) => left.Value.CompareTo(right.Value));
 
-            var offset = -30;
+            var offset = -25;
             for (var i = 0; i < edgesSortedByDistanceBetweenVertices.Count; i++)
             {
                 ComputeEdgeRoutePoints(
@@ -122,18 +122,18 @@
 
             var tempList = new List<Point> {new Point(x, y)};
 
-            x = sourcePoint.X + sourceVertexWidth/2;
+            x = sourcePoint.X;
             y = sourcePoint.Y + offset;
             tempList.Add(new Point(x, y));
 
-            x = targetPoint.X + targetVertexWidth/2;
+            x = targetPoint.X;
             y = sourcePoint.Y + offset;
             tempList.Add(new Point(x, y));
 
             x = targetPoint.X;
             y = targetPoint.Y;
 
-            tempList.Add(new Point(x + 100, y));
+            tempList.Add(new Point(x, y));
 
             if (EdgeRoutes.ContainsKey(edge))
             {

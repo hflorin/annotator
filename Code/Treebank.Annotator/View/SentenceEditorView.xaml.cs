@@ -369,9 +369,18 @@
                 GgArea.GenerateAllEdges();
             }
 
+            foreach (var vertexControl in GgArea.VertexList.Values)
+            {
+                vertexControl.VertexConnectionPointsList.ForEach(a => a.Shape = VertexShape.Circle);
+            }
+
+            GgArea.VertexList.Values.ForEach(a => a.SetConnectionPointsVisibility(true));
+
+            GgArea.UpdateAllEdges(true);
+
             GgArea.ShowAllEdgesArrows();
             GgArea.ShowAllEdgesLabels();
-
+            GgArea.UpdateParallelEdgesData();
             GgZoomCtrl.ZoomToFill();
             GgZoomCtrl.Mode = ZoomControlModes.Custom;
 

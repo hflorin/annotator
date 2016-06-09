@@ -69,7 +69,9 @@
                     sentenceGraph.AddEdge(
                         new WordEdge(fromWordVertex, toWordVertex)
                         {
-                            Text = word.GetAttributeByName(CurrentDefinition.Edge.LabelAttributeName)
+                            Text = word.GetAttributeByName(CurrentDefinition.Edge.LabelAttributeName),
+                            SourceConnectionPointId = 1,
+                            TargetConnectionPointId = 1
                         });
                 }
             }
