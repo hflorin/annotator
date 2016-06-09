@@ -42,20 +42,20 @@
 
             var distancesBetweenEdgeVertices = ComputeDistancesBetweenEdgeVertices();
 
-            var edgesSortedByDistanceBetweenVertices = distancesBetweenEdgeVertices.ToList();
-            edgesSortedByDistanceBetweenVertices.Sort((left, right) => left.Value.CompareTo(right.Value));
+            var edgeGaps = distancesBetweenEdgeVertices.ToList();
+            var sortedEdgeGaps = edgeGaps.ToList();
+            sortedEdgeGaps.Sort((left, right) => left.Value.CompareTo(right.Value));
 
             var offset = -25;
-            for (var i = 0; i < edgesSortedByDistanceBetweenVertices.Count; i++)
+            for (var i = 0; i < sortedEdgeGaps.Count; i++)
             {
                 ComputeEdgeRoutePoints(
-                    edgesSortedByDistanceBetweenVertices[i].Key,
+                    sortedEdgeGaps[i].Key,
                     offset,
                     cancellationToken);
 
-                if ((i + 1 < edgesSortedByDistanceBetweenVertices.Count) &&
-                    (edgesSortedByDistanceBetweenVertices[i].Value.CompareTo(
-                        edgesSortedByDistanceBetweenVertices[i + 1].Value) != 0))
+                if ((i + 1 < sortedEdgeGaps.Count) &&
+                    (sortedEdgeGaps[i].Value != sortedEdgeGaps[i + 1].Value))
                 {
                     offset -= 25;
                 }

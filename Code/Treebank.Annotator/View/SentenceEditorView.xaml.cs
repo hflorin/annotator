@@ -1,7 +1,9 @@
 ﻿namespace Treebank.Annotator.View
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
     using Domain;
@@ -16,6 +18,7 @@
     using Treebank.Events;
     using ViewModels;
     using Wrapper;
+    using Point = GraphX.Measure.Point;
 
     public partial class SentenceEditorView : UserControl, IDisposable
     {
@@ -26,6 +29,8 @@
         private readonly SentenceEditorManager editorManager;
 
         private readonly IEventAggregator eventAggregator;
+
+        private readonly ResourceDictionary resourceDictionary;
 
         private readonly SentenceEditorViewModel viewModel;
 
@@ -49,6 +54,13 @@
             editorManager = new SentenceEditorManager(GgArea, GgZoomCtrl);
             this.eventAggregator = eventAggregator;
             this.appConfig = appConfig;
+            resourceDictionary = new ResourceDictionary
+            {
+                Source =
+                    new Uri(
+                        "/Treebank.Annotator;component/Templates/SentenceEditorViewTemplates.xaml",
+                        UriKind.RelativeOrAbsolute)
+            };
         }
 
         public SentenceEditorView(
@@ -78,6 +90,7 @@
             }
 
             viewModel.CreateSentenceGraph();
+
             GgZoomCtrl.MouseLeftButtonUp += GgZoomCtrl_MouseLeftButtonUp;
             GgArea.VertexSelected += GgArea_VertexSelected;
             GgArea.EdgeSelected += GgArea_EdgeSelected;
@@ -101,6 +114,188 @@
             {
                 GgArea.Dispose();
             }
+        }
+
+        private void AddVCPs()
+        {
+            var numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
+
+            foreach (var edgeControl in GgArea.EdgesList)
+            {
+                if (numberOfEdgesPerVertexControl.ContainsKey(edgeControl.Value.Source))
+                {
+                    numberOfEdgesPerVertexControl[edgeControl.Value.Source]++;
+                }
+                else
+                {
+                    numberOfEdgesPerVertexControl.Add(edgeControl.Value.Source, 1);
+                }
+
+                if (numberOfEdgesPerVertexControl.ContainsKey(edgeControl.Value.Target))
+                {
+                    numberOfEdgesPerVertexControl[edgeControl.Value.Target]++;
+                }
+                else
+                {
+                    numberOfEdgesPerVertexControl.Add(edgeControl.Value.Target, 1);
+                }
+            }
+
+            foreach (var pair in numberOfEdgesPerVertexControl)
+            {
+                var vertex = pair.Key;
+                for (var i = 1; i < pair.Value; i++)
+                {
+                    var newVcp = new StaticVertexConnectionPoint
+                    {
+                        Id = 1 + i,
+                        Margin = new Thickness(2, 0, 0, 0),
+                        Shape = VertexShape.Circle,
+                        Style = resourceDictionary["CirclePath"] as Style
+                    };
+                    var cc = new Border
+                    {
+                        Margin = new Thickness(2, 0, 0, 0),
+                        Padding = new Thickness(0),
+                        Child = newVcp
+                    };
+
+                    vertex.VCPRoot.Children.Add(cc);
+                    vertex.VertexConnectionPointsList.Add(newVcp);
+                }
+            }
+
+            var occupiedVCPsPerVertex = new Dictionary<VertexControl, int[]>();
+
+            foreach (var vertexControl in GgArea.VertexList)
+            {
+                occupiedVCPsPerVertex.Add(vertexControl.Value,
+                    new int[numberOfEdgesPerVertexControl[vertexControl.Value] + 1]);
+            }
+
+            var edgeGaps = ComputeDistancesBetweenEdgeVertices();
+            var sortedEdgeGaps = edgeGaps.ToList();
+            sortedEdgeGaps.Sort((left, right) => left.Value.CompareTo(right.Value));
+
+            var VertexPositions = GgArea.GetVertexPositions();
+            var offset = -25;
+            foreach (var pair in sortedEdgeGaps)
+            {
+                var edgeControl = GgArea.EdgesList[pair.Key];
+
+                var source = edgeControl.Source;
+                var target = edgeControl.Target;
+
+                
+                offset -= 25;
+
+                var nextVCPid = 1;
+
+                if (VertexPositions[pair.Key.Source].X <= VertexPositions[pair.Key.Target].X)
+                {
+                    var sourcePos = source.VertexConnectionPointsList.FirstOrDefault(vcp => vcp.Id == pair.Key.SourceConnectionPointId).RectangularSize;
+                    var targetPos = target.VertexConnectionPointsList.FirstOrDefault(vcp => vcp.Id == pair.Key.TargetConnectionPointId).RectangularSize;
+
+                    pair.Key.RoutingPoints = new[]
+                    {
+                    new Point(sourcePos.X, sourcePos.Y),
+                    new Point(sourcePos.X, sourcePos.Y+offset),
+                    new Point(targetPos.X, sourcePos.Y+offset),
+                    new Point(targetPos.X, targetPos.Y)
+                };
+
+                    for (var i = occupiedVCPsPerVertex[source].Length; i >= 1; i--)
+                    {
+                        if (occupiedVCPsPerVertex[source][i - 1] != 1)
+                        {
+                            occupiedVCPsPerVertex[source][i - 1] = 1;
+                            nextVCPid = i - 1;
+                            break;
+                        }
+                    }
+                    nextVCPid = nextVCPid%(numberOfEdgesPerVertexControl[source] + 1);
+                    nextVCPid = nextVCPid == 0 ? 1 : nextVCPid;
+                    pair.Key.SourceConnectionPointId = nextVCPid;
+
+                    nextVCPid = 1;
+
+                    for (var i = 1; i < occupiedVCPsPerVertex[target].Length; i++)
+                    {
+                        if (occupiedVCPsPerVertex[target][i] != 1)
+                        {
+                            occupiedVCPsPerVertex[target][i] = 1;
+                            nextVCPid = i;
+                            break;
+                        }
+                    }
+
+                    nextVCPid = nextVCPid%(numberOfEdgesPerVertexControl[target] + 1);
+                    nextVCPid = nextVCPid == 0 ? 1 : nextVCPid;
+                    pair.Key.TargetConnectionPointId = nextVCPid;
+                }
+                else
+                {
+                    var sourcePos = source.VertexConnectionPointsList.FirstOrDefault(vcp => vcp.Id == pair.Key.SourceConnectionPointId).RectangularSize;
+                    var targetPos = target.VertexConnectionPointsList.FirstOrDefault(vcp => vcp.Id == pair.Key.TargetConnectionPointId).RectangularSize;
+
+                    pair.Key.RoutingPoints = new[]
+                    {
+                    new Point(sourcePos.X, sourcePos.Y),
+                    new Point(sourcePos.X, sourcePos.Y-offset),
+                    new Point(targetPos.X, sourcePos.Y-offset),
+                    new Point(targetPos.X, targetPos.Y)
+                };
+
+                    for (var i = occupiedVCPsPerVertex[target].Length; i >= 1; i--)
+                    {
+                        if (occupiedVCPsPerVertex[target][i - 1] != 1)
+                        {
+                            occupiedVCPsPerVertex[target][i - 1] = 1;
+                            nextVCPid = i - 1;
+                            break;
+                        }
+                    }
+                    nextVCPid = nextVCPid%(numberOfEdgesPerVertexControl[target] + 1);
+                    nextVCPid = nextVCPid == 0 ? 1 : nextVCPid;
+                    pair.Key.SourceConnectionPointId = nextVCPid;
+
+                    nextVCPid = 1;
+
+                    for (var i = 1; i < occupiedVCPsPerVertex[source].Length; i++)
+                    {
+                        if (occupiedVCPsPerVertex[source][i] != 1)
+                        {
+                            occupiedVCPsPerVertex[source][i] = 1;
+                            nextVCPid = i;
+                            break;
+                        }
+                    }
+
+                    nextVCPid = nextVCPid%(numberOfEdgesPerVertexControl[source] + 1);
+                    nextVCPid = nextVCPid == 0 ? 1 : nextVCPid;
+                    pair.Key.TargetConnectionPointId = nextVCPid;
+                }
+            }
+        }
+
+        private Dictionary<WordEdge, double> ComputeDistancesBetweenEdgeVertices()
+        {
+            var distancesBetweenEdgeNodes = new Dictionary<WordEdge, double>();
+
+            var VertexPositions = GgArea.GetVertexPositions();
+
+            foreach (var edge in GgArea.EdgesList.Keys)
+            {
+                var fromPoint = VertexPositions[edge.Source];
+                var toPoint = VertexPositions[edge.Target];
+
+                var distance = (fromPoint.X - toPoint.X)*(fromPoint.X - toPoint.X)
+                               + (fromPoint.X - toPoint.X)*(fromPoint.X - toPoint.X);
+
+                distancesBetweenEdgeNodes.Add(edge, distance);
+            }
+
+            return distancesBetweenEdgeNodes;
         }
 
         private void GgArea_EdgeSelected(object sender, EdgeSelectedEventArgs args)
@@ -368,6 +563,8 @@
             {
                 GgArea.GenerateAllEdges();
             }
+
+            AddVCPs();
 
             foreach (var vertexControl in GgArea.VertexList.Values)
             {
