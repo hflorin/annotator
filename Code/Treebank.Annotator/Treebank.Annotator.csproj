@@ -39,16 +39,17 @@
     <Reference Include="Autofac">
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="GraphX.Controls">
-      <HintPath>..\..\..\..\Tools\Graphx Repo\GraphX.Controls\bin\Debug\GraphX.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="GraphX.PCL.Common, Version=2.3.5.0, Culture=neutral, PublicKeyToken=a6cdb671d651b60a, processorArchitecture=MSIL">
+    <Reference Include="GraphX.Controls, Version=2.3.3.0, Culture=neutral, PublicKeyToken=bab23663f80c9e76, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Tools\Graphx Repo\GraphX.Controls\bin\Debug\GraphX.PCL.Common.dll</HintPath>
+      <HintPath>..\..\..\..\Graphx\GraphX.Controls\bin\Debug\GraphX.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="GraphX.PCL.Logic, Version=2.3.5.0, Culture=neutral, PublicKeyToken=3b65ef85075e278f, processorArchitecture=MSIL">
+    <Reference Include="GraphX.PCL.Common, Version=2.3.3.0, Culture=neutral, PublicKeyToken=a6cdb671d651b60a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Tools\Graphx Repo\GraphX.Controls\bin\Debug\GraphX.PCL.Logic.dll</HintPath>
+      <HintPath>..\..\..\..\Graphx\GraphX.Controls\bin\Debug\GraphX.PCL.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphX.PCL.Logic, Version=2.3.3.0, Culture=neutral, PublicKeyToken=3b65ef85075e278f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Graphx\GraphX.Controls\bin\Debug\GraphX.PCL.Logic.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Practices.ServiceLocation">

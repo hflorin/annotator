@@ -6,18 +6,22 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
-    using Domain;
-    using Events;
-    using Graph;
+
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Helpers;
-    using Mappers.Configuration;
+
     using Prism.Events;
+
+    using Treebank.Annotator.Events;
+    using Treebank.Annotator.Graph;
+    using Treebank.Annotator.ViewModels;
+    using Treebank.Annotator.Wrapper;
+    using Treebank.Domain;
     using Treebank.Events;
-    using ViewModels;
-    using Wrapper;
+    using Treebank.Mappers.Configuration;
+
     using Point = GraphX.Measure.Point;
 
     public partial class SentenceEditorView : UserControl, IDisposable
@@ -29,8 +33,6 @@
         private readonly SentenceEditorManager editorManager;
 
         private readonly IEventAggregator eventAggregator;
-
-        private readonly ResourceDictionary resourceDictionary;
 
         private readonly SentenceEditorViewModel viewModel;
 
@@ -54,19 +56,19 @@
             editorManager = new SentenceEditorManager(GgArea, GgZoomCtrl);
             this.eventAggregator = eventAggregator;
             this.appConfig = appConfig;
-            resourceDictionary = new ResourceDictionary
-            {
-                Source =
-                    new Uri(
-                        "/Treebank.Annotator;component/Templates/SentenceEditorViewTemplates.xaml",
+            new ResourceDictionary
+                {
+                    Source =
+                        new Uri(
+                        "/Treebank.Annotator;component/Templates/SentenceEditorViewTemplates.xaml", 
                         UriKind.RelativeOrAbsolute)
-            };
+                };
         }
 
         public SentenceEditorView(
-            SentenceEditorViewModel sentenceEditorViewModel,
-            IEventAggregator eventAggregator,
-            IAppConfig appConfig,
+            SentenceEditorViewModel sentenceEditorViewModel, 
+            IEventAggregator eventAggregator, 
+            IAppConfig appConfig, 
             Definition definition = null)
             : this(eventAggregator, appConfig)
         {
@@ -81,8 +83,8 @@
             if (definition == null)
             {
                 currentDefinition = appConfig.Definitions.Any()
-                    ? this.appConfig.Definitions.First()
-                    : MotherObjects.DefaultDefinition;
+                                        ? this.appConfig.Definitions.First()
+                                        : MotherObjects.DefaultDefinition;
             }
             else
             {
@@ -116,7 +118,7 @@
             }
         }
 
-        private void AddVCPs()
+        private void AddVcPs()
         {
             var numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
 
@@ -147,29 +149,31 @@
                 for (var i = 1; i < pair.Value; i++)
                 {
                     var newVcp = new StaticVertexConnectionPoint
-                    {
-                        Id = 1 + i,
-                        Margin = new Thickness(2, 0, 0, 0),
-                        Shape = VertexShape.Circle,
-                        Style = resourceDictionary["CirclePath"] as Style
-                    };
+                                     {
+                                         Id = 1 + i, 
+                                         Margin = new Thickness(2, 0, 0, 0), 
+                                         Shape = VertexShape.Circle, 
+
+                                         // Style = resourceDictionary["CirclePath"] as Style
+                                     };
                     var cc = new Border
-                    {
-                        Margin = new Thickness(2, 0, 0, 0),
-                        Padding = new Thickness(0),
-                        Child = newVcp
-                    };
+                                 {
+                                     Margin = new Thickness(2, 0, 0, 0), 
+                                     Padding = new Thickness(0), 
+                                     Child = newVcp
+                                 };
 
                     vertex.VCPRoot.Children.Add(cc);
                     vertex.VertexConnectionPointsList.Add(newVcp);
                 }
             }
 
-            var occupiedVCPsPerVertex = new Dictionary<VertexControl, int[]>();
+            var occupiedVcPsPerVertex = new Dictionary<VertexControl, int[]>();
 
             foreach (var vertexControl in GgArea.VertexList)
             {
-                occupiedVCPsPerVertex.Add(vertexControl.Value,
+                occupiedVcPsPerVertex.Add(
+                    vertexControl.Value, 
                     new int[numberOfEdgesPerVertexControl[vertexControl.Value] + 1]);
             }
 
@@ -177,7 +181,7 @@
             var sortedEdgeGaps = edgeGaps.ToList();
             sortedEdgeGaps.Sort((left, right) => left.Value.CompareTo(right.Value));
 
-            var VertexPositions = GgArea.GetVertexPositions();
+            var vertexPositions = GgArea.GetVertexPositions();
             var offset = -25;
             foreach (var pair in sortedEdgeGaps)
             {
@@ -186,94 +190,118 @@
                 var source = edgeControl.Source;
                 var target = edgeControl.Target;
 
-                
                 offset -= 25;
 
-                var nextVCPid = 1;
+                var nextVcPid = 1;
 
-                if (VertexPositions[pair.Key.Source].X <= VertexPositions[pair.Key.Target].X)
+                if (vertexPositions[pair.Key.Source].X <= vertexPositions[pair.Key.Target].X)
                 {
-                    var sourcePos = source.VertexConnectionPointsList.FirstOrDefault(vcp => vcp.Id == pair.Key.SourceConnectionPointId).RectangularSize;
-                    var targetPos = target.VertexConnectionPointsList.FirstOrDefault(vcp => vcp.Id == pair.Key.TargetConnectionPointId).RectangularSize;
+                    var sourcePos =
+                        source.VertexConnectionPointsList.FirstOrDefault(
+                            vcp => vcp.Id == pair.Key.SourceConnectionPointId).RectangularSize;
+                    var targetPos =
+                        target.VertexConnectionPointsList.FirstOrDefault(
+                            vcp => vcp.Id == pair.Key.TargetConnectionPointId).RectangularSize;
 
                     pair.Key.RoutingPoints = new[]
-                    {
-                    new Point(sourcePos.X, sourcePos.Y),
-                    new Point(sourcePos.X, sourcePos.Y+offset),
-                    new Point(targetPos.X, sourcePos.Y+offset),
-                    new Point(targetPos.X, targetPos.Y)
-                };
+                                                 {
+                                                     new Point(
+                                                         sourcePos.X + (double)pair.Key.SourceConnectionPointId * 2, 
+                                                         sourcePos.Y), 
+                                                     new Point(
+                                                         sourcePos.X + (double)pair.Key.SourceConnectionPointId * 2, 
+                                                         sourcePos.Y + offset), 
+                                                     new Point(
+                                                         targetPos.X - (double)pair.Key.TargetConnectionPointId * 2, 
+                                                         sourcePos.Y + offset), 
+                                                     new Point(
+                                                         targetPos.X - (double)pair.Key.TargetConnectionPointId * 2, 
+                                                         targetPos.Y)
+                                                 };
 
-                    for (var i = occupiedVCPsPerVertex[source].Length; i >= 1; i--)
+                    for (var i = occupiedVcPsPerVertex[source].Length; i >= 1; i--)
                     {
-                        if (occupiedVCPsPerVertex[source][i - 1] != 1)
+                        if (occupiedVcPsPerVertex[source][i - 1] != 1)
                         {
-                            occupiedVCPsPerVertex[source][i - 1] = 1;
-                            nextVCPid = i - 1;
-                            break;
-                        }
-                    }
-                    nextVCPid = nextVCPid%(numberOfEdgesPerVertexControl[source] + 1);
-                    nextVCPid = nextVCPid == 0 ? 1 : nextVCPid;
-                    pair.Key.SourceConnectionPointId = nextVCPid;
-
-                    nextVCPid = 1;
-
-                    for (var i = 1; i < occupiedVCPsPerVertex[target].Length; i++)
-                    {
-                        if (occupiedVCPsPerVertex[target][i] != 1)
-                        {
-                            occupiedVCPsPerVertex[target][i] = 1;
-                            nextVCPid = i;
+                            occupiedVcPsPerVertex[source][i - 1] = 1;
+                            nextVcPid = i - 1;
                             break;
                         }
                     }
 
-                    nextVCPid = nextVCPid%(numberOfEdgesPerVertexControl[target] + 1);
-                    nextVCPid = nextVCPid == 0 ? 1 : nextVCPid;
-                    pair.Key.TargetConnectionPointId = nextVCPid;
+                    nextVcPid = nextVcPid % (numberOfEdgesPerVertexControl[source] + 1);
+                    nextVcPid = nextVcPid == 0 ? 1 : nextVcPid;
+                    pair.Key.SourceConnectionPointId = nextVcPid;
+
+                    nextVcPid = 1;
+
+                    for (var i = 1; i < occupiedVcPsPerVertex[target].Length; i++)
+                    {
+                        if (occupiedVcPsPerVertex[target][i] != 1)
+                        {
+                            occupiedVcPsPerVertex[target][i] = 1;
+                            nextVcPid = i;
+                            break;
+                        }
+                    }
+
+                    nextVcPid = nextVcPid % (numberOfEdgesPerVertexControl[target] + 1);
+                    nextVcPid = nextVcPid == 0 ? 1 : nextVcPid;
+                    pair.Key.TargetConnectionPointId = nextVcPid;
                 }
                 else
                 {
-                    var sourcePos = source.VertexConnectionPointsList.FirstOrDefault(vcp => vcp.Id == pair.Key.SourceConnectionPointId).RectangularSize;
-                    var targetPos = target.VertexConnectionPointsList.FirstOrDefault(vcp => vcp.Id == pair.Key.TargetConnectionPointId).RectangularSize;
+                    var sourcePos =
+                        source.VertexConnectionPointsList.FirstOrDefault(
+                            vcp => vcp.Id == pair.Key.SourceConnectionPointId).RectangularSize;
+                    var targetPos = target.VertexConnectionPointsList.FirstOrDefault(
+                            vcp => vcp.Id == pair.Key.TargetConnectionPointId).RectangularSize;
 
                     pair.Key.RoutingPoints = new[]
-                    {
-                    new Point(sourcePos.X, sourcePos.Y),
-                    new Point(sourcePos.X, sourcePos.Y-offset),
-                    new Point(targetPos.X, sourcePos.Y-offset),
-                    new Point(targetPos.X, targetPos.Y)
-                };
+                                                 {
+                                                     new Point(
+                                                         sourcePos.X - (double)pair.Key.SourceConnectionPointId * 2, 
+                                                         sourcePos.Y), 
+                                                     new Point(
+                                                         sourcePos.X - (double)pair.Key.SourceConnectionPointId * 2, 
+                                                         sourcePos.Y + offset), 
+                                                     new Point(
+                                                         targetPos.X + (double)pair.Key.TargetConnectionPointId * 2, 
+                                                         sourcePos.Y + offset), 
+                                                     new Point(
+                                                         targetPos.X + (double)pair.Key.TargetConnectionPointId * 2, 
+                                                         targetPos.Y)
+                                                 };
 
-                    for (var i = occupiedVCPsPerVertex[target].Length; i >= 1; i--)
+                    for (var i = occupiedVcPsPerVertex[target].Length; i >= 1; i--)
                     {
-                        if (occupiedVCPsPerVertex[target][i - 1] != 1)
+                        if (occupiedVcPsPerVertex[target][i - 1] != 1)
                         {
-                            occupiedVCPsPerVertex[target][i - 1] = 1;
-                            nextVCPid = i - 1;
-                            break;
-                        }
-                    }
-                    nextVCPid = nextVCPid%(numberOfEdgesPerVertexControl[target] + 1);
-                    nextVCPid = nextVCPid == 0 ? 1 : nextVCPid;
-                    pair.Key.SourceConnectionPointId = nextVCPid;
-
-                    nextVCPid = 1;
-
-                    for (var i = 1; i < occupiedVCPsPerVertex[source].Length; i++)
-                    {
-                        if (occupiedVCPsPerVertex[source][i] != 1)
-                        {
-                            occupiedVCPsPerVertex[source][i] = 1;
-                            nextVCPid = i;
+                            occupiedVcPsPerVertex[target][i - 1] = 1;
+                            nextVcPid = i - 1;
                             break;
                         }
                     }
 
-                    nextVCPid = nextVCPid%(numberOfEdgesPerVertexControl[source] + 1);
-                    nextVCPid = nextVCPid == 0 ? 1 : nextVCPid;
-                    pair.Key.TargetConnectionPointId = nextVCPid;
+                    nextVcPid = nextVcPid % (numberOfEdgesPerVertexControl[target] + 1);
+                    nextVcPid = nextVcPid == 0 ? 1 : nextVcPid;
+                    pair.Key.SourceConnectionPointId = nextVcPid;
+
+                    nextVcPid = 1;
+
+                    for (var i = 1; i < occupiedVcPsPerVertex[source].Length; i++)
+                    {
+                        if (occupiedVcPsPerVertex[source][i] != 1)
+                        {
+                            occupiedVcPsPerVertex[source][i] = 1;
+                            nextVcPid = i;
+                            break;
+                        }
+                    }
+
+                    nextVcPid = nextVcPid % (numberOfEdgesPerVertexControl[source] + 1);
+                    nextVcPid = nextVcPid == 0 ? 1 : nextVcPid;
+                    pair.Key.TargetConnectionPointId = nextVcPid;
                 }
             }
         }
@@ -282,15 +310,15 @@
         {
             var distancesBetweenEdgeNodes = new Dictionary<WordEdge, double>();
 
-            var VertexPositions = GgArea.GetVertexPositions();
+            var vertexPositions = GgArea.GetVertexPositions();
 
             foreach (var edge in GgArea.EdgesList.Keys)
             {
-                var fromPoint = VertexPositions[edge.Source];
-                var toPoint = VertexPositions[edge.Target];
+                var fromPoint = vertexPositions[edge.Source];
+                var toPoint = vertexPositions[edge.Target];
 
-                var distance = (fromPoint.X - toPoint.X)*(fromPoint.X - toPoint.X)
-                               + (fromPoint.X - toPoint.X)*(fromPoint.X - toPoint.X);
+                var distance = (fromPoint.X - toPoint.X) * (fromPoint.X - toPoint.X)
+                               + (fromPoint.X - toPoint.X) * (fromPoint.X - toPoint.X);
 
                 distancesBetweenEdgeNodes.Add(edge, distance);
             }
@@ -314,8 +342,7 @@
             var headWordVertexControl =
                 GgArea.VertexList.Where(
                     p =>
-                        p.Key.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName)
-                            .Equals(headWordId))
+                    p.Key.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName).Equals(headWordId))
                     .Select(p => p.Value)
                     .SingleOrDefault();
 
@@ -378,10 +405,10 @@
         {
             GgArea.VertexList.Values.Where(DragBehaviour.GetIsTagged).ToList().ForEach(
                 a =>
-                {
-                    HighlightBehaviour.SetHighlighted(a, false);
-                    DragBehaviour.SetIsTagged(a, false);
-                });
+                    {
+                        HighlightBehaviour.SetHighlighted(a, false);
+                        DragBehaviour.SetIsTagged(a, false);
+                    });
 
             if (!soft)
             {
@@ -409,13 +436,13 @@
         {
             GgArea.VertexList.ForEach(
                 pair =>
-                {
-                    if (DragBehaviour.GetIsTagged(pair.Value))
                     {
-                        HighlightBehaviour.SetHighlighted(pair.Value, false);
-                        DragBehaviour.SetIsTagged(pair.Value, false);
-                    }
-                });
+                        if (DragBehaviour.GetIsTagged(pair.Value))
+                        {
+                            HighlightBehaviour.SetHighlighted(pair.Value, false);
+                            DragBehaviour.SetIsTagged(pair.Value, false);
+                        }
+                    });
         }
 
         private void GgArea_VertexSelected(object sender, VertexSelectedEventArgs args)
@@ -427,13 +454,13 @@
 
             switch (viewModel.SenteceGraphOperationMode)
             {
-                case SenteceGraphOperationMode.Edit :
+                case SenteceGraphOperationMode.Edit:
                     CreateEdgeControl(args.VertexControl);
                     break;
-                case SenteceGraphOperationMode.Delete :
+                case SenteceGraphOperationMode.Delete:
                     SafeRemoveVertex(args.VertexControl);
                     break;
-                case SenteceGraphOperationMode.Select :
+                case SenteceGraphOperationMode.Select:
                     SelectVertex(args.VertexControl);
                     break;
             }
@@ -468,12 +495,12 @@
                     edgeLabelText = dataContext.Attributes.First().Value;
                 }
 
-                var data = new WordEdge((WordVertex) fromVertexControl.Vertex, (WordVertex) toVertexControl.Vertex)
-                {
-                    Text
-                        =
-                        edgeLabelText
-                };
+                var data = new WordEdge((WordVertex)fromVertexControl.Vertex, (WordVertex)toVertexControl.Vertex)
+                               {
+                                   Text
+                                       =
+                                       edgeLabelText
+                               };
 
                 var ec = new EdgeControl(fromVertexControl, toVertexControl, data);
                 GgArea.InsertEdgeAndData(data, ec, 0, true);
@@ -507,7 +534,7 @@
                         == wordToRemove.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName))
                     {
                         word.SetAttributeByName(
-                            currentDefinition.Vertex.FromAttributeName,
+                            currentDefinition.Vertex.FromAttributeName, 
                             wordToRemove.WordWrapper.GetAttributeByName(currentDefinition.Vertex.FromAttributeName));
                     }
                 }
@@ -528,10 +555,12 @@
             if (vertex != null)
             {
                 eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
-                    .Publish(new ElementAttributeEditorViewModel(eventAggregator)
-                    {
-                        Attributes = vertex.WordWrapper.Attributes
-                    });
+                    .Publish(
+                        new ElementAttributeEditorViewModel(eventAggregator)
+                            {
+                                Attributes =
+                                    vertex.WordWrapper.Attributes
+                            });
             }
 
             ClearAllSelectedVertices();
@@ -564,7 +593,7 @@
                 GgArea.GenerateAllEdges();
             }
 
-            AddVCPs();
+            AddVcPs();
 
             foreach (var vertexControl in GgArea.VertexList.Values)
             {
@@ -580,7 +609,6 @@
             GgArea.UpdateParallelEdgesData();
             GgZoomCtrl.ZoomToFill();
             GgZoomCtrl.Mode = ZoomControlModes.Custom;
-
 
             foreach (var item in GgArea.VertexList)
             {
@@ -606,6 +634,7 @@
         private void DisplayGraph()
         {
             GgArea.GenerateGraph();
+
             GgArea.ShowAllEdgesArrows();
             GgArea.ShowAllEdgesLabels();
             GgArea.RelayoutGraph(true);
@@ -613,6 +642,9 @@
             {
                 GgArea.GenerateAllEdges();
             }
+
+            AddVcPs();
+            GgArea.UpdateAllEdges(true);
 
             GgZoomCtrl.ZoomToFill();
             GgZoomCtrl.Mode = ZoomControlModes.Custom;

@@ -100,8 +100,8 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Name="PART_vcproot">
-                                <Border Padding="0" Margin="2,2,0,2">
-                                    <graphx:StaticVertexConnectionPoint Id="1" Style="{StaticResource CirclePath}" />
+                                <Border Padding="0" Margin="2,0,0,0" HorizontalAlignment="Center">
+                                    <graphx:StaticVertexConnectionPoint Id="1"  HorizontalAlignment="Center" />
                                 </Border>
                             </StackPanel>
                             <Border Background="{TemplateBinding Background}"
