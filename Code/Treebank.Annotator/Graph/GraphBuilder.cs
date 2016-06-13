@@ -31,7 +31,7 @@
         {
             var sentenceGraph = BuildSentenceGraph(sentence);
 
-            return new SentenceGxLogicCore {EdgeCurvingEnabled = false, Graph = sentenceGraph, EnableParallelEdges = true};
+            return new SentenceGxLogicCore {EdgeCurvingEnabled = false, Graph = sentenceGraph, EnableParallelEdges = false};
         }
 
         private SentenceGraph BuildSentenceGraph(SentenceWrapper sentence)

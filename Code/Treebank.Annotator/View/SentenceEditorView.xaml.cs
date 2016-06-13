@@ -142,7 +142,6 @@
                         Id = 1 + i,
                         Margin = new Thickness(2, 0, 0, 0),
                         Shape = VertexShape.Circle
-
                         // Style = resourceDictionary["CirclePath"] as Style
                     };
                     var cc = new Border
@@ -172,7 +171,7 @@
 
             var vertexPositions = GgArea.GetVertexPositions();
             var offset = -25;
-            for (var j =0; j<  sortedEdgeGaps.Count; j++)
+            for (var j = 0; j < sortedEdgeGaps.Count; j++)
             {
                 var pair = sortedEdgeGaps[j];
                 var edgeControl = GgArea.EdgesList[pair.Key];
@@ -194,6 +193,34 @@
 
                 if (vertexPositions[pair.Key.Source].X <= vertexPositions[pair.Key.Target].X)
                 {
+                    for (var i = occupiedVcPsPerVertex[source].Length; i >= 1; i--)
+                    {
+                        if (occupiedVcPsPerVertex[source][i - 1] != 1)
+                        {
+                            occupiedVcPsPerVertex[source][i - 1] = 1;
+                            nextVcPid = i - 1;
+                            break;
+                        }
+                    }
+
+                    nextVcPid = nextVcPid <= 0 ? 1 : nextVcPid;
+                    pair.Key.SourceConnectionPointId = nextVcPid;
+
+                    nextVcPid = 1;
+
+                    for (var i = 1; i < occupiedVcPsPerVertex[target].Length; i++)
+                    {
+                        if (occupiedVcPsPerVertex[target][i] != 1)
+                        {
+                            occupiedVcPsPerVertex[target][i] = 1;
+                            nextVcPid = i;
+                            break;
+                        }
+                    }
+
+                    nextVcPid = nextVcPid <= 0 ? 1 : nextVcPid;
+                    pair.Key.TargetConnectionPointId = nextVcPid;
+
                     var sourceVCP = source.VertexConnectionPointsList.FirstOrDefault(
                         vcp => vcp.Id == pair.Key.SourceConnectionPointId);
 
@@ -217,73 +244,21 @@
                     pair.Key.RoutingPoints = new[]
                     {
                         new Point(
-                            sourcePos.X + (double) pair.Key.SourceConnectionPointId*2,
+                            sourcePos.X,
                             sourcePos.Y),
                         new Point(
-                            sourcePos.X + (double) pair.Key.SourceConnectionPointId*2 + 5,
+                            sourcePos.X,
                             sourcePos.Y + offset),
                         new Point(
-                            targetPos.X - (double) pair.Key.TargetConnectionPointId*2,
+                            targetPos.X,
                             sourcePos.Y + offset),
                         new Point(
-                            targetPos.X - (double) pair.Key.TargetConnectionPointId*2,
+                            targetPos.X,
                             targetPos.Y)
                     };
-
-                    for (var i = occupiedVcPsPerVertex[source].Length; i >= 1; i--)
-                    {
-                        if (occupiedVcPsPerVertex[source][i - 1] != 1)
-                        {
-                            occupiedVcPsPerVertex[source][i - 1] = 1;
-                            nextVcPid = i - 1;
-                            break;
-                        }
-                    }
-
-                    nextVcPid = nextVcPid%(numberOfEdgesPerVertexControl[source] + 1);
-                    nextVcPid = nextVcPid == 0 ? 1 : nextVcPid;
-                    pair.Key.SourceConnectionPointId = nextVcPid;
-
-                    nextVcPid = 1;
-
-                    for (var i = 1; i < occupiedVcPsPerVertex[target].Length; i++)
-                    {
-                        if (occupiedVcPsPerVertex[target][i] != 1)
-                        {
-                            occupiedVcPsPerVertex[target][i] = 1;
-                            nextVcPid = i;
-                            break;
-                        }
-                    }
-
-                    nextVcPid = nextVcPid%(numberOfEdgesPerVertexControl[target] + 1);
-                    nextVcPid = nextVcPid == 0 ? 1 : nextVcPid;
-                    pair.Key.TargetConnectionPointId = nextVcPid;
                 }
                 else
                 {
-                    var sourcePos =
-                        source.VertexConnectionPointsList.FirstOrDefault(
-                            vcp => vcp.Id == pair.Key.SourceConnectionPointId).RectangularSize;
-                    var targetPos = target.VertexConnectionPointsList.FirstOrDefault(
-                        vcp => vcp.Id == pair.Key.TargetConnectionPointId).RectangularSize;
-
-                    pair.Key.RoutingPoints = new[]
-                    {
-                        new Point(
-                            sourcePos.X - (double) pair.Key.SourceConnectionPointId*2,
-                            sourcePos.Y),
-                        new Point(
-                            sourcePos.X - (double) pair.Key.SourceConnectionPointId*2 -5,
-                            sourcePos.Y + offset),
-                        new Point(
-                            targetPos.X + (double) pair.Key.TargetConnectionPointId*2,
-                            sourcePos.Y + offset),
-                        new Point(
-                            targetPos.X + (double) pair.Key.TargetConnectionPointId*2,
-                            targetPos.Y)
-                    };
-
                     for (var i = occupiedVcPsPerVertex[target].Length; i >= 1; i--)
                     {
                         if (occupiedVcPsPerVertex[target][i - 1] != 1)
@@ -294,11 +269,8 @@
                         }
                     }
 
-                    nextVcPid = nextVcPid%(numberOfEdgesPerVertexControl[target] + 1);
-                    nextVcPid = nextVcPid == 0 ? 1 : nextVcPid;
-
-                    //todo: bug?
-                    pair.Key.SourceConnectionPointId = nextVcPid;
+                    nextVcPid = nextVcPid <= 0 ? 1 : nextVcPid;
+                    pair.Key.TargetConnectionPointId = nextVcPid;
 
                     nextVcPid = 1;
 
@@ -312,10 +284,41 @@
                         }
                     }
 
-                    //todo: bug?
-                    nextVcPid = nextVcPid%(numberOfEdgesPerVertexControl[source] + 1);
-                    nextVcPid = nextVcPid == 0 ? 1 : nextVcPid;
-                    pair.Key.TargetConnectionPointId = nextVcPid;
+                    nextVcPid = nextVcPid <= 0 ? 1 : nextVcPid;
+                    pair.Key.SourceConnectionPointId = nextVcPid;
+
+                    var sourceVCP = source.VertexConnectionPointsList.FirstOrDefault(
+                        vcp => vcp.Id == pair.Key.SourceConnectionPointId);
+
+                    if (sourceVCP == null)
+                    {
+                        continue;
+                    }
+                    var sourcePos = sourceVCP.RectangularSize;
+
+                    var targetVCP = target.VertexConnectionPointsList.FirstOrDefault(
+                        vcp => vcp.Id == pair.Key.TargetConnectionPointId);
+                    if (targetVCP == null)
+                    {
+                        continue;
+                    }
+                    var targetPos = targetVCP.RectangularSize;
+
+                    pair.Key.RoutingPoints = new[]
+                    {
+                        new Point(
+                            sourcePos.X,
+                            sourcePos.Y),
+                        new Point(
+                            sourcePos.X - 6,
+                            sourcePos.Y + offset),
+                        new Point(
+                            targetPos.X,
+                            sourcePos.Y + offset),
+                        new Point(
+                            targetPos.X,
+                            targetPos.Y)
+                    };
                 }
             }
         }
@@ -324,14 +327,9 @@
         {
             var distancesBetweenEdgeNodes = new Dictionary<WordEdge, double>();
 
-            var vertexPositions = GgArea.GetVertexPositions();
-
             foreach (var edge in GgArea.EdgesList.Keys)
             {
-                var fromPoint = vertexPositions[edge.Source];
-                var toPoint = vertexPositions[edge.Target];
-
-                var distance = (edge.Source.ID - edge.Target.ID) * (edge.Source.ID - edge.Target.ID);
+                var distance = (edge.Source.ID - edge.Target.ID)*(edge.Source.ID - edge.Target.ID);
 
                 distancesBetweenEdgeNodes.Add(edge, distance);
             }
@@ -607,28 +605,14 @@
                 GgArea.GenerateAllEdges();
             }
 
-            // AddVcPs();
-            AddVcPs2();
+            AddVcPs();
+
             foreach (var vertexControl in GgArea.VertexList.Values)
             {
                 vertexControl.VertexConnectionPointsList.ForEach(a => a.Shape = VertexShape.Circle);
-            }
-
-            GgArea.VertexList.Values.ForEach(a => a.SetConnectionPointsVisibility(true));
-
-            GgArea.UpdateAllEdges(true);
-
-            GgArea.ShowAllEdgesArrows();
-            GgArea.ShowAllEdgesLabels();
-            GgArea.UpdateParallelEdgesData();
-            GgZoomCtrl.ZoomToFill();
-            GgZoomCtrl.Mode = ZoomControlModes.Custom;
-
-            foreach (var item in GgArea.VertexList)
-            {
-                HighlightBehaviour.SetHighlightControl(item.Value, GraphControlType.VertexAndEdge);
-                HighlightBehaviour.SetIsHighlightEnabled(item.Value, true);
-                HighlightBehaviour.SetHighlightEdges(item.Value, EdgesType.All);
+                HighlightBehaviour.SetHighlightControl(vertexControl, GraphControlType.VertexAndEdge);
+                HighlightBehaviour.SetIsHighlightEnabled(vertexControl, true);
+                HighlightBehaviour.SetHighlightEdges(vertexControl, EdgesType.All);
             }
 
             foreach (var item in GgArea.EdgesList)
@@ -637,6 +621,14 @@
                 HighlightBehaviour.SetIsHighlightEnabled(item.Value, true);
                 HighlightBehaviour.SetHighlightEdges(item.Value, EdgesType.All);
             }
+
+            GgArea.VertexList.Values.ForEach(a => a.SetConnectionPointsVisibility(true));
+            GgArea.ShowAllEdgesArrows();
+            GgArea.ShowAllEdgesLabels();
+            GgArea.UpdateAllEdges(true);
+
+            GgZoomCtrl.ZoomToFill();
+            GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
 
         private void GgArea_RelayoutFinished(object sender, EventArgs e)
@@ -652,48 +644,14 @@
             GgArea.ShowAllEdgesArrows();
             GgArea.ShowAllEdgesLabels();
             GgArea.RelayoutGraph(true);
+
             if (!GgArea.EdgesList.Any())
             {
                 GgArea.GenerateAllEdges();
             }
 
-            // AddVcPs();
-            AddVcPs2();
+            AddVcPs();
             GgArea.UpdateAllEdges(true);
-
-            GgZoomCtrl.ZoomToFill();
-            GgZoomCtrl.Mode = ZoomControlModes.Custom;
-        }
-
-        private void AddVcPs2()
-        {
-            var edgeGaps = ComputeDistancesBetweenEdgeVertices();
-            var sortedEdgeGaps = edgeGaps.ToList();
-            sortedEdgeGaps.Sort((left, right) => left.Value.CompareTo(right.Value));
-
-            for (var j = 0; j < sortedEdgeGaps.Count; j++)
-            {
-                var pair = sortedEdgeGaps[j];
-
-                var edgeControl = GgArea.EdgesList[pair.Key];
-
-                var source = edgeControl.Source;
-                var target = edgeControl.Target;
-
-                var sourcePos =
-                        source.VertexConnectionPointsList.FirstOrDefault(
-                            vcp => vcp.Id == pair.Key.SourceConnectionPointId).RectangularSize;
-                var targetPos = target.VertexConnectionPointsList.FirstOrDefault(
-                    vcp => vcp.Id == pair.Key.TargetConnectionPointId).RectangularSize;
-
-              
-
-                for (var routingPoint = 0; routingPoint < pair.Key.RoutingPoints.Length; routingPoint++)
-                {
-                    pair.Key.RoutingPoints[routingPoint].X += 30;
-                    pair.Key.RoutingPoints[routingPoint].Y += 30;
-                }
-            }
         }
     }
 }
