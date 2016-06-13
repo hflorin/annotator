@@ -308,10 +308,10 @@
             switch (SelectedLayoutAlgorithmType)
             {
                 case GraphLayoutAlgorithmTypeEnum.Liniar :
-                    //logicCore.ExternalEdgeRoutingAlgorithm =
-                    //    new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
-                    //        logicCore.Graph as SentenceGraph);
-                    
+                    logicCore.ExternalEdgeRoutingAlgorithm =
+                        new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                            logicCore.Graph as SentenceGraph);
+
                     logicCore.ExternalLayoutAlgorithm =
                         new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
                             logicCore.Graph as SentenceGraph,
