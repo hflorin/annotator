@@ -158,7 +158,7 @@
                               ToolTip="{TemplateBinding ToolTip}"
                               x:Name="PART_edgePath" />
                         <graphx:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget">
-                            <Path Data="M0,0.5 L1,1 1,0" Fill="Black" Stretch="Uniform" Width="10" Height="10" />
+                            <Path Name="EdgePointer" Data="M0,0.5 L1,1 1,0" Fill="{TemplateBinding Foreground}" Stretch="Uniform" Width="10" Height="10" />
                         </graphx:DefaultEdgePointer>
 
                     </Grid>
