@@ -33,6 +33,7 @@
         private readonly SentenceEditorViewModel viewModel;
 
         private VertexControl fromVertexControl;
+        private Dictionary<VertexControl, int> numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
@@ -95,20 +96,6 @@
             viewModel.CreateSentenceGraph();
             viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
             GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
-            
-          //  GgArea.GenerateGraph();
-          //  AddVcPs();
-         //   GgArea.RelayoutGraph(true);
-        }
-
-        private void OnGenerateGraph(bool generate)
-        {
-            if (generate)
-            {
-                GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
-                viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
-                viewModel.PopulateWords();
-            }
         }
 
         public void Dispose()
@@ -123,7 +110,17 @@
                 GgArea.Dispose();
             }
         }
-        private Dictionary<VertexControl, int> numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
+
+        private void OnGenerateGraph(bool generate)
+        {
+            if (generate)
+            {
+                GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
+                viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
+                viewModel.PopulateWords();
+            }
+        }
+
         private void AddVcPs()
         {
             numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
@@ -148,13 +145,15 @@
                     numberOfEdgesPerVertexControl.Add(edgeControl.Value.Target, 1);
                 }
             }
-            var resourceDictionary = new ResourceDictionary
-            {
-                Source =
-                    new Uri(
-                        "/Treebank.Annotator;component/Templates/SentenceEditorViewTemplates.xaml",
-                        UriKind.RelativeOrAbsolute)
-            };
+
+            //var resourceDictionary = new ResourceDictionary
+            //{
+            //    Source =
+            //        new Uri(
+            //            "/Treebank.Annotator;component/Templates/SentenceEditorViewTemplates.xaml",
+            //            UriKind.RelativeOrAbsolute)
+            //};
+
             foreach (var pair in numberOfEdgesPerVertexControl)
             {
                 var vertex = pair.Key;
@@ -164,7 +163,7 @@
                     {
                         Id = 1 + i,
                         Margin = new Thickness(2, 0, 0, 0),
-                        Shape = VertexShape.Circle,
+                        Shape = VertexShape.Circle
                         // Style = resourceDictionary["CirclePath"] as Style
                     };
                     var cc = new Border
@@ -178,8 +177,6 @@
                     vertex.VertexConnectionPointsList.Add(newVcp);
                 }
             }
-
-            //AddVcpEdges(numberOfEdgesPerVertexControl);
         }
 
         private void AddVcpEdges(Dictionary<VertexControl, int> numberOfEdgesPerVertexControlParam)
@@ -338,7 +335,7 @@
                             sourcePos.X,
                             sourcePos.Y),
                         new Point(
-                            sourcePos.X - 6,
+                            sourcePos.X,
                             sourcePos.Y + offset),
                         new Point(
                             targetPos.X,
@@ -650,7 +647,7 @@
                 HighlightBehaviour.SetIsHighlightEnabled(item.Value, true);
                 HighlightBehaviour.SetHighlightEdges(item.Value, EdgesType.All);
             }
-            
+
             GgArea.VertexList.Values.ForEach(vc => vc.SetConnectionPointsVisibility(true));
 
             GgArea.ShowAllEdgesArrows();
@@ -658,9 +655,6 @@
             GgArea.UpdateAllEdges(true);
 
             GgArea.RelayoutGraph(true);
-
-          //  GgZoomCtrl.ZoomToFill();
-        //    GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
 
         private void GgArea_RelayoutFinished(object sender, EventArgs e)
@@ -684,13 +678,13 @@
 
             AddVcpEdges(numberOfEdgesPerVertexControl);
             GgArea.UpdateAllEdges(true);
+            GgZoomCtrl.ZoomToFill();
+            GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             DisplayGraph();
-            GgZoomCtrl.ZoomToFill();
-            GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
     }
 }
