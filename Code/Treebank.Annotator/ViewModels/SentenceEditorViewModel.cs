@@ -282,6 +282,7 @@
         private void GraphConfigurationChangedCommandExecute(object obj)
         {
             CreateSentenceGraph();
+            EventAggregator.GetEvent<GenerateGraphEvent>().Publish(true);
         }
 
         private void LayoutAlgorithmChangedCommandExecute(object obj)
@@ -300,10 +301,10 @@
             var logicCore = graphBuilder.SetupGraphLogic(Sentence);
             SentenceGraphLogicCore = logicCore;
 
-            SetLayoutAlgorithm(logicCore);
+          //  SetLayoutAlgorithm(logicCore);
         }
 
-        private void SetLayoutAlgorithm(SentenceGxLogicCore logicCore)
+        public void SetLayoutAlgorithm(SentenceGxLogicCore logicCore)
         {
             switch (SelectedLayoutAlgorithmType)
             {

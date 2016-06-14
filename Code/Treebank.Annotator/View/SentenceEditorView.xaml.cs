@@ -79,9 +79,7 @@
             {
                 currentDefinition = definition;
             }
-
-            viewModel.CreateSentenceGraph();
-
+            
             GgZoomCtrl.MouseLeftButtonUp += GgZoomCtrl_MouseLeftButtonUp;
             GgArea.VertexSelected += GgArea_VertexSelected;
             GgArea.EdgeSelected += GgArea_EdgeSelected;
@@ -90,8 +88,23 @@
             GgArea.EdgeLabelFactory = new DefaultEdgelabelFactory();
 
             viewModel.EventAggregator.GetEvent<RelayoutGraphEvent>().Subscribe(OnRelayoutGraph);
+            viewModel.EventAggregator.GetEvent<GenerateGraphEvent>().Subscribe(OnGenerateGraph);
             viewModel.EventAggregator.GetEvent<SetSentenceEditModeEvent>().Subscribe(OnSetSentenceEditMode);
             viewModel.EventAggregator.GetEvent<AddWordVertexEvent>().Subscribe(OnAddWordVertexControl);
+
+            viewModel.CreateSentenceGraph();
+            GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
+            viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
+        }
+
+        private void OnGenerateGraph(bool generate)
+        {
+            if (generate)
+            {
+                GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
+                viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
+                viewModel.PopulateWords();
+            }
         }
 
         public void Dispose()
@@ -593,7 +606,7 @@
         {
             if (relayout)
             {
-                DisplayGraph();
+                GgArea.GenerateGraph();
                 viewModel.PopulateWords();
             }
         }
@@ -613,6 +626,7 @@
                 HighlightBehaviour.SetHighlightControl(vertexControl, GraphControlType.VertexAndEdge);
                 HighlightBehaviour.SetIsHighlightEnabled(vertexControl, true);
                 HighlightBehaviour.SetHighlightEdges(vertexControl, EdgesType.All);
+                vertexControl.SetConnectionPointsVisibility(true);
             }
 
             foreach (var item in GgArea.EdgesList)
@@ -621,11 +635,12 @@
                 HighlightBehaviour.SetIsHighlightEnabled(item.Value, true);
                 HighlightBehaviour.SetHighlightEdges(item.Value, EdgesType.All);
             }
-
-            GgArea.VertexList.Values.ForEach(a => a.SetConnectionPointsVisibility(true));
+            
             GgArea.ShowAllEdgesArrows();
             GgArea.ShowAllEdgesLabels();
             GgArea.UpdateAllEdges(true);
+
+            GgArea.RelayoutGraph(true);
 
             GgZoomCtrl.ZoomToFill();
             GgZoomCtrl.Mode = ZoomControlModes.Custom;

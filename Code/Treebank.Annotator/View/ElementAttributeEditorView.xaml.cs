@@ -26,9 +26,9 @@
             var model = DataContext as ElementAttributeEditorViewModel;
             if (model != null)
             {
-                model.
-                    EventAggregator.GetEvent<RelayoutGraphEvent>()
-                    .Publish(true);
+                //model.
+                //    EventAggregator.GetEvent<RelayoutGraphEvent>()
+                //    .Publish(true);
             }
         }
     }

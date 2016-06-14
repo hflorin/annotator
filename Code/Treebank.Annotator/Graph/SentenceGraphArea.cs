@@ -23,8 +23,8 @@
         {
             var graph = (SentenceGraphArea) obj;
 
-            graph.RelayoutGraph(true);
-            graph.GenerateGraph();
+           graph.RelayoutGraph(true);
+           // graph.GenerateGraph();
         }
     }
 }
