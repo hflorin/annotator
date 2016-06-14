@@ -34,6 +34,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
+                <Button Content="Refresh" Click="ButtonBase_OnClick"></Button>
                 <Button Content="Is Tree?" Width="70" Command="{Binding CheckIsTreeCommand}" />
                 <Button Content="Save" Width="70" IsEnabled="{Binding Sentence.IsChanged}" />
                 <ToggleButton Name="butSelect" Content="Select" Command="{Binding ToggleEditModeCommand}"

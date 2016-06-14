@@ -282,7 +282,7 @@
         private void GraphConfigurationChangedCommandExecute(object obj)
         {
             CreateSentenceGraph();
-            EventAggregator.GetEvent<GenerateGraphEvent>().Publish(true);
+            //EventAggregator.GetEvent<GenerateGraphEvent>().Publish(true);
         }
 
         private void LayoutAlgorithmChangedCommandExecute(object obj)
@@ -306,6 +306,12 @@
 
         public void SetLayoutAlgorithm(SentenceGxLogicCore logicCore)
         {
+            logicCore.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.None;
+            logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
+            logicCore.ExternalEdgeRoutingAlgorithm = null;
+            logicCore.ExternalEdgeRoutingAlgorithm = null;
+            logicCore.ExternalOverlapRemovalAlgorithm = null;
+
             switch (SelectedLayoutAlgorithmType)
             {
                 case GraphLayoutAlgorithmTypeEnum.Liniar :
@@ -348,7 +354,7 @@
                     throw new ArgumentOutOfRangeException();
             }
 
-            EventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
+            //EventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
         }
 
         private void SetTreeLayout(SentenceGxLogicCore logicCore, LayoutDirection direction)
