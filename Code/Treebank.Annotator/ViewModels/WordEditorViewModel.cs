@@ -14,8 +14,9 @@
         private readonly IEventAggregator eventAggregator;
 
         private readonly WordWrapper wordWrapper;
+        private Guid viewId;
 
-        public WordEditorViewModel(WordWrapper wordWrapper, IEventAggregator eventAggregator)
+        public WordEditorViewModel(WordWrapper wordWrapper, IEventAggregator eventAggregator, Guid viewId)
         {
             if (wordWrapper == null)
             {
@@ -26,6 +27,8 @@
             {
                 throw new ArgumentNullException("eventAggregator");
             }
+
+            this.viewId = viewId;
 
             this.wordWrapper = wordWrapper;
             this.eventAggregator = eventAggregator;
@@ -71,12 +74,12 @@
         private void WordGotFocusCommandExecute(object obj)
         {
             eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
-                .Publish(new ElementAttributeEditorViewModel(eventAggregator) {Attributes = wordWrapper.Attributes});
+                .Publish(new ElementAttributeEditorViewModel(eventAggregator, viewId) {Attributes = wordWrapper.Attributes});
         }
 
         private void WordChangedCommandExecute(object obj)
         {
-            eventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
+            eventAggregator.GetEvent<GenerateGraphEvent>().Publish(viewId);
         }
 
         private bool WordChangedCommandCanExecute(object arg)

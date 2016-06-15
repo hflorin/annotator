@@ -140,6 +140,8 @@
 
         public ObservableCollection<Definition> GraphConfigurations { get; set; }
 
+        public Guid ViewId { get; set; }
+
         public void PopulateWords()
         {
             PopulateWords(EventAggregator, sentenceWrapper);
@@ -154,7 +156,7 @@
 
             foreach (var word in sortedWords)
             {
-                w.Add(new WordEditorViewModel(word, eventAggregator));
+                w.Add(new WordEditorViewModel(word, eventAggregator, ViewId));
             }
 
             Words = new ChangeTrackingCollection<WordEditorViewModel>(w);
@@ -281,13 +283,12 @@
 
         private void GraphConfigurationChangedCommandExecute(object obj)
         {
-            CreateSentenceGraph();
-            //EventAggregator.GetEvent<GenerateGraphEvent>().Publish(true);
+            EventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
         }
 
         private void LayoutAlgorithmChangedCommandExecute(object obj)
         {
-            SetLayoutAlgorithm(SentenceGraphLogicCore);
+            EventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
         }
 
         private bool LayoutAlgorithmChangedCommandCanExecute(object arg)
@@ -300,8 +301,6 @@
             graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
             var logicCore = graphBuilder.SetupGraphLogic(Sentence);
             SentenceGraphLogicCore = logicCore;
-
-          //  SetLayoutAlgorithm(logicCore);
         }
 
         public void SetLayoutAlgorithm(SentenceGxLogicCore logicCore)
@@ -353,8 +352,6 @@
                 default :
                     throw new ArgumentOutOfRangeException();
             }
-
-            //EventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
         }
 
         private void SetTreeLayout(SentenceGxLogicCore logicCore, LayoutDirection direction)

@@ -1,8 +1,9 @@
 ﻿namespace Treebank.Events
 {
+    using System;
     using Prism.Events;
 
-    public class GenerateGraphEvent : PubSubEvent<bool>
+    public class GenerateGraphEvent : PubSubEvent<Guid>
     {
     }
 }

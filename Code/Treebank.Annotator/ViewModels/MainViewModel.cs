@@ -11,18 +11,15 @@
     using Domain;
     using Events;
     using Graph.Algos;
-
     using GraphX.PCL.Logic.Helpers;
-
     using Mappers;
     using Mappers.Configuration;
     using Prism.Events;
-
-    using Treebank.Annotator.Wrapper.Base;
     using Treebank.Events;
     using View;
     using View.Services;
     using Wrapper;
+    using Wrapper.Base;
     using Attribute = Domain.Attribute;
 
     public class MainViewModel : Observable
@@ -102,8 +99,8 @@
 
                 ((DelegateCommand) EditSentenceCommand).RaiseCanExecuteChanged();
                 ((DelegateCommand) EditWordOrderCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)AddSentenceCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)DeleteSentenceCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand) AddSentenceCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand) DeleteSentenceCommand).RaiseCanExecuteChanged();
 
                 OnPropertyChanged();
             }
@@ -111,10 +108,7 @@
 
         public DocumentWrapper SelectedDocument
         {
-            get
-            {
-                return selectedDocument;
-            }
+            get { return selectedDocument; }
 
             set
             {
@@ -314,12 +308,12 @@
 
         private bool DeleteSentenceCommandCanExecute(object arg)
         {
-            return SelectedDocument != null && SelectedSentence != null;
+            return (SelectedDocument != null) && (SelectedSentence != null);
         }
 
         private void DeleteSentenceCommandExecute(object obj)
         {
-            if (SelectedDocument == null || SelectedSentence == null)
+            if ((SelectedDocument == null) || (SelectedSentence == null))
             {
                 return;
             }
@@ -330,12 +324,12 @@
                 return;
             }
 
-            if (SelectedDocument != null && SelectedSentence != null)
+            if ((SelectedDocument != null) && (SelectedSentence != null))
             {
                 var sentenceToRemoveIndex = SelectedDocument.Sentences.IndexOf(SelectedSentence);
 
                 SelectedSentence =
-                    SelectedDocument.Sentences.Except(new List<SentenceWrapper> { SelectedSentence }).FirstOrDefault();
+                    SelectedDocument.Sentences.Except(new List<SentenceWrapper> {SelectedSentence}).FirstOrDefault();
                 SelectedDocument.Sentences.RemoveAt(sentenceToRemoveIndex);
             }
         }
@@ -351,7 +345,7 @@
             {
                 var sentencePrototype = appConfig.Elements.OfType<Sentence>().FirstOrDefault();
 
-                var newSentence = new SentenceWrapper(sentencePrototype) { IsOptional = false };
+                var newSentence = new SentenceWrapper(sentencePrototype) {IsOptional = false};
 
                 newSentence.Attributes.ForEach(
                     a =>
@@ -390,17 +384,11 @@
 
         private void SelectedSentenceChangedCommandExecute(object obj)
         {
-            if (SelectedSentence == null || SentenceEditViews == null)
+            if ((SelectedSentence == null) || (SentenceEditViews == null))
             {
                 return;
             }
 
-            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(eventAggregator)
-            {
-                Attributes =
-                    SelectedSentence
-                        .Attributes
-            };
             if (SentenceEditViews.Any())
             {
                 var sentenceEditView = SentenceEditViews.FirstOrDefault(
@@ -413,6 +401,14 @@
 
                 if (sentenceEditView != null)
                 {
+                    SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(eventAggregator,
+                        sentenceEditView.ViewId)
+                    {
+                        Attributes =
+                            SelectedSentence
+                                .Attributes
+                    };
+
                     ActiveSentenceEditorView = sentenceEditView;
                 }
             }
@@ -430,7 +426,7 @@
 
         private void EditSentenceCommandExecute(object obj)
         {
-            if (SelectedSentence == null || SentenceEditViews == null)
+            if ((SelectedSentence == null) || (SentenceEditViews == null))
             {
                 return;
             }
@@ -443,7 +439,8 @@
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
-            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(eventAggregator)
+            SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(eventAggregator,
+                sentenceEditView.ViewId)
             {
                 Attributes =
                     SelectedSentence
@@ -473,16 +470,16 @@
 
         private void InvalidateCommands()
         {
-            ((DelegateCommand)NewTreeBankCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)OpenCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)SaveAsCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)CloseCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) NewTreeBankCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) OpenCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) SaveAsCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) CloseCommand).RaiseCanExecuteChanged();
 
-            ((DelegateCommand)AddSentenceCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)DeleteSentenceCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)EditSentenceCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)EditWordOrderCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) AddSentenceCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) DeleteSentenceCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) EditSentenceCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) EditWordOrderCommand).RaiseCanExecuteChanged();
         }
 
         private bool CloseCommandCanExecute(object arg)
@@ -492,7 +489,7 @@
 
         private void CloseCommandExecute(object obj)
         {
-            if (SelectedDocument == null || documentsWrappers == null)
+            if ((SelectedDocument == null) || (documentsWrappers == null))
             {
                 return;
             }
@@ -540,13 +537,13 @@
             var document = new Document();
 
             document.Attributes.Add(
-                new Attribute { Name = "id", DisplayName = "Id", Value = "Treebank" + Documents.Count });
+                new Attribute {Name = "id", DisplayName = "Id", Value = "Treebank" + Documents.Count});
 
             if (Documents == null)
             {
                 Documents =
                     new ChangeTrackingCollection<DocumentWrapper>(
-                        new List<DocumentWrapper> { new DocumentWrapper(document) });
+                        new List<DocumentWrapper> {new DocumentWrapper(document)});
             }
             else
             {

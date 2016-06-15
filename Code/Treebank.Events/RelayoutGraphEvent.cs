@@ -2,7 +2,7 @@
 {
     using Prism.Events;
 
-    public class RelayoutGraphEvent : PubSubEvent<bool>
+    public class RelayoutGraphEvent : PubSubEvent<string>
     {
     }
 }

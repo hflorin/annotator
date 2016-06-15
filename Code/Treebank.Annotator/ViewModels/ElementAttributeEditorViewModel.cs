@@ -13,8 +13,9 @@
     public class ElementAttributeEditorViewModel : Observable
     {
         private readonly IEventAggregator eventAggregator;
+        public Guid ViewId { get; set; }
 
-        public ElementAttributeEditorViewModel(IEventAggregator eventAggregator)
+        public ElementAttributeEditorViewModel(IEventAggregator eventAggregator, Guid viewId)
         {
             InitializeCommands();
             if (eventAggregator == null)
@@ -22,6 +23,7 @@
                 throw new ArgumentNullException("eventAggregator");
             }
 
+            ViewId = viewId;
             this.eventAggregator = eventAggregator;
         }
 
@@ -69,7 +71,7 @@
         {
             //todo: save to the file as well
             Attributes.AcceptChanges();
-            eventAggregator.GetEvent<RelayoutGraphEvent>().Publish(true);
+            eventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
         }
 
         private bool SaveAttributeCommandCanExecute(object arg)
@@ -118,7 +120,7 @@
             return true;
         }
 
-        private void InvalidateCommands()
+        public void InvalidateCommands()
         {
             ((DelegateCommand) SaveAttributeCommand).RaiseCanExecuteChanged();
             ((DelegateCommand) CancelAttributeCommand).RaiseCanExecuteChanged();
