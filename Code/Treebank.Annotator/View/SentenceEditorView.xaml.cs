@@ -96,6 +96,7 @@
             viewModel.CreateSentenceGraph();
             viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
             GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
+            DisplayGraph();
         }
 
         public void Dispose()
@@ -684,6 +685,9 @@
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
+            viewModel.CreateSentenceGraph();
+            viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
+            GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
             DisplayGraph();
         }
     }

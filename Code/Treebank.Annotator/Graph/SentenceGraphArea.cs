@@ -22,9 +22,9 @@
         private static void OnItemsPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             var graph = (SentenceGraphArea) obj;
-
-           graph.RelayoutGraph(true);
-           graph.GenerateGraph();
+            //todo: remove if not needed
+           //graph.RelayoutGraph(true);
+           //graph.GenerateGraph();
         }
     }
 }

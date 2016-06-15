@@ -101,7 +101,7 @@
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Name="PART_vcproot">
                                 <Border Padding="0" Margin="2,0,0,0" HorizontalAlignment="Center">
-                                    <graphx:StaticVertexConnectionPoint Id="1"  HorizontalAlignment="Center" />
+                                    <graphx:StaticVertexConnectionPoint Id="1" HorizontalAlignment="Center" />
                                 </Border>
                             </StackPanel>
                             <Border Background="{TemplateBinding Background}"
@@ -121,17 +121,19 @@
 
         <Setter Property="ToolTip">
             <Setter.Value>
-                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="8"
-                        Background="Aquamarine">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="Attributes" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   FontSize="14" FontWeight="Bold" />
-                        <StackPanel Orientation="Horizontal" Margin="3">
-                            <TextBlock MinWidth="70" Text="Name: " VerticalAlignment="Center" />
-                            <TextBlock FontWeight="Bold" Text="{Binding VertexLabel}" Margin="3"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
-                    </StackPanel>
+                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="4"
+                        Background="GhostWhite">
+                    <DataGrid ItemsSource="{Binding WordWrapper.Attributes}" Margin="0 5 0 0"
+                              SelectionUnit="FullRow"
+                              AutoGenerateColumns="False" MaxWidth="200">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name"
+                                                Binding="{Binding DisplayName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                Width="Auto" IsReadOnly="True" />
+                            <DataGridTemplateColumn CellStyle="{StaticResource DataGridCellStyle1}" Header="Value"
+                                                    Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Border>
             </Setter.Value>
         </Setter>
@@ -158,7 +160,8 @@
                               ToolTip="{TemplateBinding ToolTip}"
                               x:Name="PART_edgePath" />
                         <graphx:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget">
-                            <Path Name="EdgePointer" Data="M0,0.5 L1,1 1,0" Fill="{TemplateBinding Foreground}" Stretch="Uniform" Width="10" Height="10" />
+                            <Path Name="EdgePointer" Data="M0,0.5 L1,1 1,0" Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform" Width="10" Height="10" />
                         </graphx:DefaultEdgePointer>
 
                     </Grid>
