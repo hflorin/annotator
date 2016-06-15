@@ -17,7 +17,7 @@
             <WrapPanel Orientation="Horizontal">
                 <Label Content="Layouts:" HorizontalAlignment="Left" FontWeight="Bold" />
                 <ComboBox Name="LayoutAlgos" SelectedItem="{Binding SelectedLayoutAlgorithmType}"
-                          ItemsSource="{Binding LayoutAlgorithmTypes}" IsReadOnly="True" HorizontalAlignment="Stretch">
+                          ItemsSource="{Binding LayoutAlgorithmTypes}" IsReadOnly="True" HorizontalAlignment="Stretch" ToolTip="Choose a vertex layout algorithm">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding LayoutAlgorithmChangedCommand}" />
@@ -27,27 +27,38 @@
                 <Label Content="Configurations:" HorizontalAlignment="Left" FontWeight="Bold" />
                 <ComboBox Name="GraphConfigurations" SelectedItem="{Binding SelectedGraphConfiguration}"
                           ItemsSource="{Binding GraphConfigurations}" IsReadOnly="True"
-                          HorizontalAlignment="Stretch" SelectedValuePath="Name" DisplayMemberPath="Name">
+                          HorizontalAlignment="Stretch" SelectedValuePath="Name" DisplayMemberPath="Name" ToolTip="Choose a configuration to draw the graph">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding GraphConfigurationChangedCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
-                <Button Content="Refresh" Click="ButtonBase_OnClick"></Button>
-                <Button Content="Is Tree?" Width="70" Command="{Binding CheckIsTreeCommand}" />
-                <Button Content="Save" Width="70" IsEnabled="{Binding Sentence.IsChanged}" />
-                <ToggleButton Name="butSelect" Content="Select" Command="{Binding ToggleEditModeCommand}"
+                <StackPanel Orientation="Horizontal">
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                </StackPanel>
+                <Button Content="Refresh" Width="70" Click="RefreshButton_OnClick" ToolTip="Refresh the graph vizualization"></Button>
+                <Button Content="Is Tree?" Width="70" Command="{Binding CheckIsTreeCommand}" ToolTip="Checks if the sentence graph is tree" />
+                <StackPanel Orientation="Horizontal">
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                </StackPanel>
+                <Button Content="Accept Changes" Width="90" Command="{Binding AcceptChangesCommand}" ToolTip="Accept the change to the current sentence. Does not save to disk"/>
+                <Button Content="Reject Changes" Width="90" Command="{Binding RejectChangesCommand}" ToolTip="Reject the change to the current sentence. Restores to last save state"/>
+                <StackPanel Orientation="Horizontal">
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                </StackPanel>
+                <ToggleButton Name="butSelect" Content="Drag" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events1:SenteceGraphOperationMode.Select}"
-                              ToolTip="Selection mode: drag vertices, Ctrl+Click to group them"
+                              ToolTip="Drag the vertices on the graph to reposition them"
                               x:FieldModifier="private" Width="70" />
-                <ToggleButton Name="butEdit" Content="Set Edges" Command="{Binding ToggleEditModeCommand}"
+                <ToggleButton Name="butEdit" Content="Create edge" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events1:SenteceGraphOperationMode.Edit}"
-                              ToolTip="Edit mode: click to place vertices, click vertices to add edges"
+                              ToolTip="Click on a vertex, then click on another to create an edge between them"
                               x:FieldModifier="private" Width="70" />
                 <ToggleButton Name="butDelete" Content="Delete" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events:SenteceGraphOperationMode.Delete}"
-                              x:FieldModifier="private" Width="70" />
+                              x:FieldModifier="private" Width="70" 
+                              ToolTip="Click on vertex/edge to delete it"/>
             </WrapPanel>
         </ScrollViewer>
         <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">

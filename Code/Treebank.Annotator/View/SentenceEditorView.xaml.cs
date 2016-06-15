@@ -23,9 +23,7 @@
     public partial class SentenceEditorView : UserControl, IDisposable
     {
         private readonly IAppConfig appConfig;
-
-        private readonly Definition currentDefinition;
-
+        
         private readonly SentenceEditorManager editorManager;
 
         private readonly IEventAggregator eventAggregator;
@@ -62,8 +60,7 @@
         public SentenceEditorView(
             SentenceEditorViewModel sentenceEditorViewModel,
             IEventAggregator eventAggregator,
-            IAppConfig appConfig,
-            Definition definition = null)
+            IAppConfig appConfig)
             : this(eventAggregator, appConfig)
         {
             if (sentenceEditorViewModel == null)
@@ -74,17 +71,6 @@
             viewModel = sentenceEditorViewModel;
             viewModel.ViewId = viewUniqueId;
             DataContext = viewModel;
-
-            if (definition == null)
-            {
-                currentDefinition = appConfig.Definitions.Any()
-                    ? this.appConfig.Definitions.First()
-                    : MotherObjects.DefaultDefinition;
-            }
-            else
-            {
-                currentDefinition = definition;
-            }
 
             GgArea.ShowAllEdgesArrows();
             GgArea.ShowAllEdgesLabels();
@@ -104,6 +90,11 @@
             viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
             GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
             DisplayGraph();
+        }
+
+        public Definition CurrentConfiguration
+        {
+            get { return viewModel.SelectedGraphConfiguration; }
         }
 
         public void Dispose()
@@ -131,7 +122,7 @@
             }
         }
 
-        private void AddVcPs()
+        private void AddVertexConnectionPoints()
         {
             numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
 
@@ -192,7 +183,7 @@
             }
         }
 
-        private void AddVcpEdges(Dictionary<VertexControl, int> numberOfEdgesPerVertexControlParam)
+        private void AddEdgesBetweenVertexConnectionPoints(Dictionary<VertexControl, int> numberOfEdgesPerVertexControlParam)
         {
             var occupiedVcPsPerVertex = new Dictionary<VertexControl, int[]>();
 
@@ -387,11 +378,11 @@
         private void OnAddWordVertexControl(WordWrapper word)
         {
             var vertexControl = AddWordVertexControl(word);
-            var headWordId = word.GetAttributeByName(currentDefinition.Vertex.FromAttributeName);
+            var headWordId = word.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName);
             var headWordVertexControl =
                 GgArea.VertexList.Where(
                     p =>
-                        p.Key.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName)
+                        p.Key.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName)
                             .Equals(headWordId))
                     .Select(p => p.Value)
                     .SingleOrDefault();
@@ -535,7 +526,7 @@
             var addEdgeDialog =
                 new AddEdgeWindow(
                     new AddEdgeViewModel(
-                        wordPrototype.Attributes.Single(a => a.Name.Equals(currentDefinition.Edge.LabelAttributeName))));
+                        wordPrototype.Attributes.Single(a => a.Name.Equals(CurrentConfiguration.Edge.LabelAttributeName))));
             if (addEdgeDialog.ShowDialog().GetValueOrDefault())
             {
                 var edgeLabelText = string.Empty;
@@ -563,7 +554,7 @@
 
         private VertexControl AddWordVertexControl(WordWrapper wordWrapper)
         {
-            var vertex = new WordVertex(wordWrapper, currentDefinition.Vertex.LabelAttributeName);
+            var vertex = new WordVertex(wordWrapper, CurrentConfiguration.Vertex.LabelAttributeName);
             var vertexControl = new VertexControl(vertex);
             GgArea.AddVertexAndData(vertex, vertexControl, true);
             return vertexControl;
@@ -580,22 +571,19 @@
 
                 foreach (var word in viewModel.Sentence.Words)
                 {
-                    if (word.GetAttributeByName(currentDefinition.Vertex.FromAttributeName)
-                        == wordToRemove.WordWrapper.GetAttributeByName(currentDefinition.Vertex.ToAttributeName))
+                    if (word.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName)
+                        == wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName))
                     {
                         word.SetAttributeByName(
-                            currentDefinition.Vertex.FromAttributeName,
-                            wordToRemove.WordWrapper.GetAttributeByName(currentDefinition.Vertex.FromAttributeName));
+                            CurrentConfiguration.Vertex.FromAttributeName,
+                            wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName));
                     }
                 }
 
-                GgArea.RemoveAllEdges();
-                GgArea.RemoveAllVertices();
-
                 viewModel.CreateSentenceGraph();
-                viewModel.PopulateWords();
-
-                GgArea.InvalidateVisual();
+                viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
+                GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
+                DisplayGraph();
             }
         }
 
@@ -644,7 +632,7 @@
                 GgArea.GenerateAllEdges();
             }
 
-            AddVcPs();
+            AddVertexConnectionPoints();
 
             foreach (var vertexControl in GgArea.VertexList.Values)
             {
@@ -672,7 +660,7 @@
 
         private void DisplayGraph()
         {
-            GgArea.GenerateGraph();
+            GgArea.GenerateGraph();//this will trigger and execute GgArea_GenerateGraphFinished
             GgArea.RelayoutGraph(true);
 
             if (!GgArea.EdgesList.Any())
@@ -680,14 +668,14 @@
                 GgArea.GenerateAllEdges();
             }
 
-            AddVcpEdges(numberOfEdgesPerVertexControl);
+            AddEdgesBetweenVertexConnectionPoints(numberOfEdgesPerVertexControl);
 
             GgArea.UpdateAllEdges(true);
             GgZoomCtrl.ZoomToFill();
             GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             viewModel.CreateSentenceGraph();
             viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);

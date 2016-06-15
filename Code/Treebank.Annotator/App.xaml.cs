@@ -22,6 +22,8 @@
                 typeof(DependencyObject), 
                 new FrameworkPropertyMetadata(int.MaxValue));
 
+            ToolTipService.InitialShowDelayProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(10));
+
             var bootstrapper = new Bootstrapper();
 
             var container = bootstrapper.Boostrap();

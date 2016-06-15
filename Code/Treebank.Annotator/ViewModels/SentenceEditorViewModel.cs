@@ -106,6 +106,7 @@
             set
             {
                 sentenceWrapper = value;
+                InvalidateCommands();
                 OnPropertyChanged();
             }
         }
@@ -141,6 +142,10 @@
         public ObservableCollection<Definition> GraphConfigurations { get; set; }
 
         public Guid ViewId { get; set; }
+
+        public ICommand RejectChangesCommand { get; set; }
+
+        public ICommand AcceptChangesCommand { get; set; }
 
         public void PopulateWords()
         {
@@ -187,6 +192,39 @@
             ToggleEditModeCommand = new DelegateCommand(ToggleEditModeCommandExecute, ToggleEditModeCommandCanExecute);
             AddWordCommand = new DelegateCommand(AddWordCommandExecute, AddWordCommandCanExecute);
             CheckIsTreeCommand = new DelegateCommand(CheckIsTreeCommandExecute, CheckIsTreeCommandCanExecute);
+            AcceptChangesCommand = new DelegateCommand(AcceptChangesCommandExecute, AcceptChangesCommandCanExecute);
+            RejectChangesCommand = new DelegateCommand(RejectChangesCommandExecute, RejectChangesCommandCanExecute);
+        }
+
+        private bool RejectChangesCommandCanExecute(object arg)
+        {
+            return Sentence.IsChanged;
+        }
+
+        private void RejectChangesCommandExecute(object obj)
+        {
+            Sentence.RejectChanges();
+        }
+
+        private void AcceptChangesCommandExecute(object obj)
+        {
+            Sentence.AcceptChanges();
+        }
+
+        private bool AcceptChangesCommandCanExecute(object arg)
+        {
+            return Sentence.IsChanged;
+        }
+
+        private void InvalidateCommands()
+        {
+            ((DelegateCommand)LayoutAlgorithmChangedCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)GraphConfigurationChangedCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)ToggleEditModeCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)AddWordCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)CheckIsTreeCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)AcceptChangesCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand)RejectChangesCommand).RaiseCanExecuteChanged();
         }
 
         private void CheckIsTreeCommandExecute(object obj)
@@ -251,6 +289,8 @@
             }
             CreateSentenceGraph();
             PopulateWords(EventAggregator, Sentence);
+
+            InvalidateCommands();
         }
 
         private bool AddWordCommandCanExecute(object arg)
