@@ -4,9 +4,10 @@
 
     public partial class InputDialog : Window
     {
-        public InputDialog()
+        public InputDialog(string windowTitle = "Input")
         {
             InitializeComponent();
+            Title = windowTitle;
         }
 
         public string Value
