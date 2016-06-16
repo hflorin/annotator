@@ -4,10 +4,6 @@
     {
         Liniar,
         DiagonalLiniar,
-        EfficientSugiyama,
-        TopBottomTree,
-        BottomTopTree,
-        LeftRightTree,
-        RightLeftTree
+        EfficientSugiyama
     }
 }

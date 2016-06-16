@@ -6,7 +6,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
-
+    using Graph.Algos;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
@@ -37,7 +37,7 @@
         // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
         private readonly Guid viewUniqueId = Guid.NewGuid();
 
-        private VertexControl fromVertexControl;
+        private VertexControl sourceVertexControl;
 
         private Dictionary<VertexControl, int> numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
 
@@ -81,20 +81,66 @@
             GgZoomCtrl.MouseLeftButtonUp += GgZoomCtrlMouseLeftButtonUp;
             GgArea.VertexSelected += GgAreaVertexSelected;
             GgArea.EdgeSelected += GgAreaEdgeSelected;
-            GgArea.RelayoutFinished += GgAreaRelayoutFinished;
             GgArea.GenerateGraphFinished += GgAreaGenerateGraphFinished;
             GgArea.EdgeLabelFactory = new DefaultEdgelabelFactory();
 
-            eventAggregator.GetEvent<RelayoutGraphEvent>().Subscribe(OnRelayoutGraph);
             eventAggregator.GetEvent<GenerateGraphEvent>().Subscribe(OnGenerateGraph);
             eventAggregator.GetEvent<SetSentenceEditModeEvent>().Subscribe(OnSetSentenceEditMode);
             eventAggregator.GetEvent<AddWordVertexEvent>().Subscribe(OnAddWordVertexControl);
+            eventAggregator.GetEvent<ZoomOnWordVertexEvent>().Subscribe(OnZoomOnWordVertex);
+            eventAggregator.GetEvent<ZoomToFillEvent>().Subscribe(ZoomToFill);
 
             viewModel.PopulateWords();
             viewModel.CreateSentenceGraph();
             viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
             GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
             DisplayGraph();
+            ZoomToFill();
+        }
+
+        private void ZoomToFill(Guid viewId)
+        {
+            if (viewId == viewUniqueId)
+            {
+                ZoomToFill();
+            }
+        }
+
+        private void ZoomToFill()
+        {
+            GgZoomCtrl.ZoomToFill();
+            GgZoomCtrl.Mode = ZoomControlModes.Custom;
+        }
+
+        private void OnZoomOnWordVertex(ZoomOnWordIdentifier identifier)
+        {
+            if (identifier.ViewId == ViewId)
+            {
+                if (!GgArea.VertexList.Any())
+                {
+                    return;
+                }
+
+                var vertexControl = GgArea.VertexList.Values.FirstOrDefault(vc =>
+                {
+                    var wordVertex = vc.Vertex as WordVertex;
+                    return (wordVertex != null) &&
+                           (wordVertex.WordWrapper.GetAttributeByName("id") == identifier.WordId);
+                });
+
+                if (vertexControl != null)
+                {
+                    const int offset = 100;
+                    var pos = vertexControl.GetPosition();
+                    GgZoomCtrl.ZoomToContent(new Rect(pos.X - offset, pos.Y - offset,
+                        vertexControl.ActualWidth + offset*2, vertexControl.ActualHeight + offset*3));
+
+                    GgArea.VertexList.ForEach(
+                        pair => { HighlightBehaviour.SetHighlighted(pair.Value, false); });
+
+                    HighlightBehaviour.SetHighlighted(vertexControl, true);
+                }
+            }
         }
 
         public Guid ViewId
@@ -387,7 +433,15 @@
             if ((args.MouseArgs.LeftButton == MouseButtonState.Pressed)
                 && (operationMode == SenteceGraphOperationMode.Delete))
             {
-                GgArea.RemoveEdge(args.EdgeControl.Edge as WordEdge, true);
+                var edge = args.EdgeControl.Edge as WordEdge;
+                if (edge != null)
+                {
+                    GgArea.RemoveEdge(edge, true);
+                    var targetVertex = edge.Target;
+                    targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName, "-1");
+                    targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Edge.LabelAttributeName, string.Empty);
+                }
+
             }
         }
 
@@ -404,11 +458,12 @@
 
             if (headWordVertexControl != null)
             {
-                fromVertexControl = headWordVertexControl;
+                sourceVertexControl = headWordVertexControl;
                 CreateEdgeControl(vertexControl);
             }
 
             DisplayGraph();
+            ZoomToFill();
         }
 
         private void OnSetSentenceEditMode(SetSenteceGraphOperationModeRequest setSenteceGraphOperationModeRequest)
@@ -474,13 +529,13 @@
 
         private void ClearEditMode()
         {
-            if (fromVertexControl != null)
+            if (sourceVertexControl != null)
             {
-                HighlightBehaviour.SetHighlighted(fromVertexControl, false);
+                HighlightBehaviour.SetHighlighted(sourceVertexControl, false);
             }
 
             editorManager.DestroyVirtualEdge();
-            fromVertexControl = null;
+            sourceVertexControl = null;
         }
 
         private void GgZoomCtrlMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -522,27 +577,29 @@
             }
         }
 
-        private void CreateEdgeControl(VertexControl toVertexControl)
+        private void CreateEdgeControl(VertexControl targetVertexControl)
         {
-            if (fromVertexControl == null)
+            if (sourceVertexControl == null)
             {
-                editorManager.CreateVirtualEdge(toVertexControl, toVertexControl.GetPosition());
-                fromVertexControl = toVertexControl;
-                HighlightBehaviour.SetHighlighted(fromVertexControl, true);
+                editorManager.CreateVirtualEdge(targetVertexControl, targetVertexControl.GetPosition());
+                sourceVertexControl = targetVertexControl;
+                HighlightBehaviour.SetHighlighted(sourceVertexControl, true);
                 return;
             }
 
-            if (Equals(fromVertexControl, toVertexControl))
+            if (Equals(sourceVertexControl, targetVertexControl))
             {
                 return;
             }
 
             var wordPrototype = appConfig.Elements.OfType<Word>().Single();
+
             var addEdgeDialog =
                 new AddEdgeWindow(
                     new AddEdgeViewModel(
                         wordPrototype.Attributes.Single(
                             a => a.Name.Equals(CurrentConfiguration.Edge.LabelAttributeName))));
+
             if (addEdgeDialog.ShowDialog().GetValueOrDefault())
             {
                 var edgeLabelText = string.Empty;
@@ -551,19 +608,31 @@
                 {
                     edgeLabelText = dataContext.Attributes.First().Value;
                 }
+                var sourceWordVertex = sourceVertexControl.Vertex as WordVertex;
+                var targetWordVertex = targetVertexControl.Vertex as WordVertex;
 
-                var data = new WordEdge((WordVertex)fromVertexControl.Vertex, (WordVertex)toVertexControl.Vertex)
+                if (sourceWordVertex == null || targetWordVertex == null)
+                {
+                    return;
+                }
+
+                targetWordVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName,
+                    sourceWordVertex.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName));
+                targetWordVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Edge.LabelAttributeName,
+                    edgeLabelText);
+
+                var data = new WordEdge((WordVertex)sourceVertexControl.Vertex, targetWordVertex)
                                {
                                    Text
                                        =
                                        edgeLabelText
                                };
 
-                var ec = new EdgeControl(fromVertexControl, toVertexControl, data);
+                var ec = new EdgeControl(sourceVertexControl, targetVertexControl, data);
                 GgArea.InsertEdgeAndData(data, ec, 0, true);
 
-                HighlightBehaviour.SetHighlighted(fromVertexControl, false);
-                fromVertexControl = null;
+                HighlightBehaviour.SetHighlighted(sourceVertexControl, false);
+                sourceVertexControl = null;
                 editorManager.DestroyVirtualEdge();
             }
         }
@@ -600,6 +669,7 @@
                 viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
                 GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
                 DisplayGraph();
+                ZoomToFill();
             }
         }
 
@@ -633,19 +703,17 @@
             }
         }
 
-        private void OnRelayoutGraph(string sentenceId)
-        {
-            if (sentenceId == viewModel.Sentence.Id.Value)
-            {
-                GgArea.InvalidateVisual();
-                GgArea.GenerateGraph();
-                viewModel.PopulateWords();
-            }
-        }
-
         private void GgAreaGenerateGraphFinished(object sender, EventArgs e)
         {
-            AddVertexConnectionPoints();
+            if (viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.DiagonalLiniar ||
+                viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.Liniar)
+            {
+                AddVertexConnectionPoints();
+            }
+            else
+            {
+                RemoveVertexConnectionPoints();
+            }
 
             foreach (var vertexControl in GgArea.VertexList.Values)
             {
@@ -665,10 +733,22 @@
             GgArea.VertexList.Values.ForEach(vc => vc.SetConnectionPointsVisibility(true));
         }
 
-        private void GgAreaRelayoutFinished(object sender, EventArgs e)
+        private void RemoveVertexConnectionPoints()
         {
-            GgZoomCtrl.ZoomToFill();
-            GgZoomCtrl.Mode = ZoomControlModes.Custom;
+            foreach (var vertexControl in GgArea.VertexList.Values)
+            {
+                if ((vertexControl.VCPRoot != null) && (vertexControl.VCPRoot.Children != null) &&
+                    (vertexControl.VCPRoot.Children.Count > 1))
+                {
+                    vertexControl.VCPRoot.Children.RemoveRange(1, vertexControl.VCPRoot.Children.Count - 1);
+                }
+            }
+
+            foreach (var edgeControl in GgArea.EdgesList.Keys)
+            {
+                edgeControl.SourceConnectionPointId = null;
+                edgeControl.TargetConnectionPointId = null;
+            }
         }
 
         private void DisplayGraph()
@@ -676,11 +756,14 @@
             GgArea.GenerateGraph(); // this will trigger and execute GgArea_GenerateGraphFinished
             GgArea.RelayoutGraph(true);
 
-            AddEdgesBetweenVertexConnectionPoints(numberOfEdgesPerVertexControl);
+
+            if (viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.DiagonalLiniar ||
+                viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.Liniar)
+            {
+                AddEdgesBetweenVertexConnectionPoints(numberOfEdgesPerVertexControl);
+            }
 
             GgArea.UpdateAllEdges(true);
-            GgZoomCtrl.ZoomToFill();
-            GgZoomCtrl.Mode = ZoomControlModes.Custom;
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
@@ -689,6 +772,7 @@
             viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
             GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
             DisplayGraph();
+            ZoomToFill();
         }
     }
 }

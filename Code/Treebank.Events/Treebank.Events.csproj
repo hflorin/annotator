@@ -41,11 +41,12 @@
   <ItemGroup>
     <Compile Include="GenerateGraphEvent.cs" />
     <Compile Include="ValidationExceptionEvent.cs" />
-    <Compile Include="RelayoutGraphEvent.cs" />
     <Compile Include="SenteceGraphOperationMode.cs" />
     <Compile Include="SetSenteceGraphOperationModeRequest.cs" />
     <Compile Include="SetSentenceEditModeEvent.cs" />
     <Compile Include="StatusNotificationEvent.cs" />
+    <Compile Include="ZoomOnWordVertexEvent.cs" />
+    <Compile Include="ZoomToFillEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Prism, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">

@@ -74,7 +74,16 @@
         private void WordGotFocusCommandExecute(object obj)
         {
             eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
-                .Publish(new ElementAttributeEditorViewModel(eventAggregator, viewId) {Attributes = wordWrapper.Attributes});
+                .Publish(new ElementAttributeEditorViewModel(eventAggregator, viewId)
+                {
+                    Attributes = wordWrapper.Attributes
+                });
+
+            eventAggregator.GetEvent<ZoomOnWordVertexEvent>().Publish(new ZoomOnWordIdentifier
+            {
+                ViewId = viewId,
+                WordId = wordWrapper.GetAttributeByName("id")
+            });
         }
 
         private void WordChangedCommandExecute(object obj)

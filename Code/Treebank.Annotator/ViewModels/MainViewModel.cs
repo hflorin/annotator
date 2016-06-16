@@ -465,6 +465,7 @@
             if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
             {
                 eventAggregator.GetEvent<GenerateGraphEvent>().Publish(ActiveSentenceEditorView.ViewId);
+                eventAggregator.GetEvent<ZoomToFillEvent>().Publish(ActiveSentenceEditorView.ViewId);
             }
         }
 
