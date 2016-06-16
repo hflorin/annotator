@@ -211,9 +211,13 @@
 
             foreach (var vertexControl in GgArea.VertexList)
             {
-                occupiedVcPsPerVertex.Add(
-                    vertexControl.Value, 
-                    new int[numberOfEdgesPerVertexControlParam[vertexControl.Value] + 1]);
+                int edgePerVertex;
+                if (numberOfEdgesPerVertexControlParam.TryGetValue(vertexControl.Value, out edgePerVertex))
+                {
+                    occupiedVcPsPerVertex.Add(
+                        vertexControl.Value,
+                        new int[edgePerVertex + 1]);
+                }
             }
 
             var edgeGaps = ComputeDistancesBetweenEdgeVertices();
@@ -640,7 +644,6 @@
 
         private void GgAreaGenerateGraphFinished(object sender, EventArgs e)
         {
-
             AddVertexConnectionPoints();
 
             foreach (var vertexControl in GgArea.VertexList.Values)

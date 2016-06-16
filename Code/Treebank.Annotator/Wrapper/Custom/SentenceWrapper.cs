@@ -10,10 +10,14 @@
     {
         public AttributeWrapper Id
         {
-            get { return Attributes.Single(a => a.Name.Equals("id")); }
+            get
+            {
+                return Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+            }
+
             set
             {
-                var oldId = Attributes.Single(a => a.Name.Equals("id"));
+                var oldId = Attributes.FirstOrDefault(a => a.Name.Equals("id"));
                 Attributes.Remove(oldId);
                 Attributes.Add(value);
             }
@@ -40,7 +44,7 @@
                     Attributes.Add(contentAttribute);
                 }
 
-                return Attributes.Single(a => a.Name.Equals("content"));
+                return Attributes.FirstOrDefault(a => a.Name.Equals("content"));
             }
 
             set
@@ -57,10 +61,14 @@
 
         public AttributeWrapper Parser
         {
-            get { return Attributes.Single(a => a.Name.Equals("parser")); }
+            get
+            {
+                return Attributes.FirstOrDefault(a => a.Name.Equals("parser"));
+            }
+
             set
             {
-                var oldId = Attributes.Single(a => a.Name.Equals("parser"));
+                var oldId = Attributes.FirstOrDefault(a => a.Name.Equals("parser"));
                 Attributes.Remove(oldId);
                 Attributes.Add(value);
             }
@@ -68,10 +76,14 @@
 
         public AttributeWrapper User
         {
-            get { return Attributes.Single(a => a.Name.Equals("user")); }
+            get
+            {
+                return Attributes.FirstOrDefault(a => a.Name.Equals("user"));
+            }
+
             set
             {
-                var oldId = Attributes.Single(a => a.Name.Equals("user"));
+                var oldId = Attributes.FirstOrDefault(a => a.Name.Equals("user"));
                 Attributes.Remove(oldId);
                 Attributes.Add(value);
             }
@@ -79,10 +91,14 @@
 
         public AttributeWrapper Date
         {
-            get { return Attributes.Single(a => a.Name.Equals("date")); }
+            get
+            {
+                return Attributes.FirstOrDefault(a => a.Name.Equals("date"));
+            }
+
             set
             {
-                var oldId = Attributes.Single(a => a.Name.Equals("date"));
+                var oldId = Attributes.FirstOrDefault(a => a.Name.Equals("date"));
                 Attributes.Remove(oldId);
                 Attributes.Add(value);
             }

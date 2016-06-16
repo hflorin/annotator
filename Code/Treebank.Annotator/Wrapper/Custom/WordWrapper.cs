@@ -8,20 +8,41 @@ namespace Treebank.Annotator.Wrapper
     {
         public string Form
         {
-            get { return GetAttributeByName("form"); }
-            set { SetAttributeByName("form", value); }
+            get
+            {
+                return GetAttributeByName("form");
+            }
+
+            set
+            {
+                SetAttributeByName("form", value);
+            }
         }
 
         public int Id
         {
-            get { return int.Parse(GetAttributeByName("id")); }
-            set { SetAttributeByName("id", value.ToString()); }
+            get
+            {
+                return int.Parse(GetAttributeByName("id"));
+            }
+
+            set
+            {
+                SetAttributeByName("id", value.ToString());
+            }
         }
 
         public int HeadWordId
         {
-            get { return int.Parse(GetAttributeByName("head")); }
-            set { SetAttributeByName("head", value.ToString()); }
+            get
+            {
+                return int.Parse(GetAttributeByName("head"));
+            }
+
+            set
+            {
+                SetAttributeByName("head", value.ToString());
+            }
         }
 
         public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -31,28 +52,40 @@ namespace Treebank.Annotator.Wrapper
                 yield break;
             }
 
-            if (string.IsNullOrWhiteSpace(Attributes.Single(a => a.Name.Equals("form")).Value))
+            var firstOrDefault = Attributes.FirstOrDefault(a => a.Name.Equals("form"));
+            if (firstOrDefault != null && string.IsNullOrWhiteSpace(firstOrDefault.Value))
             {
-                yield return new ValidationResult("Form is required.", new[] {"form"});
+                yield return new ValidationResult("Form is required.", new[] { "form" });
             }
 
-            if (string.IsNullOrEmpty(GetAttributeByName("postag"))
-                || string.IsNullOrEmpty(GetAttributeByName("form")))
+            if (string.IsNullOrEmpty(GetAttributeByName("postag")) || string.IsNullOrEmpty(GetAttributeByName("form")))
             {
                 yield return
-                    new ValidationResult("A word must have a part of speech and a form", new[] {"postag", "form"});
+                    new ValidationResult("A word must have a part of speech and a form", new[] { "postag", "form" });
             }
         }
 
         public string GetAttributeByName(string attributeName)
         {
-            return Attributes.Single(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant())).Value;
+            var firstOrDefault =
+                Attributes.FirstOrDefault(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant()));
+            if (firstOrDefault != null)
+            {
+                return firstOrDefault.Value;
+            }
+
+            return string.Empty;
         }
 
         public void SetAttributeByName(string attributeName, string value)
         {
-            Attributes.Single(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant())).Value = value;
-            OnPropertyChanged("Attributes");
+            var firstOrDefault =
+                Attributes.FirstOrDefault(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant()));
+            if (firstOrDefault != null)
+            {
+                firstOrDefault.Value = value;
+                OnPropertyChanged("Attributes");
+            }
         }
     }
 }

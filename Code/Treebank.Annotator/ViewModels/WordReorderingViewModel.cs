@@ -2,8 +2,9 @@
 {
     using System;
     using System.Windows.Input;
-    using Commands;
-    using Wrapper;
+
+    using Treebank.Annotator.Commands;
+    using Treebank.Annotator.Wrapper;
 
     public class WordReorderingViewModel : Observable
     {
@@ -19,6 +20,7 @@
         }
 
         public ICommand MoveUpCommand { get; set; }
+
         public ICommand MoveDownCommand { get; set; }
 
         public SentenceWrapper Sentence { get; set; }
@@ -34,7 +36,9 @@
         private void MoveDownCommandExecute(object obj)
         {
             if (SelectedWord == null)
+            {
                 return;
+            }
 
             var numberOfElements = Sentence.Words.Count;
             var selectedWordIndex = Sentence.Words.IndexOf(SelectedWord);
@@ -42,8 +46,7 @@
             {
                 var tempIdCurrent = Sentence.Words[selectedWordIndex].GetAttributeByName("id");
                 var tempIdNext = Sentence.Words[selectedWordIndex + 1].GetAttributeByName("id");
-                Sentence.Words[selectedWordIndex].SetAttributeByName("id",
-                    tempIdNext);
+                Sentence.Words[selectedWordIndex].SetAttributeByName("id", tempIdNext);
                 Sentence.Words[selectedWordIndex + 1].SetAttributeByName("id", tempIdCurrent);
 
                 var temp = Sentence.Words[selectedWordIndex];
@@ -82,15 +85,16 @@
         private void MoveUpCommandExecute(object obj)
         {
             if (SelectedWord == null)
+            {
                 return;
+            }
 
             var selectedWordIndex = Sentence.Words.IndexOf(SelectedWord);
             if (selectedWordIndex > 0)
             {
                 var tempIdCurrent = Sentence.Words[selectedWordIndex].GetAttributeByName("id");
                 var tempIdNext = Sentence.Words[selectedWordIndex - 1].GetAttributeByName("id");
-                Sentence.Words[selectedWordIndex].SetAttributeByName("id",
-                    tempIdNext);
+                Sentence.Words[selectedWordIndex].SetAttributeByName("id", tempIdNext);
                 Sentence.Words[selectedWordIndex - 1].SetAttributeByName("id", tempIdCurrent);
 
                 var temp = Sentence.Words[selectedWordIndex];

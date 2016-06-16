@@ -71,8 +71,8 @@
             {
                 switch (reader.NodeType)
                 {
-                    case XmlNodeType.Element :
-                        var pair = new ConfigurationPair {ElementName = reader.Name};
+                    case XmlNodeType.Element:
+                        var pair = new ConfigurationPair { ElementName = reader.Name };
 
                         var entityAttributes = new Dictionary<string, string>();
 
@@ -84,7 +84,7 @@
                         pair.Attributes.Add(entityAttributes);
                         queue.Add(pair);
                         break;
-                    case XmlNodeType.EndElement :
+                    case XmlNodeType.EndElement:
                         AddElementsToDocument(document, queue, appConfig);
                         break;
                 }
@@ -259,10 +259,16 @@
                         newElement.Attributes.SingleOrDefault(atr => atr.Name.Equals(wordPrototypeAttribute.Name));
                     if ((wordAttribute == null) || string.IsNullOrEmpty(wordAttribute.Value))
                     {
+                        if (document == null || !document.Sentences.Any())
+                        {
+                            continue;
+                        }
+
                         var lastSentence = document.Sentences.Last();
-                        var newWordId = newElement.Attributes.Single(a => a.Name.Equals("id")).Value;
-                        var sentenceId = lastSentence.Attributes.Single(a => a.Name.Equals("id")).Value;
-                        var documentId = document.Attributes.Single(a => a.Name.Equals("id")).Value;
+
+                        var newWordId = newElement.GetAttributeByName("id");
+                        var sentenceId = lastSentence.GetAttributeByName("id");
+                        var documentId = document.GetAttributeByName("id");
 
                         EventAggregator.GetEvent<ValidationExceptionEvent>()
                             .Publish(

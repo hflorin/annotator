@@ -26,12 +26,19 @@
 
         public string GetAttributeByName(string attributeName)
         {
-            return Attributes.Single(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant())).Value;
+            var attribute = Attributes.FirstOrDefault(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant()));
+
+            return attribute == null ? string.Empty : attribute.Value;
         }
 
         public void SetAttributeByName(string attributeName, string value)
         {
-            Attributes.Single(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant())).Value = value;
+            var attribute = Attributes.FirstOrDefault(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant()));
+
+            if (attribute != null)
+            {
+                attribute.Value = value;
+            }
         }
     }
 }

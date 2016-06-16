@@ -5,20 +5,23 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Input;
-    using Commands;
-    using Domain;
-    using Graph;
-    using Graph.Algos;
+
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
-    using Mappers;
-    using Mappers.Configuration;
+
     using Prism.Events;
+
+    using Treebank.Annotator.Commands;
+    using Treebank.Annotator.Graph;
+    using Treebank.Annotator.Graph.Algos;
+    using Treebank.Annotator.View;
+    using Treebank.Annotator.View.Services;
+    using Treebank.Annotator.Wrapper;
+    using Treebank.Annotator.Wrapper.Base;
+    using Treebank.Domain;
     using Treebank.Events;
-    using View;
-    using View.Services;
-    using Wrapper;
-    using Wrapper.Base;
+    using Treebank.Mappers;
+    using Treebank.Mappers.Configuration;
 
     public class SentenceEditorViewModel : Observable
     {
@@ -39,9 +42,9 @@
         private SentenceWrapper sentenceWrapper;
 
         public SentenceEditorViewModel(
-            IEventAggregator eventAggregator,
-            IAppConfig appConfig,
-            SentenceWrapper sentence,
+            IEventAggregator eventAggregator, 
+            IAppConfig appConfig, 
+            SentenceWrapper sentence, 
             IShowInfoMessage showMessage)
         {
             if (sentence == null)
@@ -82,9 +85,15 @@
 
         public SenteceGraphOperationMode SenteceGraphOperationMode
         {
-            get { return operationMode; }
+            get
+            {
+                return operationMode;
+            }
 
-            set { operationMode = value; }
+            set
+            {
+                operationMode = value;
+            }
         }
 
         public IEventAggregator EventAggregator { get; set; }
@@ -179,21 +188,26 @@
             switch (SelectedLayoutAlgorithmType)
             {
                 case GraphLayoutAlgorithmTypeEnum.Liniar:
+
                     // logicCore.ExternalEdgeRoutingAlgorithm =
                     // new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
                     // logicCore.Graph as SentenceGraph);
                     logicCore.ExternalLayoutAlgorithm =
                         new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
-                            logicCore.Graph as SentenceGraph,
+                            logicCore.Graph as SentenceGraph, 
                             50);
 
                     break;
                 case GraphLayoutAlgorithmTypeEnum.DiagonalLiniar:
+
                     // logicCore.ExternalEdgeRoutingAlgorithm =
                     // new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
                     // logicCore.Graph as SentenceGraph);
                     logicCore.ExternalLayoutAlgorithm =
-                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(logicCore.Graph as SentenceGraph, 50, 25);
+                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                            logicCore.Graph as SentenceGraph, 
+                            50, 
+                            25);
                     break;
                 case GraphLayoutAlgorithmTypeEnum.EfficientSugiyama:
                     SetEfficientSugiyamaLayout(logicCore);
@@ -220,12 +234,8 @@
             var sortedWords = sentence.Words.ToList();
             sortedWords.Sort(Comparison);
 
-            IList<WordEditorViewModel> w = new List<WordEditorViewModel>();
-
-            foreach (var word in sortedWords)
-            {
-                w.Add(new WordEditorViewModel(word, eventAggregator, ViewId));
-            }
+            IList<WordEditorViewModel> w =
+                sortedWords.Select(word => new WordEditorViewModel(word, eventAggregator, ViewId)).ToList();
 
             Words = new ChangeTrackingCollection<WordEditorViewModel>(w);
             OnPropertyChanged("Words");
@@ -247,10 +257,10 @@
         private void InitializeCommands()
         {
             LayoutAlgorithmChangedCommand = new DelegateCommand(
-                LayoutAlgorithmChangedCommandExecute,
+                LayoutAlgorithmChangedCommandExecute, 
                 LayoutAlgorithmChangedCommandCanExecute);
             GraphConfigurationChangedCommand = new DelegateCommand(
-                GraphConfigurationChangedCommandExecute,
+                GraphConfigurationChangedCommandExecute, 
                 GraphConfigurationChangedCommandCanExecute);
             ToggleEditModeCommand = new DelegateCommand(ToggleEditModeCommandExecute, ToggleEditModeCommandCanExecute);
             AddWordCommand = new DelegateCommand(AddWordCommandExecute, AddWordCommandCanExecute);
@@ -304,7 +314,7 @@
                     EventAggregator.GetEvent<ValidationExceptionEvent>()
                         .Publish(
                             string.Format(
-                                "The word with id: {0}, is not connected to another word.",
+                                "The word with id: {0}, is not connected to another word.", 
                                 disconnectedWordId));
                 }
 
@@ -313,8 +323,8 @@
                     EventAggregator.GetEvent<ValidationExceptionEvent>()
                         .Publish(
                             string.Format(
-                                "The sentence with id {0} has cycle: {1}",
-                                Sentence.Id.Value,
+                                "The sentence with id {0} has cycle: {1}", 
+                                Sentence.Id.Value, 
                                 string.Join(",", cycle)));
                 }
 
@@ -353,9 +363,6 @@
                 {
                     EventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
                 }
-
-                // todo: remove if not used anymore or bring it back if performance becomes an issue
-                // EventAggregator.GetEvent<AddWordVertexEvent>().Publish(word);
             }
 
             CreateSentenceGraph();
@@ -379,12 +386,12 @@
             EventAggregator.GetEvent<SetSentenceEditModeEvent>()
                 .Publish(
                     new SetSenteceGraphOperationModeRequest
-                    {
-                        Mode =
-                            obj is SenteceGraphOperationMode
-                                ? (SenteceGraphOperationMode)obj
-                                : SenteceGraphOperationMode.Select
-                    });
+                        {
+                            Mode =
+                                obj is SenteceGraphOperationMode
+                                    ? (SenteceGraphOperationMode)obj
+                                    : SenteceGraphOperationMode.Select
+                        });
         }
 
         private bool GraphConfigurationChangedCommandCanExecute(object arg)
@@ -406,7 +413,7 @@
         {
             return true;
         }
-        
+
         private void SetTreeLayout(SentenceGxLogicCore logicCore, LayoutDirection direction)
         {
             logicCore.ExternalEdgeRoutingAlgorithm = null;
@@ -414,7 +421,7 @@
 
             var parameters =
                 logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.Tree) as
-                    SimpleTreeLayoutParameters;
+                SimpleTreeLayoutParameters;
 
             if (parameters != null)
             {
@@ -435,7 +442,7 @@
 
             var layoutParameters =
                 logicCore.AlgorithmFactory.CreateLayoutParameters(LayoutAlgorithmTypeEnum.EfficientSugiyama) as
-                    EfficientSugiyamaLayoutParameters;
+                EfficientSugiyamaLayoutParameters;
 
             if (layoutParameters != null)
             {

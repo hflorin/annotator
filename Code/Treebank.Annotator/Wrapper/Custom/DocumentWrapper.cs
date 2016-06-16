@@ -6,8 +6,27 @@
     {
         public string IdValue
         {
-            get { return Attributes.Single(a => a.Name.Equals("id")).Value; }
-            set { Attributes.Single(a => a.Name.Equals("id")).Value = value; }
+            get
+            {
+                var attribute = Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+
+                if (attribute != null)
+                {
+                    return attribute.Value;
+                }
+
+                return string.Empty;
+            }
+
+            set
+            {
+                var attribute = Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+
+                if (attribute != null)
+                {
+                    attribute.Value = value;
+                }
+            }
         }
     }
 }

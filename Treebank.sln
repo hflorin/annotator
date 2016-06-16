@@ -23,8 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Data", "Test Data", "{
 	ProjectSection(SolutionItems) = preProject
 		Resources\XML\1984Orwel.xml = Resources\XML\1984Orwel.xml
 		Resources\XML\OneSentenceDoc.xml = Resources\XML\OneSentenceDoc.xml
-		Resources\XML\QuoVadisFull.xml = Resources\XML\QuoVadisFull.xml
-		Resources\XML\QuoVadisPartial.xml = Resources\XML\QuoVadisPartial.xml
 		Resources\XML\test.xml = Resources\XML\test.xml
 		Resources\XML\testSmall.xml = Resources\XML\testSmall.xml
 	EndProjectSection
