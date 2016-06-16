@@ -28,9 +28,9 @@
 
         private readonly IShowInfoMessage showMessage;
 
-        private ObservableCollection<GraphLayoutAlgorithmTypeEnum> layoutAlgorithmTypes = new ObservableCollection
-            <GraphLayoutAlgorithmTypeEnum>(
-            Enum.GetValues(typeof(GraphLayoutAlgorithmTypeEnum)).Cast<GraphLayoutAlgorithmTypeEnum>());
+        private ObservableCollection<GraphLayoutAlgorithmTypeEnum> layoutAlgorithmTypes =
+            new ObservableCollection<GraphLayoutAlgorithmTypeEnum>(
+                Enum.GetValues(typeof(GraphLayoutAlgorithmTypeEnum)).Cast<GraphLayoutAlgorithmTypeEnum>());
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
@@ -77,7 +77,7 @@
             PopulateWords(eventAggregator, sentence);
 
             var sentenceGraph = new SentenceGraph();
-            sentenceLogicCore = new SentenceGxLogicCore {Graph = sentenceGraph};
+            sentenceLogicCore = new SentenceGxLogicCore { Graph = sentenceGraph };
         }
 
         public SenteceGraphOperationMode SenteceGraphOperationMode
@@ -101,7 +101,10 @@
 
         public SentenceWrapper Sentence
         {
-            get { return sentenceWrapper; }
+            get
+            {
+                return sentenceWrapper;
+            }
 
             set
             {
@@ -115,7 +118,10 @@
 
         public SentenceGxLogicCore SentenceGraphLogicCore
         {
-            get { return sentenceLogicCore; }
+            get
+            {
+                return sentenceLogicCore;
+            }
 
             set
             {
@@ -130,7 +136,10 @@
 
         public ObservableCollection<GraphLayoutAlgorithmTypeEnum> LayoutAlgorithmTypes
         {
-            get { return layoutAlgorithmTypes; }
+            get
+            {
+                return layoutAlgorithmTypes;
+            }
 
             set
             {
@@ -150,6 +159,60 @@
         public void PopulateWords()
         {
             PopulateWords(EventAggregator, sentenceWrapper);
+        }
+
+        public void CreateSentenceGraph()
+        {
+            graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
+            var logicCore = graphBuilder.SetupGraphLogic(Sentence);
+            SentenceGraphLogicCore = logicCore;
+        }
+
+        public void SetLayoutAlgorithm(SentenceGxLogicCore logicCore)
+        {
+            logicCore.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.None;
+            logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
+            logicCore.ExternalEdgeRoutingAlgorithm = null;
+            logicCore.ExternalEdgeRoutingAlgorithm = null;
+            logicCore.ExternalOverlapRemovalAlgorithm = null;
+
+            switch (SelectedLayoutAlgorithmType)
+            {
+                case GraphLayoutAlgorithmTypeEnum.Liniar:
+                    // logicCore.ExternalEdgeRoutingAlgorithm =
+                    // new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                    // logicCore.Graph as SentenceGraph);
+                    logicCore.ExternalLayoutAlgorithm =
+                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                            logicCore.Graph as SentenceGraph,
+                            50);
+
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.DiagonalLiniar:
+                    // logicCore.ExternalEdgeRoutingAlgorithm =
+                    // new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                    // logicCore.Graph as SentenceGraph);
+                    logicCore.ExternalLayoutAlgorithm =
+                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(logicCore.Graph as SentenceGraph, 50, 25);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.EfficientSugiyama:
+                    SetEfficientSugiyamaLayout(logicCore);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.TopBottomTree:
+                    SetTreeLayout(logicCore, LayoutDirection.TopToBottom);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.BottomTopTree:
+                    SetTreeLayout(logicCore, LayoutDirection.BottomToTop);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.LeftRightTree:
+                    SetTreeLayout(logicCore, LayoutDirection.LeftToRight);
+                    break;
+                case GraphLayoutAlgorithmTypeEnum.RightLeftTree:
+                    SetTreeLayout(logicCore, LayoutDirection.RightToLeft);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void PopulateWords(IEventAggregator eventAggregator, SentenceWrapper sentence)
@@ -239,15 +302,20 @@
                 foreach (var disconnectedWordId in validationResult.DisconnectedWordIds)
                 {
                     EventAggregator.GetEvent<ValidationExceptionEvent>()
-                        .Publish(string.Format("The word with id: {0}, is not connected to another word.",
-                            disconnectedWordId));
+                        .Publish(
+                            string.Format(
+                                "The word with id: {0}, is not connected to another word.",
+                                disconnectedWordId));
                 }
 
                 foreach (var cycle in validationResult.Cycles)
                 {
                     EventAggregator.GetEvent<ValidationExceptionEvent>()
-                        .Publish(string.Format("The sentence with id {0} has cycle: {1}",
-                            Sentence.Id.Value, string.Join(",", cycle)));
+                        .Publish(
+                            string.Format(
+                                "The sentence with id {0} has cycle: {1}",
+                                Sentence.Id.Value,
+                                string.Join(",", cycle)));
                 }
 
                 if (validationResult.DisconnectedWordIds.Any() || validationResult.Cycles.Any())
@@ -271,22 +339,25 @@
             var wordPrototype = ObjectCopier.Clone(appConfig.Elements.OfType<Word>().Single());
             var wordIds =
                 Sentence.Words.Select(
-                    w => new Pair {Id = int.Parse(w.GetAttributeByName("id")), Form = w.GetAttributeByName("form")})
+                    w => new Pair { Id = int.Parse(w.GetAttributeByName("id")), Form = w.GetAttributeByName("form") })
                     .ToList();
             var addWordWindow = new AddWordWindow(new AddWordViewModel(wordPrototype, wordIds));
 
             if (addWordWindow.ShowDialog().GetValueOrDefault())
             {
-                var word = ((AddWordViewModel) addWordWindow.DataContext).Word;
+                var word = ((AddWordViewModel)addWordWindow.DataContext).Word;
                 Sentence.Words.Add(word);
 
                 var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(Sentence));
                 if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
                 {
+                    EventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
                 }
-                //todo: remove if not used anymore or bring it back if performance becomes an issue
-                //EventAggregator.GetEvent<AddWordVertexEvent>().Publish(word);
+
+                // todo: remove if not used anymore or bring it back if performance becomes an issue
+                // EventAggregator.GetEvent<AddWordVertexEvent>().Publish(word);
             }
+
             CreateSentenceGraph();
             PopulateWords(EventAggregator, Sentence);
 
@@ -311,7 +382,7 @@
                     {
                         Mode =
                             obj is SenteceGraphOperationMode
-                                ? (SenteceGraphOperationMode) obj
+                                ? (SenteceGraphOperationMode)obj
                                 : SenteceGraphOperationMode.Select
                     });
         }
@@ -335,65 +406,7 @@
         {
             return true;
         }
-
-        public void CreateSentenceGraph()
-        {
-            graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
-            var logicCore = graphBuilder.SetupGraphLogic(Sentence);
-            SentenceGraphLogicCore = logicCore;
-        }
-
-        public void SetLayoutAlgorithm(SentenceGxLogicCore logicCore)
-        {
-            logicCore.DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.None;
-            logicCore.DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.None;
-            logicCore.ExternalEdgeRoutingAlgorithm = null;
-            logicCore.ExternalEdgeRoutingAlgorithm = null;
-            logicCore.ExternalOverlapRemovalAlgorithm = null;
-
-            switch (SelectedLayoutAlgorithmType)
-            {
-                case GraphLayoutAlgorithmTypeEnum.Liniar :
-                    //logicCore.ExternalEdgeRoutingAlgorithm =
-                    //    new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
-                    //        logicCore.Graph as SentenceGraph);
-
-                    logicCore.ExternalLayoutAlgorithm =
-                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
-                            logicCore.Graph as SentenceGraph,
-                            50);
-
-                    break;
-                case GraphLayoutAlgorithmTypeEnum.DiagonalLiniar :
-                    //logicCore.ExternalEdgeRoutingAlgorithm =
-                    //    new LiniarEdgeRoutingAlgorithm<WordVertex, WordEdge, SentenceGraph>(
-                    //        logicCore.Graph as SentenceGraph);
-
-                    logicCore.ExternalLayoutAlgorithm =
-                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
-                            logicCore.Graph as SentenceGraph,
-                            50, 25);
-                    break;
-                case GraphLayoutAlgorithmTypeEnum.EfficientSugiyama :
-                    SetEfficientSugiyamaLayout(logicCore);
-                    break;
-                case GraphLayoutAlgorithmTypeEnum.TopBottomTree :
-                    SetTreeLayout(logicCore, LayoutDirection.TopToBottom);
-                    break;
-                case GraphLayoutAlgorithmTypeEnum.BottomTopTree :
-                    SetTreeLayout(logicCore, LayoutDirection.BottomToTop);
-                    break;
-                case GraphLayoutAlgorithmTypeEnum.LeftRightTree :
-                    SetTreeLayout(logicCore, LayoutDirection.LeftToRight);
-                    break;
-                case GraphLayoutAlgorithmTypeEnum.RightLeftTree :
-                    SetTreeLayout(logicCore, LayoutDirection.RightToLeft);
-                    break;
-                default :
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
+        
         private void SetTreeLayout(SentenceGxLogicCore logicCore, LayoutDirection direction)
         {
             logicCore.ExternalEdgeRoutingAlgorithm = null;

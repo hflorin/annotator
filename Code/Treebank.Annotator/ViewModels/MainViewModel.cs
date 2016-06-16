@@ -464,6 +464,7 @@
             var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(SelectedSentence));
             if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
             {
+                eventAggregator.GetEvent<GenerateGraphEvent>().Publish(ActiveSentenceEditorView.ViewId);
             }
         }
 

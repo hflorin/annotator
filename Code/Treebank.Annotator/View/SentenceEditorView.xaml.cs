@@ -640,10 +640,6 @@
 
         private void GgAreaGenerateGraphFinished(object sender, EventArgs e)
         {
-            if (!GgArea.EdgesList.Any())
-            {
-                GgArea.GenerateAllEdges();
-            }
 
             AddVertexConnectionPoints();
 
@@ -675,11 +671,6 @@
         {
             GgArea.GenerateGraph(); // this will trigger and execute GgArea_GenerateGraphFinished
             GgArea.RelayoutGraph(true);
-
-            if (!GgArea.EdgesList.Any())
-            {
-                GgArea.GenerateAllEdges();
-            }
 
             AddEdgesBetweenVertexConnectionPoints(numberOfEdgesPerVertexControl);
 
