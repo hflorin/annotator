@@ -148,6 +148,8 @@
 
         public ICommand NewTreeBankCommand { get; set; }
 
+        public ICommand BindAttributesCommand { get; set; }
+
         public ICommand OpenCommand { get; set; }
 
         public ICommand SaveCommand { get; set; }
@@ -275,11 +277,11 @@
         }
 
         private void InitializeServices(
-            IEventAggregator eventAggregatorArg, 
-            ISaveDialogService saveDialogServiceArg, 
-            IOpenFileDialogService openFileDialogServiceArg, 
-            IDocumentMapper documentMapperArg, 
-            IAppConfigMapper configMapper, 
+            IEventAggregator eventAggregatorArg,
+            ISaveDialogService saveDialogServiceArg,
+            IOpenFileDialogService openFileDialogServiceArg,
+            IDocumentMapper documentMapperArg,
+            IAppConfigMapper configMapper,
             IShowInfoMessage showMessage)
         {
             if (eventAggregatorArg == null)
@@ -338,6 +340,24 @@
             EditWordOrderCommand = new DelegateCommand(EditWordOrderCommandExecute, EditWordOrderCommandCanExecute);
             AddSentenceCommand = new DelegateCommand(AddSentenceCommandExecute, AddSentenceCommandCanExecute);
             DeleteSentenceCommand = new DelegateCommand(DeleteSentenceCommandExecute, DeleteSentenceCommandCanExecute);
+            BindAttributesCommand = new DelegateCommand(BindAttributesCommandExecute, BindAttributesCommandCanExecute);
+        }
+
+        private void BindAttributesCommandExecute(object obj)
+        {
+            if (SelectedDocument != null)
+            {
+                eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
+                    .Publish(new ElementAttributeEditorViewModel(eventAggregator, Guid.Empty)
+                    {
+                        Attributes = SelectedDocument.Attributes
+                    });
+            }
+        }
+
+        private bool BindAttributesCommandCanExecute(object arg)
+        {
+            return SelectedDocument != null;
         }
 
         private bool DeleteSentenceCommandCanExecute(object arg)
@@ -393,36 +413,38 @@
                 {
                     string sentenceContent = inputDialog.Value;
 
-                    sentencePrototype.SetAttributeByName("date", DateTime.Now.ToString("d"));
-                    sentencePrototype.SetAttributeByName("id", (SelectedDocument.Sentences.Count+1).ToString());
-                    var newSentence = new SentenceWrapper(sentencePrototype)
-                                          {
-                                              IsOptional = false,
-                                              Content =
-                                                  new AttributeWrapper(
-                                                  new Attribute
-                                                      {
-                                                          Name = "content",
-                                                          DisplayName = "Content",
-                                                          Value = sentenceContent,
-                                                          IsOptional = true,
-                                                          IsEditable = false
-                                                      })
-                                          };
-
-                    var words = sentenceContent.Split(' ');
-
-                    for(var i=0; i < words.Length; i++)
+                    if (sentencePrototype != null)
                     {
-                        var wordContent = words[i];
-                        var newWord = ObjectCopier.Clone(wordPrototype);
-                        newWord.Value = wordContent;
+                        sentencePrototype.SetAttributeByName("date", DateTime.Now.ToString("d"));
+                        sentencePrototype.SetAttributeByName("id", (SelectedDocument.Sentences.Count+1).ToString());
+                        var newSentence = new SentenceWrapper(sentencePrototype)
+                        {
+                            IsOptional = false,
+                            Content =
+                                new AttributeWrapper(
+                                    new Attribute
+                                    {
+                                        Name = "content",
+                                        DisplayName = "Content",
+                                        Value = sentenceContent,
+                                        IsOptional = true,
+                                        IsEditable = false
+                                    })
+                        };
 
-                        newWord.SetAttributeByName(configuration.Vertex.ToAttributeName, i.ToString());
-                        newWord.SetAttributeByName(configuration.Vertex.FromAttributeName, "-1");
+                        var words = sentenceContent.Split(' ');
 
-                        newWord.Attributes.Add(
-                            new Attribute
+                        for(var i=0; i < words.Length; i++)
+                        {
+                            var wordContent = words[i];
+                            var newWord = ObjectCopier.Clone(wordPrototype);
+                            newWord.Value = wordContent;
+
+                            newWord.SetAttributeByName(configuration.Vertex.ToAttributeName, i.ToString());
+                            newWord.SetAttributeByName(configuration.Vertex.FromAttributeName, "-1");
+
+                            newWord.Attributes.Add(
+                                new Attribute
                                 {
                                     Name = "content",
                                     DisplayName = "Content",
@@ -431,20 +453,21 @@
                                     IsEditable = false
                                 });
 
-                        var newWordWrapper = new WordWrapper(newWord);
+                            var newWordWrapper = new WordWrapper(newWord);
 
-                        newSentence.Words.Add(newWordWrapper);
-                    }
+                            newSentence.Words.Add(newWordWrapper);
+                        }
 
-                    newSentence.Attributes.ForEach(
-                        a =>
+                        newSentence.Attributes.ForEach(
+                            a =>
                             {
                                 a.IsOptional = false;
                                 a.IsEditable = true;
                             });
 
-                    SelectedDocument.Sentences.Add(newSentence);
-                    SelectedSentence = newSentence;
+                        SelectedDocument.Sentences.Add(newSentence);
+                        SelectedSentence = newSentence;
+                    }
                 }
             }
         }

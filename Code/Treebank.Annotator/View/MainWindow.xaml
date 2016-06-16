@@ -118,7 +118,13 @@
                                                    AutoHideWidth="200" FloatingWidth="200" ToolTip="A list of all the loaded documents">
                                 <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
                                          DisplayMemberPath="IdValue"
-                                         SelectedItem="{Binding SelectedDocument}" />
+                                         SelectedItem="{Binding SelectedDocument}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding BindAttributesCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    </ListBox>
                             </xcad:LayoutAnchorable>
                             <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200" FloatingWidth="200" CanHide="False" CanClose="False" ToolTip="The list of attributes for the selected element">
                                 <view:ElementAttributeEditorView
