@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
     using System.Windows.Threading;
     using Events;
     using Prism.Events;
@@ -50,6 +51,11 @@
                 Dispatcher.BeginInvoke(new Action(() => viewModel.SentenceEditViews.Remove(documentModel)),
                     DispatcherPriority.Background);
             }
+        }
+
+        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            viewModel.EditSentenceCommand.Execute(null);
         }
     }
 }
