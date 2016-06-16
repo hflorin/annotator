@@ -15,7 +15,7 @@
                     return attribute.Value;
                 }
 
-                return string.Empty;
+                return "Undefined";
             }
 
             set

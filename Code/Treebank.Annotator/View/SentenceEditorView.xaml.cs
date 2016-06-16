@@ -90,6 +90,7 @@
             eventAggregator.GetEvent<SetSentenceEditModeEvent>().Subscribe(OnSetSentenceEditMode);
             eventAggregator.GetEvent<AddWordVertexEvent>().Subscribe(OnAddWordVertexControl);
 
+            viewModel.PopulateWords();
             viewModel.CreateSentenceGraph();
             viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
             GgArea.LogicCore = viewModel.SentenceGraphLogicCore;

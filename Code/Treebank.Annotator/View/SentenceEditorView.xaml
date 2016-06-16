@@ -17,7 +17,8 @@
             <WrapPanel Orientation="Horizontal">
                 <Label Content="Layouts:" HorizontalAlignment="Left" FontWeight="Bold" />
                 <ComboBox Name="LayoutAlgos" SelectedItem="{Binding SelectedLayoutAlgorithmType}"
-                          ItemsSource="{Binding LayoutAlgorithmTypes}" IsReadOnly="True" HorizontalAlignment="Stretch" ToolTip="Choose a vertex layout algorithm">
+                          ItemsSource="{Binding LayoutAlgorithmTypes}" IsReadOnly="True" HorizontalAlignment="Stretch"
+                          ToolTip="Choose a vertex layout algorithm">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding LayoutAlgorithmChangedCommand}" />
@@ -27,7 +28,8 @@
                 <Label Content="Configurations:" HorizontalAlignment="Left" FontWeight="Bold" />
                 <ComboBox Name="GraphConfigurations" SelectedItem="{Binding SelectedGraphConfiguration}"
                           ItemsSource="{Binding GraphConfigurations}" IsReadOnly="True"
-                          HorizontalAlignment="Stretch" SelectedValuePath="Name" DisplayMemberPath="Name" ToolTip="Choose a configuration to draw the graph">
+                          HorizontalAlignment="Stretch" SelectedValuePath="Name" DisplayMemberPath="Name"
+                          ToolTip="Choose a configuration to draw the graph">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding GraphConfigurationChangedCommand}" />
@@ -37,13 +39,17 @@
                 <StackPanel Orientation="Horizontal">
                     <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 </StackPanel>
-                <Button Content="Refresh" Width="70" Click="RefreshButton_OnClick" ToolTip="Refresh the graph vizualization"></Button>
-                <Button Content="Is Tree?" Width="70" Command="{Binding CheckIsTreeCommand}" ToolTip="Checks if the sentence graph is tree" />
+                <Button Content="Refresh" Width="70" Click="RefreshButton_OnClick"
+                        ToolTip="Refresh the graph vizualization" />
+                <Button Content="Is Tree?" Width="70" Command="{Binding CheckIsTreeCommand}"
+                        ToolTip="Checks if the sentence graph is tree" />
                 <StackPanel Orientation="Horizontal">
                     <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 </StackPanel>
-                <Button Content="Accept Changes" Width="90" Command="{Binding AcceptChangesCommand}" ToolTip="Accept the change to the current sentence. Does not save to disk"/>
-                <Button Content="Reject Changes" Width="90" Command="{Binding RejectChangesCommand}" ToolTip="Reject the change to the current sentence. Restores to last save state"/>
+                <Button Content="Accept Changes" Width="90" Command="{Binding AcceptChangesCommand}"
+                        ToolTip="Accept the change to the current sentence. Does not save to disk" />
+                <Button Content="Reject Changes" Width="90" Command="{Binding RejectChangesCommand}"
+                        ToolTip="Reject the change to the current sentence. Restores to last save state" />
                 <StackPanel Orientation="Horizontal">
                     <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 </StackPanel>
@@ -57,8 +63,8 @@
                               x:FieldModifier="private" Width="70" />
                 <ToggleButton Name="butDelete" Content="Delete" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events:SenteceGraphOperationMode.Delete}"
-                              x:FieldModifier="private" Width="70" 
-                              ToolTip="Click on vertex/edge to delete it"/>
+                              x:FieldModifier="private" Width="70"
+                              ToolTip="Click on vertex/edge to delete it" />
             </WrapPanel>
         </ScrollViewer>
         <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
@@ -75,7 +81,7 @@
                                 <TextBox Text="{Binding Form, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          HorizontalAlignment="Stretch" Margin="0,0,2,0">
                                     <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="TextChanged">
+                                        <i:EventTrigger EventName="LostKeyboardFocus">
                                             <i:InvokeCommandAction Command="{Binding WordChangedCommand}" />
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="GotFocus">

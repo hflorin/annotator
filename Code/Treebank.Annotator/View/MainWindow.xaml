@@ -68,7 +68,7 @@
                 <xcad:LayoutRoot.BottomSide>
                     <xcad:LayoutAnchorSide>
                         <xcad:LayoutAnchorGroup>
-                            <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False" CanClose="False">
+                            <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False" CanClose="False" ToolTip="The list of sentences for the selected document">
                                 <DataGrid ItemsSource="{Binding SelectedDocument.Sentences}" LoadingRow="DataGrid_OnLoadingRow"
                                           SelectedItem="{Binding SelectedSentence,Mode=TwoWay}" Margin="0 5 0 0"
                                           AutoGenerateColumns="False" SelectionUnit="FullRow">
@@ -110,12 +110,12 @@
                         <xcad:LayoutAnchorGroup>
                             <xcad:LayoutAnchorable ContentId="documents" Title="Document Explorer" CanHide="False"
                                                    CanClose="False"
-                                                   AutoHideWidth="200">
+                                                   AutoHideWidth="200" ToolTip="A list of all the loaded documents">
                                 <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
                                          DisplayMemberPath="IdValue"
                                          SelectedItem="{Binding SelectedDocument}" />
                             </xcad:LayoutAnchorable>
-                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200" CanHide="False" CanClose="False">
+                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200" CanHide="False" CanClose="False" ToolTip="The list of attributes for the selected element">
                                 <view:ElementAttributeEditorView
                                     DataContext="{Binding SelectedElementAttributeEditorViewModel}" />
                             </xcad:LayoutAnchorable>

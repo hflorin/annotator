@@ -77,8 +77,6 @@
             GraphConfigurations = new ObservableCollection<Definition>(this.appConfig.Definitions);
             SelectedGraphConfiguration = GraphConfigurations.First();
 
-            PopulateWords(eventAggregator, sentence);
-
             var sentenceGraph = new SentenceGraph();
             sentenceLogicCore = new SentenceGxLogicCore { Graph = sentenceGraph };
         }

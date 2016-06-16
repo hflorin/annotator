@@ -394,7 +394,7 @@
                     string sentenceContent = inputDialog.Value;
 
                     sentencePrototype.SetAttributeByName("date", DateTime.Now.ToString("d"));
-
+                    sentencePrototype.SetAttributeByName("id", (SelectedDocument.Sentences.Count+1).ToString());
                     var newSentence = new SentenceWrapper(sentencePrototype)
                                           {
                                               IsOptional = false,

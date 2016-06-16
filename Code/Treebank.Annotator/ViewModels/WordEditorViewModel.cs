@@ -79,7 +79,11 @@
 
         private void WordChangedCommandExecute(object obj)
         {
-            eventAggregator.GetEvent<GenerateGraphEvent>().Publish(viewId);
+            if (wordWrapper.IsChanged)
+            {
+                eventAggregator.GetEvent<GenerateGraphEvent>().Publish(viewId);
+                wordWrapper.AcceptChanges();
+            }
         }
 
         private bool WordChangedCommandCanExecute(object arg)
