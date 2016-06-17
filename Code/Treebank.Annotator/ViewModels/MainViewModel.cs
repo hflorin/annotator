@@ -445,7 +445,7 @@
                             newWord.Value = wordContent;
 
                             newWord.SetAttributeByName(configuration.Vertex.ToAttributeName, (i + 1).ToString());
-                            newWord.SetAttributeByName(configuration.Vertex.FromAttributeName, "-1");
+                            newWord.SetAttributeByName(configuration.Vertex.FromAttributeName, "0");
 
                             newWord.Attributes.Add(
                                 new Attribute
