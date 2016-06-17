@@ -441,10 +441,12 @@
                 {
                     GgArea.RemoveEdge(edge, true);
                     var targetVertex = edge.Target;
-                    targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName, "-1");
+                    targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName, "0");
                     targetVertex.WordWrapper.SetAttributeByName(
                         CurrentConfiguration.Edge.LabelAttributeName, 
                         string.Empty);
+
+                    viewModel.InvalidateCommands();
                 }
             }
         }
@@ -640,6 +642,8 @@
                 sourceVertexControl = null;
                 editorManager.DestroyVirtualEdge();
             }
+
+            viewModel.InvalidateCommands();
         }
 
         private VertexControl AddWordVertexControl(WordWrapper wordWrapper)
@@ -673,6 +677,7 @@
                 viewModel.CreateSentenceGraph();
                 viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
                 GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
+                viewModel.PopulateWords();
                 DisplayGraph();
                 ZoomToFill();
             }

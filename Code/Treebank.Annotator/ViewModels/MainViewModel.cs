@@ -10,25 +10,21 @@
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
-
+    using Commands;
+    using Domain;
+    using Events;
+    using Graph.Algos;
     using GraphX.PCL.Logic.Helpers;
-
+    using Mappers;
+    using Mappers.Configuration;
+    using Persistence;
     using Prism.Events;
-
-    using Treebank.Annotator.Commands;
-    using Treebank.Annotator.Events;
-    using Treebank.Annotator.Graph.Algos;
-    using Treebank.Annotator.View;
-    using Treebank.Annotator.View.Services;
-    using Treebank.Annotator.Wrapper;
-    using Treebank.Annotator.Wrapper.Base;
-    using Treebank.Domain;
     using Treebank.Events;
-    using Treebank.Mappers;
-    using Treebank.Mappers.Configuration;
-    using Treebank.Persistence;
-
-    using Attribute = Treebank.Domain.Attribute;
+    using View;
+    using View.Services;
+    using Wrapper;
+    using Wrapper.Base;
+    using Attribute = Domain.Attribute;
 
     public class MainViewModel : Observable
     {
@@ -48,6 +44,8 @@
 
         private IOpenFileDialogService openFileDialogService;
 
+        private IPersister persisterService;
+
         private ISaveDialogService saveDialogService;
 
         private DocumentWrapper selectedDocument;
@@ -60,25 +58,23 @@
 
         private IShowInfoMessage showInfoMessage;
 
-        private IPersister persisterService;
-
         public MainViewModel(
-            IEventAggregator eventAggregator, 
-            ISaveDialogService saveDialogService, 
-            IOpenFileDialogService openFileDialogService, 
-            IDocumentMapper documentMapper, 
-            IAppConfigMapper appConfigMapper, 
+            IEventAggregator eventAggregator,
+            ISaveDialogService saveDialogService,
+            IOpenFileDialogService openFileDialogService,
+            IDocumentMapper documentMapper,
+            IAppConfigMapper appConfigMapper,
             IShowInfoMessage showInfoMessage,
             IPersister persister)
         {
             InitializeCommands();
 
             InitializeServices(
-                eventAggregator, 
-                saveDialogService, 
-                openFileDialogService, 
-                documentMapper, 
-                appConfigMapper, 
+                eventAggregator,
+                saveDialogService,
+                openFileDialogService,
+                documentMapper,
+                appConfigMapper,
                 showInfoMessage,
                 persister);
 
@@ -102,10 +98,7 @@
 
         public string CurrentStatus
         {
-            get
-            {
-                return currentStatus;
-            }
+            get { return currentStatus; }
 
             set
             {
@@ -116,19 +109,16 @@
 
         public SentenceWrapper SelectedSentence
         {
-            get
-            {
-                return sentence;
-            }
+            get { return sentence; }
 
             set
             {
                 sentence = value;
 
-                ((DelegateCommand)EditSentenceCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)EditWordOrderCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)AddSentenceCommand).RaiseCanExecuteChanged();
-                ((DelegateCommand)DeleteSentenceCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand) EditSentenceCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand) EditWordOrderCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand) AddSentenceCommand).RaiseCanExecuteChanged();
+                ((DelegateCommand) DeleteSentenceCommand).RaiseCanExecuteChanged();
 
                 OnPropertyChanged();
             }
@@ -136,10 +126,7 @@
 
         public DocumentWrapper SelectedDocument
         {
-            get
-            {
-                return selectedDocument;
-            }
+            get { return selectedDocument; }
 
             set
             {
@@ -151,10 +138,7 @@
 
         public ObservableCollection<SentenceEditorView> SentenceEditViews
         {
-            get
-            {
-                return sentenceEditViewModels;
-            }
+            get { return sentenceEditViewModels; }
 
             set
             {
@@ -187,10 +171,7 @@
 
         public SentenceEditorView ActiveSentenceEditorView
         {
-            get
-            {
-                return activeSentenceEditorView;
-            }
+            get { return activeSentenceEditorView; }
 
             set
             {
@@ -201,10 +182,7 @@
 
         public ElementAttributeEditorViewModel SelectedElementAttributeEditorViewModel
         {
-            get
-            {
-                return selectedElementAttributeEditorViewModel;
-            }
+            get { return selectedElementAttributeEditorViewModel; }
 
             set
             {
@@ -215,9 +193,25 @@
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
         {
-            // todo: show message box to confirm closing if there are changes in the viewmodel
+            var modifiedDocs = Documents.Where(p => p.IsChanged || string.IsNullOrWhiteSpace(p.FilePath)).Select(p => p).ToList();
 
-            // todo:check if there are any unsaved changes, show popup to allow the user to decide, handle his response and then exit the app
+            if (modifiedDocs.Any())
+            {
+                if (showInfoMessage.ShowInfoMessage(
+                    "Unsaved changes will be lost upon closing the application.\r\nDo you want to save the changes?",
+                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    foreach (var doc in modifiedDocs)
+                    {
+                        if (string.IsNullOrEmpty(doc.FilePath))
+                        {
+                            doc.FilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+                        }
+
+                        persisterService.Save(doc.Model, doc.FilePath);
+                    }
+                }
+            }
         }
 
         private void InitializeMembers()
@@ -238,7 +232,9 @@
 
         private async Task<IAppConfig> LoadConfig()
         {
-            if (appConfig == null || (SelectedDocument != null && appConfig.Filepath != SelectedDocument.Model.GetAttributeByName("configuration")))
+            if ((appConfig == null) ||
+                ((SelectedDocument != null) &&
+                 (appConfig.Filepath != SelectedDocument.Model.GetAttributeByName("configuration"))))
             {
                 var configFilePath = string.Empty;
 
@@ -247,7 +243,8 @@
                 if (SelectedDocument != null)
                 {
                     var configurationFileName = SelectedDocument.Model.GetAttributeByName("configuration");
-                    configFilePath = filePathToName.Where(p => p.Value == configurationFileName).Select(p => p.Key).FirstOrDefault();
+                    configFilePath =
+                        filePathToName.Where(p => p.Value == configurationFileName).Select(p => p.Key).FirstOrDefault();
                 }
 
                 if (string.IsNullOrEmpty(configFilePath))
@@ -256,8 +253,11 @@
 
                     if (string.IsNullOrWhiteSpace(configFilePath))
                     {
-                        var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
-                        MessageBox.Show(string.Format("Please add a configuration file in the configurations folder {0}", configFilesDirectoryPath), "Missing configuration file");
+                        var configFilesDirectoryPath =
+                            ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
+                        MessageBox.Show(
+                            string.Format("Please add a configuration file in the configurations folder {0}",
+                                configFilesDirectoryPath), "Missing configuration file");
                     }
                 }
 
@@ -286,8 +286,8 @@
                     eventAggregator.GetEvent<ValidationExceptionEvent>()
                         .Publish(
                             string.Format(
-                                "The word id: {0}, in sentence id: {1}, is not connected to another word.", 
-                                disconnectedWordId, 
+                                "The word id: {0}, in sentence id: {1}, is not connected to another word.",
+                                disconnectedWordId,
                                 sentenceWrapper.Id.Value));
                 }
 
@@ -296,8 +296,8 @@
                     eventAggregator.GetEvent<ValidationExceptionEvent>()
                         .Publish(
                             string.Format(
-                                "The sentence with id {0} has cycle: {1}", 
-                                sentence.Id.Value, 
+                                "The sentence with id {0} has cycle: {1}",
+                                sentence.Id.Value,
                                 string.Join(",", cycle)));
                 }
 
@@ -386,7 +386,7 @@
             CloseCommand = new DelegateCommand(CloseCommandExecute, CloseCommandCanExecute);
             EditSentenceCommand = new DelegateCommand(EditSentenceCommandExecute, EditSentenceCommandCanExecute);
             SelectedSentenceChangedCommand = new DelegateCommand(
-                SelectedSentenceChangedCommandExecute, 
+                SelectedSentenceChangedCommandExecute,
                 SelectedSentenceChangedCommandCanExecute);
             EditWordOrderCommand = new DelegateCommand(EditWordOrderCommandExecute, EditWordOrderCommandCanExecute);
             AddSentenceCommand = new DelegateCommand(AddSentenceCommandExecute, AddSentenceCommandCanExecute);
@@ -434,7 +434,7 @@
                 var sentenceToRemoveIndex = SelectedDocument.Sentences.IndexOf(SelectedSentence);
 
                 SelectedSentence =
-                    SelectedDocument.Sentences.Except(new List<SentenceWrapper> { SelectedSentence }).FirstOrDefault();
+                    SelectedDocument.Sentences.Except(new List<SentenceWrapper> {SelectedSentence}).FirstOrDefault();
                 SelectedDocument.Sentences.RemoveAt(sentenceToRemoveIndex);
             }
         }
@@ -454,7 +454,8 @@
 
                 if (configuration == null)
                 {
-                    eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Must define a configuration in the configuration file before adding a sentence");
+                    eventAggregator.GetEvent<StatusNotificationEvent>()
+                        .Publish("Must define a configuration in the configuration file before adding a sentence");
                     return;
                 }
 
@@ -462,30 +463,30 @@
 
                 if (inputDialog.ShowDialog().GetValueOrDefault())
                 {
-                    string sentenceContent = inputDialog.Value;
+                    var sentenceContent = inputDialog.Value;
 
                     if (sentencePrototype != null)
                     {
                         var sentenceClone = ObjectCopier.Clone(sentencePrototype);
 
-                        sentenceClone.SetAttributeByName("date", DateTime.Now.ToString("d"));
+                        sentenceClone.SetAttributeByName("date", DateTime.Now.ToString("dd-MM-yyyy"));
                         sentenceClone.SetAttributeByName("id", (SelectedDocument.Sentences.Count + 1).ToString());
                         var newSentence = new SentenceWrapper(sentenceClone)
-                                              {
-                                                  IsOptional = false,
-                                                  Content =
-                                                      new AttributeWrapper(
-                                                      new Attribute
-                                                          {
-                                                              Name = "content",
-                                                              DisplayName =
-                                                                  "Content",
-                                                              Value =
-                                                                  sentenceContent,
-                                                              IsOptional = true,
-                                                              IsEditable = false
-                                                          })
-                                              };
+                        {
+                            IsOptional = false,
+                            Content =
+                                new AttributeWrapper(
+                                    new Attribute
+                                    {
+                                        Name = "content",
+                                        DisplayName =
+                                            "Content",
+                                        Value =
+                                            sentenceContent,
+                                        IsOptional = true,
+                                        IsEditable = false
+                                    })
+                        };
 
                         var words = sentenceContent.Split(' ');
 
@@ -500,13 +501,13 @@
 
                             newWord.Attributes.Add(
                                 new Attribute
-                                    {
-                                        Name = "content",
-                                        DisplayName = "Content",
-                                        Value = wordContent,
-                                        IsOptional = true,
-                                        IsEditable = false
-                                    });
+                                {
+                                    Name = "content",
+                                    DisplayName = "Content",
+                                    Value = wordContent,
+                                    IsOptional = true,
+                                    IsEditable = false
+                                });
 
                             if (wordPrototype != null)
                             {
@@ -527,10 +528,10 @@
 
                         newSentence.Attributes.ForEach(
                             a =>
-                                {
-                                    a.IsOptional = false;
-                                    a.IsEditable = true;
-                                });
+                            {
+                                a.IsOptional = false;
+                                a.IsEditable = true;
+                            });
 
                         SelectedDocument.Sentences.Add(newSentence);
                         SelectedSentence = newSentence;
@@ -575,11 +576,11 @@
             {
                 var sentenceEditView = SentenceEditViews.FirstOrDefault(
                     s =>
-                        {
-                            var sentenceEditorViewModel = s.DataContext as SentenceEditorViewModel;
-                            return (sentenceEditorViewModel != null)
-                                   && (sentenceEditorViewModel.Sentence.Id == SelectedSentence.Id);
-                        });
+                    {
+                        var sentenceEditorViewModel = s.DataContext as SentenceEditorViewModel;
+                        return (sentenceEditorViewModel != null)
+                               && (sentenceEditorViewModel.Sentence.Id == SelectedSentence.Id);
+                    });
 
                 if (sentenceEditView != null)
                 {
@@ -599,8 +600,8 @@
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(
                     string.Format(
-                        "Selected sentence with ID: {0} from document with ID: {1}", 
-                        sentenceIdAttribute != null ? sentenceIdAttribute.Value : string.Empty, 
+                        "Selected sentence with ID: {0} from document with ID: {1}",
+                        sentenceIdAttribute != null ? sentenceIdAttribute.Value : string.Empty,
                         documentIdAttribute != null ? documentIdAttribute.Value : string.Empty));
         }
 
@@ -613,14 +614,14 @@
 
             var sentenceEditView =
                 new SentenceEditorView(
-                    new SentenceEditorViewModel(eventAggregator, AppConfig, SelectedSentence, showInfoMessage), 
-                    eventAggregator, 
+                    new SentenceEditorViewModel(eventAggregator, AppConfig, SelectedSentence, showInfoMessage),
+                    eventAggregator,
                     AppConfig);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
             SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(
-                eventAggregator, 
+                eventAggregator,
                 sentenceEditView.ViewId)
             {
                 Attributes = SelectedSentence.Attributes
@@ -632,8 +633,8 @@
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(
                     string.Format(
-                        "Editing sentence with ID: {0}, document ID: {1}", 
-                        sentenceIdAttribute != null ? sentenceIdAttribute.Value : string.Empty, 
+                        "Editing sentence with ID: {0}, document ID: {1}",
+                        sentenceIdAttribute != null ? sentenceIdAttribute.Value : string.Empty,
                         documentIdAttribute != null ? documentIdAttribute.Value : string.Empty));
         }
 
@@ -649,16 +650,16 @@
 
         private void InvalidateCommands()
         {
-            ((DelegateCommand)NewTreeBankCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)OpenCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)SaveAsCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)CloseCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) NewTreeBankCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) OpenCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) SaveCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) SaveAsCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) CloseCommand).RaiseCanExecuteChanged();
 
-            ((DelegateCommand)AddSentenceCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)DeleteSentenceCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)EditSentenceCommand).RaiseCanExecuteChanged();
-            ((DelegateCommand)EditWordOrderCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) AddSentenceCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) DeleteSentenceCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) EditSentenceCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) EditWordOrderCommand).RaiseCanExecuteChanged();
         }
 
         private bool CloseCommandCanExecute(object arg)
@@ -707,17 +708,12 @@
         private void NewTreeBankCommandExecute(object obj)
         {
             var filenameToPathMapping = GetConfigFileNameToFilePathMapping();
-            var document = new Document();
 
-            document.Attributes.Add(
-                new Attribute
-                    {
-                        Name = "id",
-                        DisplayName = "Id",
-                        Value = "Treebank" + Documents.Count,
-                        IsOptional = false,
-                        IsEditable = true
-                    });
+            var documentPrototype = AppConfig.Elements.OfType<Document>().Single();
+
+            var document = ObjectCopier.Clone(documentPrototype);
+
+            document.SetAttributeByName("id", "Treebank" + Documents.Count);
 
             document.Attributes.Add(
                 new Attribute
@@ -735,7 +731,7 @@
             {
                 Documents =
                     new ChangeTrackingCollection<DocumentWrapper>(
-                        new List<DocumentWrapper> { new DocumentWrapper(document) });
+                        new List<DocumentWrapper> {new DocumentWrapper(document)});
             }
             else
             {
@@ -767,9 +763,9 @@
             DocumentLoadExceptions.Clear();
 
             var documentModel = await MapDocumentModel(documentFilePath);
-            
+
             var documentWrapper = new DocumentWrapper(documentModel);
-            
+
             documentsWrappers[documentFilePath] = documentWrapper;
 
             RefreshDocumentsExplorerList();
@@ -788,15 +784,15 @@
 
             documentModel.Attributes.Add(
                 new Attribute
-                    {
-                        AllowedValuesSet = filenameToPathMapping.Values,
-                        Value = AppConfig.Name,
-                        Name = "configuration",
-                        DisplayName = "Configuration",
-                        Entity = "attribute",
-                        IsEditable = true,
-                        IsOptional = false
-                    });
+                {
+                    AllowedValuesSet = filenameToPathMapping.Values,
+                    Value = AppConfig.Name,
+                    Name = "configuration",
+                    DisplayName = "Configuration",
+                    Entity = "attribute",
+                    IsEditable = true,
+                    IsOptional = false
+                });
 
             return documentModel;
         }
@@ -804,7 +800,7 @@
         private Dictionary<string, string> GetConfigFileNameToFilePathMapping()
         {
             var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
-            
+
             var filenameToPathMapping = new Dictionary<string, string>();
 
             if (Directory.Exists(configFilesDirectoryPath))
@@ -839,21 +835,20 @@
         private void SaveCommandExecute(object obj)
         {
             var documentFilePath = SelectedDocument != null
-                                       ? SelectedDocument.Model.FilePath
-                                       : saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+                ? SelectedDocument.Model.FilePath
+                : saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
 
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Saving document to file {0}", documentFilePath));
+            eventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(string.Format("Saving document to file {0}", documentFilePath));
 
             if (!string.IsNullOrWhiteSpace(documentFilePath))
             {
-                // todo rename old file, create new file with old filename, save, delete old file
                 if (SelectedDocument != null)
                 {
                     persisterService.Save(SelectedDocument.Model, documentFilePath);
                 }
             }
 
-            // todo: save logic
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(string.Format("Document saved: {0}", documentFilePath));
         }
@@ -872,18 +867,16 @@
         {
             eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Saving document");
 
-            var documentFilePath = saveDialogService.GetSaveFileLocation(FileFilters.AllFilesFilter);
+            var documentFilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
 
             if (!string.IsNullOrWhiteSpace(documentFilePath))
             {
-                // todo rename old file, create new file with old filename, save, delete old file
                 if (SelectedDocument != null)
                 {
                     persisterService.Save(SelectedDocument.Model, documentFilePath);
                 }
             }
 
-            // todo: save as logic
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(string.Format("Document saved: {0}", documentFilePath));
         }

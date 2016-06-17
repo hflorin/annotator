@@ -117,10 +117,10 @@
                                                    CanClose="False"
                                                    AutoHideWidth="200" FloatingWidth="200" ToolTip="A list of all the loaded documents">
                                 <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
-                                         DisplayMemberPath="IdValue"
+                                         DisplayMemberPath="IdValue" 
                                          SelectedItem="{Binding SelectedDocument}" SelectionMode="Single">
                                     <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectionChanged">
+                                        <i:EventTrigger EventName="MouseLeftButtonUp">
                                             <i:InvokeCommandAction Command="{Binding BindAttributesCommand}" />
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>

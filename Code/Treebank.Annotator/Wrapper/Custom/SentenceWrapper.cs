@@ -106,19 +106,19 @@
 
         public bool IsTree { get; set; }
 
-        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (Attributes == null)
-            {
-                yield break;
-            }
+        //public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    if (Attributes == null)
+        //    {
+        //        yield break;
+        //    }
 
-            var attribute = Attributes.FirstOrDefault(a => (a.Name != null) && a.Name.Equals("parser"));
+        //    var attribute = Attributes.FirstOrDefault(a => (a.Name != null) && a.Name.Equals("parser"));
 
-            if (attribute == null || string.IsNullOrWhiteSpace(attribute.Value))
-            {
-                yield return new ValidationResult("Parser is required.", new[] { "Parser" });
-            }
-        }
+        //    if (attribute == null || string.IsNullOrWhiteSpace(attribute.Value))
+        //    {
+        //        yield return new ValidationResult("Parser is required.", new[] { "Parser" });
+        //    }
+        //}
     }
 }

@@ -4,9 +4,9 @@
 
     public class ShowMessageBoxInfo : IShowInfoMessage
     {
-        public MessageBoxResult ShowInfoMessage(string message)
+        public MessageBoxResult ShowInfoMessage(string message, MessageBoxButton buttons)
         {
-            return MessageBox.Show(message, "Info", MessageBoxButton.OK);
+            return MessageBox.Show(message, "Info", buttons);
         }
     }
 }

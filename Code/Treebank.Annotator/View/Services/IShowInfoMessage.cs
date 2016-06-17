@@ -4,6 +4,6 @@
 
     public interface IShowInfoMessage
     {
-        MessageBoxResult ShowInfoMessage(string message);
+        MessageBoxResult ShowInfoMessage(string message, MessageBoxButton buttons);
     }
 }

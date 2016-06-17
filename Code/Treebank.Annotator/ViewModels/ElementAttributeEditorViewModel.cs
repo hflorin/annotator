@@ -13,7 +13,6 @@
     public class ElementAttributeEditorViewModel : Observable
     {
         private readonly IEventAggregator eventAggregator;
-        public Guid ViewId { get; set; }
 
         public ElementAttributeEditorViewModel(IEventAggregator eventAggregator, Guid viewId)
         {
@@ -26,6 +25,8 @@
             ViewId = viewId;
             this.eventAggregator = eventAggregator;
         }
+
+        public Guid ViewId { get; set; }
 
         public IEventAggregator EventAggregator
         {
@@ -69,7 +70,6 @@
 
         private void SaveAttributeCommandExecute(object obj)
         {
-            //todo: save to the file as well
             Attributes.AcceptChanges();
             eventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
         }
@@ -81,16 +81,19 @@
 
         private void RemoveAttributeCommandExecute(object obj)
         {
-            if (SelectedAttribute!=null && SelectedAttribute.IsOptional)
+            if ((SelectedAttribute != null) && SelectedAttribute.IsOptional)
             {
                 Attributes.Remove(SelectedAttribute);
                 InvalidateCommands();
             }
             else
             {
-                eventAggregator.GetEvent<StatusNotificationEvent>()
-                    .Publish(string.Format("Cannot delete attribute {0} because it is not optional.",
-                        SelectedAttribute.Name));
+                if (SelectedAttribute != null)
+                {
+                    eventAggregator.GetEvent<StatusNotificationEvent>()
+                        .Publish(string.Format("Cannot delete attribute {0} because it is not optional.",
+                            SelectedAttribute.Name));
+                }
             }
         }
 

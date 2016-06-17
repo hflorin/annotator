@@ -56,7 +56,7 @@
             var localCopy = new List<Pair>(wordsParam) {new Pair {Id = 0, Form = string.Empty}};
 
             var headWordIdAttribute = word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("head"));
-            localCopy.Sort((l, r) => { return l.Id == r.Id ? 0 : l.Id < r.Id ? -1 : 1; });
+            localCopy.Sort((l, r) => l.Id == r.Id ? 0 : l.Id < r.Id ? -1 : 1);
             headWordIdAttribute.AllowedValuesSet = localCopy.Select(p => p.Form).ToList();
             headWordIdAttribute.Value = localCopy.Aggregate((l, r) => l.Id > r.Id ? l : r).Form;
         }
@@ -80,7 +80,6 @@
 
 
             var headwordAttribute = Word.Attributes.Single(a => a.Name.ToLowerInvariant().Equals("head"));
-            
 
             headwordAttribute.IsEditable = originalHeadWordAttribute.IsEditable;
             headwordAttribute.AllowedValuesSet = originalHeadWordAttribute.AllowedValuesSet;
@@ -88,7 +87,6 @@
             var headWordId = words.Where(p => p.Form == headwordAttribute.Value).Select(p => p.Id).FirstOrDefault();
             headwordAttribute.Value = headWordId.ToString();
             Word.AcceptChanges();
-            //todo:validate the values entered
         }
 
         private bool OkButtonCommandCanExecute(object arg)

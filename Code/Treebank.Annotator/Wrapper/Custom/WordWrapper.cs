@@ -45,25 +45,25 @@ namespace Treebank.Annotator.Wrapper
             }
         }
 
-        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (Attributes == null)
-            {
-                yield break;
-            }
+        //public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    if (Attributes == null)
+        //    {
+        //        yield break;
+        //    }
 
-            var firstOrDefault = Attributes.FirstOrDefault(a => a.Name.Equals("form"));
-            if (firstOrDefault != null && string.IsNullOrWhiteSpace(firstOrDefault.Value))
-            {
-                yield return new ValidationResult("Form is required.", new[] { "form" });
-            }
+        //    var firstOrDefault = Attributes.FirstOrDefault(a => a.Name.Equals("form"));
+        //    if (firstOrDefault != null && string.IsNullOrWhiteSpace(firstOrDefault.Value))
+        //    {
+        //        yield return new ValidationResult("Form is required.", new[] { "form" });
+        //    }
 
-            if (string.IsNullOrEmpty(GetAttributeByName("postag")) || string.IsNullOrEmpty(GetAttributeByName("form")))
-            {
-                yield return
-                    new ValidationResult("A word must have a part of speech and a form", new[] { "postag", "form" });
-            }
-        }
+        //    if (string.IsNullOrEmpty(GetAttributeByName("postag")) || string.IsNullOrEmpty(GetAttributeByName("form")))
+        //    {
+        //        yield return
+        //            new ValidationResult("A word must have a part of speech and a form", new[] { "postag", "form" });
+        //    }
+        //}
 
         public string GetAttributeByName(string attributeName)
         {
