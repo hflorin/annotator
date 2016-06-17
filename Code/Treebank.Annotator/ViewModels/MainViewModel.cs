@@ -415,43 +415,59 @@
 
                     if (sentencePrototype != null)
                     {
-                        sentencePrototype.SetAttributeByName("date", DateTime.Now.ToString("d"));
-                        sentencePrototype.SetAttributeByName("id", (SelectedDocument.Sentences.Count+1).ToString());
-                        var newSentence = new SentenceWrapper(sentencePrototype)
-                        {
-                            IsOptional = false,
-                            Content =
-                                new AttributeWrapper(
-                                    new Attribute
-                                    {
-                                        Name = "content",
-                                        DisplayName = "Content",
-                                        Value = sentenceContent,
-                                        IsOptional = true,
-                                        IsEditable = false
-                                    })
-                        };
+                        var sentenceClone = ObjectCopier.Clone(sentencePrototype);
+
+                        sentenceClone.SetAttributeByName("date", DateTime.Now.ToString("d"));
+                        sentenceClone.SetAttributeByName("id", (SelectedDocument.Sentences.Count + 1).ToString());
+                        var newSentence = new SentenceWrapper(sentenceClone)
+                                              {
+                                                  IsOptional = false,
+                                                  Content =
+                                                      new AttributeWrapper(
+                                                      new Attribute
+                                                          {
+                                                              Name = "content",
+                                                              DisplayName =
+                                                                  "Content",
+                                                              Value =
+                                                                  sentenceContent,
+                                                              IsOptional = true,
+                                                              IsEditable = false
+                                                          })
+                                              };
 
                         var words = sentenceContent.Split(' ');
 
-                        for(var i=0; i < words.Length; i++)
+                        for (var i = 0; i < words.Length; i++)
                         {
                             var wordContent = words[i];
                             var newWord = ObjectCopier.Clone(wordPrototype);
                             newWord.Value = wordContent;
 
-                            newWord.SetAttributeByName(configuration.Vertex.ToAttributeName, i.ToString());
+                            newWord.SetAttributeByName(configuration.Vertex.ToAttributeName, (i + 1).ToString());
                             newWord.SetAttributeByName(configuration.Vertex.FromAttributeName, "-1");
 
                             newWord.Attributes.Add(
                                 new Attribute
+                                    {
+                                        Name = "content",
+                                        DisplayName = "Content",
+                                        Value = wordContent,
+                                        IsOptional = true,
+                                        IsEditable = false
+                                    });
+
+                            if (wordPrototype != null)
+                            {
+                                var attribute =
+                                    newWord.Attributes.FirstOrDefault(
+                                        a => a.Name == configuration.Vertex.LabelAttributeName);
+
+                                if (attribute != null)
                                 {
-                                    Name = "content",
-                                    DisplayName = "Content",
-                                    Value = wordContent,
-                                    IsOptional = true,
-                                    IsEditable = false
-                                });
+                                    attribute.Value = wordContent;
+                                }
+                            }
 
                             var newWordWrapper = new WordWrapper(newWord);
 
@@ -460,10 +476,10 @@
 
                         newSentence.Attributes.ForEach(
                             a =>
-                            {
-                                a.IsOptional = false;
-                                a.IsEditable = true;
-                            });
+                                {
+                                    a.IsOptional = false;
+                                    a.IsEditable = true;
+                                });
 
                         SelectedDocument.Sentences.Add(newSentence);
                         SelectedSentence = newSentence;
