@@ -63,30 +63,31 @@
 
         private async Task ParseDocument(string filepath, IAppConfig appConfig, Document document)
         {
-            var reader = new XmlTextReader(filepath);
-
-            var queue = new List<ConfigurationPair>();
-
-            while (await Task.Run(() => reader.Read()))
+            using (var reader = new XmlTextReader(filepath))
             {
-                switch (reader.NodeType)
+                var queue = new List<ConfigurationPair>();
+
+                while (await Task.Run(() => reader.Read()))
                 {
-                    case XmlNodeType.Element:
-                        var pair = new ConfigurationPair { ElementName = reader.Name };
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element :
+                            var pair = new ConfigurationPair {ElementName = reader.Name};
 
-                        var entityAttributes = new Dictionary<string, string>();
+                            var entityAttributes = new Dictionary<string, string>();
 
-                        while (reader.MoveToNextAttribute())
-                        {
-                            entityAttributes.Add(reader.Name, reader.Value);
-                        }
+                            while (reader.MoveToNextAttribute())
+                            {
+                                entityAttributes.Add(reader.Name, reader.Value);
+                            }
 
-                        pair.Attributes.Add(entityAttributes);
-                        queue.Add(pair);
-                        break;
-                    case XmlNodeType.EndElement:
-                        AddElementsToDocument(document, queue, appConfig);
-                        break;
+                            pair.Attributes.Add(entityAttributes);
+                            queue.Add(pair);
+                            break;
+                        case XmlNodeType.EndElement :
+                            AddElementsToDocument(document, queue, appConfig);
+                            break;
+                    }
                 }
             }
         }
@@ -249,7 +250,7 @@
             const string MissingNonOptionalAttributeErrorMessage =
                 "Value missing for: attribute {0}, word id {1}, sentence id: {2}, document id: {3}";
 
-            bool exceptionsFound = false;
+            var exceptionsFound = false;
 
             foreach (var wordPrototypeAttribute in elementPrototype.Attributes)
             {
@@ -259,7 +260,7 @@
                         newElement.Attributes.SingleOrDefault(atr => atr.Name.Equals(wordPrototypeAttribute.Name));
                     if ((wordAttribute == null) || string.IsNullOrEmpty(wordAttribute.Value))
                     {
-                        if (document == null || !document.Sentences.Any())
+                        if ((document == null) || !document.Sentences.Any())
                         {
                             continue;
                         }
