@@ -9,6 +9,11 @@
     {
         public void Save(Document document, string filepath)
         {
+            if (string.IsNullOrWhiteSpace(filepath))
+            {
+                return;
+            }
+
             using (var xmlWriter = new XmlTextWriter(filepath, Encoding.UTF8))
             {
                 xmlWriter.Formatting = Formatting.Indented;
