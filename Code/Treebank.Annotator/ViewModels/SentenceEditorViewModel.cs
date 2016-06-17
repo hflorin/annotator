@@ -185,24 +185,21 @@
 
             switch (SelectedLayoutAlgorithmType)
             {
-                case GraphLayoutAlgorithmTypeEnum.Liniar :
-                    logicCore.ExternalLayoutAlgorithm =
-                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                case GraphLayoutAlgorithmTypeEnum.Liniar:
+                    logicCore.ExternalLayoutAlgorithm = new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
                             logicCore.Graph as SentenceGraph,
                             50);
-
                     break;
-                case GraphLayoutAlgorithmTypeEnum.DiagonalLiniar :
-                    logicCore.ExternalLayoutAlgorithm =
-                        new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
+                case GraphLayoutAlgorithmTypeEnum.DiagonalLiniar:
+                    logicCore.ExternalLayoutAlgorithm = new LiniarLayoutAlgorithm<WordVertex, WordEdge, SentenceGraph>(
                             logicCore.Graph as SentenceGraph,
                             50,
                             25);
                     break;
-                case GraphLayoutAlgorithmTypeEnum.EfficientSugiyama :
+                case GraphLayoutAlgorithmTypeEnum.EfficientSugiyama:
                     SetEfficientSugiyamaLayout(logicCore);
                     break;
-                default :
+                default:
                     throw new ArgumentOutOfRangeException();
             }
         }

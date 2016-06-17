@@ -1,13 +1,16 @@
 ﻿namespace Treebank.Mappers
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
-    using Configuration;
-    using Domain;
-    using Loaders;
+
     using Prism.Events;
+
+    using Treebank.Domain;
+    using Treebank.Loaders;
+    using Treebank.Mappers.Configuration;
 
     public class AppConfigMapper : IAppConfigMapper
     {
@@ -24,6 +27,9 @@
         {
             var appConfig = new AppConfig();
 
+            appConfig.Filepath = filepath;
+            appConfig.Name = Path.GetFileName(filepath);
+
             var reader = new XmlTextReader(filepath);
 
             var queue = new List<ConfigurationPair>();
@@ -35,8 +41,8 @@
             {
                 switch (reader.NodeType)
                 {
-                    case XmlNodeType.Element :
-                        var pair = new ConfigurationPair {ElementName = reader.Name};
+                    case XmlNodeType.Element:
+                        var pair = new ConfigurationPair { ElementName = reader.Name };
 
                         var entityAttributes = new Dictionary<string, string>();
 
@@ -60,7 +66,7 @@
                         }
 
                         break;
-                    case XmlNodeType.EndElement :
+                    case XmlNodeType.EndElement:
                         if (isParsingDataStructure)
                         {
                             ParseDataStructure(queue, appConfig);
@@ -100,26 +106,23 @@
                     if (elementName.Equals(ConfigurationStaticData.DefinitionTagName))
                     {
                         appConfig.Definitions.Add(
-                            new Definition {Name = attributes[ConfigurationStaticData.NameStructureAttributeName]});
+                            new Definition { Name = attributes[ConfigurationStaticData.NameStructureAttributeName] });
                     }
                     else if (elementName.Equals(ConfigurationStaticData.VertexTagName))
                     {
                         var definition = appConfig.Definitions.Last();
 
                         var vertexConfig = new VertexConfig
-                        {
-                            Entity =
-                                attributes[
-                                    ConfigurationStaticData.EntityAttributeName],
-                            FromAttributeName =
-                                attributes[ConfigurationStaticData.FromAttributeName
-                                    ],
-                            LabelAttributeName =
-                                attributes[
-                                    ConfigurationStaticData.LabelAttributeName],
-                            ToAttributeName =
-                                attributes[ConfigurationStaticData.ToAttributeName]
-                        };
+                                               {
+                                                   Entity =
+                                                       attributes[ConfigurationStaticData.EntityAttributeName], 
+                                                   FromAttributeName =
+                                                       attributes[ConfigurationStaticData.FromAttributeName], 
+                                                   LabelAttributeName =
+                                                       attributes[ConfigurationStaticData.LabelAttributeName], 
+                                                   ToAttributeName =
+                                                       attributes[ConfigurationStaticData.ToAttributeName]
+                                               };
 
                         definition.Vertex = vertexConfig;
                     }
@@ -128,12 +131,12 @@
                         var definition = appConfig.Definitions.Last();
 
                         var edgeConfig = new EdgeConfig
-                        {
-                            Entity =
-                                attributes[ConfigurationStaticData.EntityAttributeName],
-                            LabelAttributeName =
-                                attributes[ConfigurationStaticData.LabelAttributeName]
-                        };
+                                             {
+                                                 Entity =
+                                                     attributes[ConfigurationStaticData.EntityAttributeName], 
+                                                 LabelAttributeName =
+                                                     attributes[ConfigurationStaticData.LabelAttributeName]
+                                             };
 
                         definition.Edge = edgeConfig;
                     }

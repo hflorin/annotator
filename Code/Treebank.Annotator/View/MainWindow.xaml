@@ -118,9 +118,9 @@
                                                    AutoHideWidth="200" FloatingWidth="200" ToolTip="A list of all the loaded documents">
                                 <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
                                          DisplayMemberPath="IdValue"
-                                         SelectedItem="{Binding SelectedDocument}">
+                                         SelectedItem="{Binding SelectedDocument}" SelectionMode="Single">
                                     <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                        <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding BindAttributesCommand}" />
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>

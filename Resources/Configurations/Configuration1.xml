@@ -1,4 +1,4 @@
-<configuration>
+<configuration id="Config1">
 	<dataStructure>
 		<elements>
 			<element entity="document" name="treebank" displayName="Treebank" isOptional="false">

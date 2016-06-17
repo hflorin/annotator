@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<treebank id="test1">
+<treebank id="OneSentenceDoc">
   <sentence id="111" parser="" user="Ugla" date="2016-03-02">
     <word id="1" form="Holul" lemma="hol" postag="Ncmsry" head="3" chunk="" deprel="sbj." />
     <word id="2" form="blocului" lemma="bloc" postag="Ncmsoy" head="1" chunk="" deprel="a.subst." />

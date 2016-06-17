@@ -6,7 +6,7 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
-    using Graph.Algos;
+
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
@@ -16,6 +16,7 @@
 
     using Treebank.Annotator.Events;
     using Treebank.Annotator.Graph;
+    using Treebank.Annotator.Graph.Algos;
     using Treebank.Annotator.ViewModels;
     using Treebank.Annotator.Wrapper;
     using Treebank.Domain;
@@ -37,11 +38,11 @@
         // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
         private readonly Guid viewUniqueId = Guid.NewGuid();
 
-        private VertexControl sourceVertexControl;
-
         private Dictionary<VertexControl, int> numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
+
+        private VertexControl sourceVertexControl;
 
         public SentenceEditorView(IEventAggregator eventAggregator, IAppConfig appConfig)
         {
@@ -98,51 +99,6 @@
             ZoomToFill();
         }
 
-        private void ZoomToFill(Guid viewId)
-        {
-            if (viewId == viewUniqueId)
-            {
-                ZoomToFill();
-            }
-        }
-
-        private void ZoomToFill()
-        {
-            GgZoomCtrl.ZoomToFill();
-            GgZoomCtrl.Mode = ZoomControlModes.Custom;
-        }
-
-        private void OnZoomOnWordVertex(ZoomOnWordIdentifier identifier)
-        {
-            if (identifier.ViewId == ViewId)
-            {
-                if (!GgArea.VertexList.Any())
-                {
-                    return;
-                }
-
-                var vertexControl = GgArea.VertexList.Values.FirstOrDefault(vc =>
-                {
-                    var wordVertex = vc.Vertex as WordVertex;
-                    return (wordVertex != null) &&
-                           (wordVertex.WordWrapper.GetAttributeByName("id") == identifier.WordId);
-                });
-
-                if (vertexControl != null)
-                {
-                    const int offset = 100;
-                    var pos = vertexControl.GetPosition();
-                    GgZoomCtrl.ZoomToContent(new Rect(pos.X - offset, pos.Y - offset,
-                        vertexControl.ActualWidth + offset*2, vertexControl.ActualHeight + offset*3));
-
-                    GgArea.VertexList.ForEach(
-                        pair => { HighlightBehaviour.SetHighlighted(pair.Value, false); });
-
-                    HighlightBehaviour.SetHighlighted(vertexControl, true);
-                }
-            }
-        }
-
         public Guid ViewId
         {
             get
@@ -169,6 +125,55 @@
             if (GgArea != null)
             {
                 GgArea.Dispose();
+            }
+        }
+
+        private void ZoomToFill(Guid viewId)
+        {
+            if (viewId == viewUniqueId)
+            {
+                ZoomToFill();
+            }
+        }
+
+        private void ZoomToFill()
+        {
+            GgZoomCtrl.ZoomToFill();
+            GgZoomCtrl.Mode = ZoomControlModes.Custom;
+        }
+
+        private void OnZoomOnWordVertex(ZoomOnWordIdentifier identifier)
+        {
+            if (identifier.ViewId == ViewId)
+            {
+                if (!GgArea.VertexList.Any())
+                {
+                    return;
+                }
+
+                var vertexControl = GgArea.VertexList.Values.FirstOrDefault(
+                    vc =>
+                        {
+                            var wordVertex = vc.Vertex as WordVertex;
+                            return (wordVertex != null)
+                                   && (wordVertex.WordWrapper.GetAttributeByName("id") == identifier.WordId);
+                        });
+
+                if (vertexControl != null)
+                {
+                    const int Offset = 100;
+                    var pos = vertexControl.GetPosition();
+                    GgZoomCtrl.ZoomToContent(
+                        new Rect(
+                            pos.X - Offset, 
+                            pos.Y - Offset, 
+                            vertexControl.ActualWidth + Offset * 2, 
+                            vertexControl.ActualHeight + Offset * 3));
+
+                    GgArea.VertexList.ForEach(pair => { HighlightBehaviour.SetHighlighted(pair.Value, false); });
+
+                    HighlightBehaviour.SetHighlighted(vertexControl, true);
+                }
             }
         }
 
@@ -261,9 +266,7 @@
                 int edgePerVertex;
                 if (numberOfEdgesPerVertexControlParam.TryGetValue(vertexControl.Value, out edgePerVertex))
                 {
-                    occupiedVcPsPerVertex.Add(
-                        vertexControl.Value,
-                        new int[edgePerVertex + 1]);
+                    occupiedVcPsPerVertex.Add(vertexControl.Value, new int[edgePerVertex + 1]);
                 }
             }
 
@@ -439,9 +442,10 @@
                     GgArea.RemoveEdge(edge, true);
                     var targetVertex = edge.Target;
                     targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName, "-1");
-                    targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Edge.LabelAttributeName, string.Empty);
+                    targetVertex.WordWrapper.SetAttributeByName(
+                        CurrentConfiguration.Edge.LabelAttributeName, 
+                        string.Empty);
                 }
-
             }
         }
 
@@ -608,6 +612,7 @@
                 {
                     edgeLabelText = dataContext.Attributes.First().Value;
                 }
+
                 var sourceWordVertex = sourceVertexControl.Vertex as WordVertex;
                 var targetWordVertex = targetVertexControl.Vertex as WordVertex;
 
@@ -616,16 +621,16 @@
                     return;
                 }
 
-                targetWordVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName,
+                targetWordVertex.WordWrapper.SetAttributeByName(
+                    CurrentConfiguration.Vertex.FromAttributeName, 
                     sourceWordVertex.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName));
-                targetWordVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Edge.LabelAttributeName,
+                targetWordVertex.WordWrapper.SetAttributeByName(
+                    CurrentConfiguration.Edge.LabelAttributeName, 
                     edgeLabelText);
 
                 var data = new WordEdge((WordVertex)sourceVertexControl.Vertex, targetWordVertex)
                                {
-                                   Text
-                                       =
-                                       edgeLabelText
+                                   Text = edgeLabelText
                                };
 
                 var ec = new EdgeControl(sourceVertexControl, targetVertexControl, data);
@@ -705,8 +710,8 @@
 
         private void GgAreaGenerateGraphFinished(object sender, EventArgs e)
         {
-            if (viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.DiagonalLiniar ||
-                viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.Liniar)
+            if (viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.DiagonalLiniar
+                || viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.Liniar)
             {
                 AddVertexConnectionPoints();
             }
@@ -737,8 +742,8 @@
         {
             foreach (var vertexControl in GgArea.VertexList.Values)
             {
-                if ((vertexControl.VCPRoot != null) && (vertexControl.VCPRoot.Children != null) &&
-                    (vertexControl.VCPRoot.Children.Count > 1))
+                if ((vertexControl.VCPRoot != null) && (vertexControl.VCPRoot.Children != null)
+                    && (vertexControl.VCPRoot.Children.Count > 1))
                 {
                     vertexControl.VCPRoot.Children.RemoveRange(1, vertexControl.VCPRoot.Children.Count - 1);
                 }
@@ -756,9 +761,8 @@
             GgArea.GenerateGraph(); // this will trigger and execute GgArea_GenerateGraphFinished
             GgArea.RelayoutGraph(true);
 
-
-            if (viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.DiagonalLiniar ||
-                viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.Liniar)
+            if (viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.DiagonalLiniar
+                || viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.Liniar)
             {
                 AddEdgesBetweenVertexConnectionPoints(numberOfEdgesPerVertexControl);
             }

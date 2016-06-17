@@ -1,7 +1,8 @@
-﻿ namespace Treebank.Mappers.Configuration
+﻿namespace Treebank.Mappers.Configuration
 {
     using System.Collections.Generic;
-    using Domain;
+
+    using Treebank.Domain;
 
     public class AppConfig : IAppConfig
     {
@@ -10,6 +11,10 @@
             Elements = new List<Element>();
             Definitions = new List<Definition>();
         }
+
+        public string Name { get; set; }
+
+        public string Filepath { get; set; }
 
         public IList<Element> Elements { get; set; }
 

@@ -21,10 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Data", "Test Data", "{30436E23-7BCA-4F0F-A252-70896483B692}"
 	ProjectSection(SolutionItems) = preProject
-		Resources\XML\1984Orwel.xml = Resources\XML\1984Orwel.xml
-		Resources\XML\OneSentenceDoc.xml = Resources\XML\OneSentenceDoc.xml
-		Resources\XML\test.xml = Resources\XML\test.xml
-		Resources\XML\testSmall.xml = Resources\XML\testSmall.xml
+		Resources\Treebanks\1984Orwel.xml = Resources\Treebanks\1984Orwel.xml
+		Resources\Treebanks\OneSentenceDoc.xml = Resources\Treebanks\OneSentenceDoc.xml
+		Resources\Treebanks\test.xml = Resources\Treebanks\test.xml
+		Resources\Treebanks\testSmall.xml = Resources\Treebanks\testSmall.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{EAF00DB7-BF79-4879-B873-1A03EE373847}"
@@ -32,9 +32,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Resources\Documentation.odt = Resources\Documentation.odt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{3E81FD0B-AA06-4BA6-80E5-49BB8D099E14}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{FA543F16-CC59-4DBF-81D6-4B06A511E508}"
 	ProjectSection(SolutionItems) = preProject
-		Resources\Configuration.xml = Resources\Configuration.xml
+		Resources\Configurations\Configuration1.xml = Resources\Configurations\Configuration1.xml
+		Resources\Configurations\Configuration2.xml = Resources\Configurations\Configuration2.xml
 	EndProjectSection
 EndProject
 Global

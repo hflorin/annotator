@@ -5,7 +5,10 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Configuration;
+    using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows;
     using System.Windows.Input;
 
     using GraphX.PCL.Logic.Helpers;
@@ -77,6 +80,15 @@
             SubscribeToEvents();
 
             InitializeMembers();
+        }
+
+        public IAppConfig AppConfig
+        {
+            get
+            {
+                appConfig = LoadConfig().GetAwaiter().GetResult();
+                return appConfig;
+            }
         }
 
         public ObservableCollection<DocumentWrapper> Documents { get; set; }
@@ -219,6 +231,38 @@
             eventAggregator.GetEvent<CheckIsTreeOnSentenceEvent>().Subscribe(OnCheckIsTreeOnSentence);
         }
 
+        private async Task<IAppConfig> LoadConfig()
+        {
+            if (appConfig == null || (SelectedDocument != null && appConfig.Filepath != SelectedDocument.Model.GetAttributeByName("configuration")))
+            {
+                var configFilePath = string.Empty;
+
+                var filePathToName = GetConfigFileNameToFilePathMapping();
+
+                if (SelectedDocument != null)
+                {
+                    var configurationFileName = SelectedDocument.Model.GetAttributeByName("configuration");
+                    configFilePath = filePathToName.Where(p => p.Value == configurationFileName).Select(p => p.Key).FirstOrDefault();
+                }
+
+                if (string.IsNullOrEmpty(configFilePath))
+                {
+                    var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
+
+                    configFilePath = filePathToName.Keys.FirstOrDefault();
+
+                    if (string.IsNullOrWhiteSpace(configFilePath))
+                    {
+                        MessageBox.Show(string.Format("Please add a configuration file in the configurations folder {0}", configFilesDirectoryPath), "Missing configuration file");
+                    }
+                }
+
+                appConfig = await appConfigMapper.Map(configFilePath);
+            }
+
+            return appConfig;
+        }
+
         private void OnCheckIsTreeOnSentence(SentenceWrapper sentenceWrapper)
         {
             if (sentenceWrapper == null)
@@ -228,7 +272,7 @@
 
             var validationResult = new CheckGraphResult();
             sentenceWrapper.IsTree =
-                GraphOperations.GetGraph(sentenceWrapper, appConfig.Definitions.First(), eventAggregator)
+                GraphOperations.GetGraph(sentenceWrapper, AppConfig.Definitions.First(), eventAggregator)
                     .IsTree(validationResult);
 
             if (!sentenceWrapper.IsTree)
@@ -320,10 +364,6 @@
             eventAggregator = eventAggregatorArg;
             documentMapper = documentMapperArg;
             appConfigMapper = configMapper;
-            if (appConfig == null)
-            {
-                appConfig = appConfigMapper.Map(ConfigurationManager.AppSettings["configurationFilePath"]).Result;
-            }
         }
 
         private void InitializeCommands()
@@ -397,9 +437,9 @@
         {
             if (SelectedDocument != null)
             {
-                var sentencePrototype = appConfig.Elements.OfType<Sentence>().FirstOrDefault();
-                var wordPrototype = appConfig.Elements.OfType<Word>().FirstOrDefault();
-                var configuration = appConfig.Definitions.FirstOrDefault();
+                var sentencePrototype = AppConfig.Elements.OfType<Sentence>().FirstOrDefault();
+                var wordPrototype = AppConfig.Elements.OfType<Word>().FirstOrDefault();
+                var configuration = AppConfig.Definitions.FirstOrDefault();
 
                 if (configuration == null)
                 {
@@ -562,9 +602,9 @@
 
             var sentenceEditView =
                 new SentenceEditorView(
-                    new SentenceEditorViewModel(eventAggregator, appConfig, SelectedSentence, showInfoMessage), 
+                    new SentenceEditorViewModel(eventAggregator, AppConfig, SelectedSentence, showInfoMessage), 
                     eventAggregator, 
-                    appConfig);
+                    AppConfig);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
@@ -655,10 +695,30 @@
 
         private void NewTreeBankCommandExecute(object obj)
         {
+            var filenameToPathMapping = GetConfigFileNameToFilePathMapping();
             var document = new Document();
 
             document.Attributes.Add(
-                new Attribute { Name = "id", DisplayName = "Id", Value = "Treebank" + Documents.Count });
+                new Attribute
+                    {
+                        Name = "id",
+                        DisplayName = "Id",
+                        Value = "Treebank" + Documents.Count,
+                        IsOptional = false,
+                        IsEditable = true
+                    });
+
+            document.Attributes.Add(
+                new Attribute
+                {
+                    AllowedValuesSet = filenameToPathMapping.Values,
+                    Value = AppConfig.Name,
+                    Name = "configuration",
+                    DisplayName = "Configuration",
+                    Entity = "attribute",
+                    IsEditable = true,
+                    IsOptional = false
+                });
 
             if (Documents == null)
             {
@@ -695,11 +755,11 @@
 
             DocumentLoadExceptions.Clear();
 
-            var documentModel =
-                await documentMapper.Map(documentFilePath, ConfigurationManager.AppSettings["configurationFilePath"]);
-
-            // todo: must check if the file is alredy loaded and has changes offer to save if so
-            documentsWrappers[documentFilePath] = new DocumentWrapper(documentModel);
+            var documentModel = await MapDocumentModel(documentFilePath);
+            
+            var documentWrapper = new DocumentWrapper(documentModel);
+            
+            documentsWrappers[documentFilePath] = documentWrapper;
 
             RefreshDocumentsExplorerList();
 
@@ -707,6 +767,47 @@
 
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(string.Format("Document loaded: {0}", documentFilePath));
+        }
+
+        private async Task<Document> MapDocumentModel(string documentFilePath)
+        {
+            var filenameToPathMapping = GetConfigFileNameToFilePathMapping();
+
+            var documentModel = await documentMapper.Map(documentFilePath, AppConfig.Filepath);
+
+            documentModel.Attributes.Add(
+                new Attribute
+                    {
+                        AllowedValuesSet = filenameToPathMapping.Values,
+                        Value = AppConfig.Name,
+                        Name = "configuration",
+                        DisplayName = "Configuration",
+                        Entity = "attribute",
+                        IsEditable = true,
+                        IsOptional = false
+                    });
+
+            return documentModel;
+        }
+
+        private Dictionary<string, string> GetConfigFileNameToFilePathMapping()
+        {
+            var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
+            
+            var filenameToPathMapping = new Dictionary<string, string>();
+
+            if (Directory.Exists(configFilesDirectoryPath))
+            {
+                var configFilesPaths = Directory.GetFiles(configFilesDirectoryPath).ToList();
+
+                foreach (var configFilePath in configFilesPaths)
+                {
+                    var filename = Path.GetFileName(configFilePath);
+                    filenameToPathMapping.Add(configFilePath, filename);
+                }
+            }
+
+            return filenameToPathMapping;
         }
 
         private void RefreshDocumentsExplorerList()
