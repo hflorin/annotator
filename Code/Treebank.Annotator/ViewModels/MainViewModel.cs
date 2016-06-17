@@ -193,7 +193,8 @@
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
         {
-            var modifiedDocs = Documents.Where(p => p.IsChanged || string.IsNullOrWhiteSpace(p.FilePath)).Select(p => p).ToList();
+            var modifiedDocs =
+                Documents.Where(p => p.IsChanged || string.IsNullOrWhiteSpace(p.FilePath)).Select(p => p).ToList();
 
             if (modifiedDocs.Any())
             {
@@ -847,10 +848,10 @@
                 {
                     persisterService.Save(SelectedDocument.Model, documentFilePath);
                 }
-            }
 
-            eventAggregator.GetEvent<StatusNotificationEvent>()
-                .Publish(string.Format("Document saved: {0}", documentFilePath));
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(string.Format("Document saved: {0}", documentFilePath));
+            }
         }
 
         private bool SaveCommandCanExecute(object arg)
@@ -875,10 +876,10 @@
                 {
                     persisterService.Save(SelectedDocument.Model, documentFilePath);
                 }
-            }
 
-            eventAggregator.GetEvent<StatusNotificationEvent>()
-                .Publish(string.Format("Document saved: {0}", documentFilePath));
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(string.Format("Document saved: {0}", documentFilePath));
+            }
         }
     }
 }
