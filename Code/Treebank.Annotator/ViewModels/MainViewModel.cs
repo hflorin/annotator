@@ -247,12 +247,11 @@
 
                 if (string.IsNullOrEmpty(configFilePath))
                 {
-                    var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
-
                     configFilePath = filePathToName.Keys.FirstOrDefault();
 
                     if (string.IsNullOrWhiteSpace(configFilePath))
                     {
+                        var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
                         MessageBox.Show(string.Format("Please add a configuration file in the configurations folder {0}", configFilesDirectoryPath), "Missing configuration file");
                     }
                 }
