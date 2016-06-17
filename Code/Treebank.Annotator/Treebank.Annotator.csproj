@@ -301,6 +301,10 @@
       <Project>{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}</Project>
       <Name>Treebank.Mappers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Treebank.Persistence\Treebank.Persistence.csproj">
+      <Project>{a7f6448a-1a73-4c05-8b63-8e5f5daa2823}</Project>
+      <Name>Treebank.Persistence</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

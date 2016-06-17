@@ -1,11 +1,14 @@
 ﻿namespace Treebank.Annotator.AutofacModules
 {
     using Autofac;
-    using Loaders;
-    using Mappers;
+
     using Prism.Events;
-    using View.Services;
-    using ViewModels;
+
+    using Treebank.Annotator.View.Services;
+    using Treebank.Annotator.ViewModels;
+    using Treebank.Loaders;
+    using Treebank.Mappers;
+    using Treebank.Persistence;
 
     public class AnnotatorModule : Module
     {
@@ -13,6 +16,7 @@
         {
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
             builder.RegisterType<DynamicXmlLoader>().As<IResourceLoader>();
+            builder.RegisterType<XmlPersister>().As<IPersister>();
             builder.RegisterType<DocumentMapperWithReader>().As<IDocumentMapper>().PropertiesAutowired();
             builder.RegisterType<SaveDialogService>().As<ISaveDialogService>();
             builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>();

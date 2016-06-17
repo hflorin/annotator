@@ -26,6 +26,7 @@
     using Treebank.Events;
     using Treebank.Mappers;
     using Treebank.Mappers.Configuration;
+    using Treebank.Persistence;
 
     using Attribute = Treebank.Domain.Attribute;
 
@@ -59,13 +60,16 @@
 
         private IShowInfoMessage showInfoMessage;
 
+        private IPersister persisterService;
+
         public MainViewModel(
             IEventAggregator eventAggregator, 
             ISaveDialogService saveDialogService, 
             IOpenFileDialogService openFileDialogService, 
             IDocumentMapper documentMapper, 
             IAppConfigMapper appConfigMapper, 
-            IShowInfoMessage showInfoMessage)
+            IShowInfoMessage showInfoMessage,
+            IPersister persister)
         {
             InitializeCommands();
 
@@ -75,7 +79,8 @@
                 openFileDialogService, 
                 documentMapper, 
                 appConfigMapper, 
-                showInfoMessage);
+                showInfoMessage,
+                persister);
 
             SubscribeToEvents();
 
@@ -325,7 +330,8 @@
             IOpenFileDialogService openFileDialogServiceArg,
             IDocumentMapper documentMapperArg,
             IAppConfigMapper configMapper,
-            IShowInfoMessage showMessage)
+            IShowInfoMessage showMessage,
+            IPersister persister)
         {
             if (eventAggregatorArg == null)
             {
@@ -357,12 +363,18 @@
                 throw new ArgumentNullException("showMessage");
             }
 
+            if (persister == null)
+            {
+                throw new ArgumentNullException("persister");
+            }
+
             showInfoMessage = showMessage;
             saveDialogService = saveDialogServiceArg;
             openFileDialogService = openFileDialogServiceArg;
             eventAggregator = eventAggregatorArg;
             documentMapper = documentMapperArg;
             appConfigMapper = configMapper;
+            persisterService = persister;
         }
 
         private void InitializeCommands()
@@ -830,10 +842,15 @@
                                        ? SelectedDocument.Model.FilePath
                                        : saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
 
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Saving document");
+            eventAggregator.GetEvent<StatusNotificationEvent>().Publish(string.Format("Saving document to file {0}", documentFilePath));
 
-            if (string.IsNullOrWhiteSpace(documentFilePath))
+            if (!string.IsNullOrWhiteSpace(documentFilePath))
             {
+                // todo rename old file, create new file with old filename, save, delete old file
+                if (SelectedDocument != null)
+                {
+                    persisterService.Save(SelectedDocument.Model, documentFilePath);
+                }
             }
 
             // todo: save logic
@@ -857,8 +874,13 @@
 
             var documentFilePath = saveDialogService.GetSaveFileLocation(FileFilters.AllFilesFilter);
 
-            if (string.IsNullOrWhiteSpace(documentFilePath))
+            if (!string.IsNullOrWhiteSpace(documentFilePath))
             {
+                // todo rename old file, create new file with old filename, save, delete old file
+                if (SelectedDocument != null)
+                {
+                    persisterService.Save(SelectedDocument.Model, documentFilePath);
+                }
             }
 
             // todo: save as logic
