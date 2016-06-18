@@ -68,6 +68,7 @@
             {
                 throw new ArgumentNullException("sentenceEditorViewModel");
             }
+
             Loaded += SentenceEditorView_Loaded;
             viewModel = sentenceEditorViewModel;
             viewModel.ViewId = viewUniqueId;
