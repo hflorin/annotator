@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Loaders", "Code\Tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Mappers", "Code\Treebank.Mappers\Treebank.Mappers.csproj", "{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{E6B72AE7-C7F6-4BA8-B52F-DA9E4EEF14AC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source Code", "Source Code", "{E6B72AE7-C7F6-4BA8-B52F-DA9E4EEF14AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Data", "Test Data", "{30436E23-7BCA-4F0F-A252-70896483B692}"
 	ProjectSection(SolutionItems) = preProject

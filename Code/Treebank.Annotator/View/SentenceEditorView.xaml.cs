@@ -68,7 +68,7 @@
             {
                 throw new ArgumentNullException("sentenceEditorViewModel");
             }
-
+            Loaded += SentenceEditorView_Loaded;
             viewModel = sentenceEditorViewModel;
             viewModel.ViewId = viewUniqueId;
             DataContext = viewModel;
@@ -86,13 +86,6 @@
             eventAggregator.GetEvent<AddWordVertexEvent>().Subscribe(OnAddWordVertexControl);
             eventAggregator.GetEvent<ZoomOnWordVertexEvent>().Subscribe(OnZoomOnWordVertex);
             eventAggregator.GetEvent<ZoomToFillEvent>().Subscribe(ZoomToFill);
-
-            viewModel.PopulateWords();
-            viewModel.CreateSentenceGraph();
-            viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
-            GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
-            DisplayGraph();
-            ZoomToFill();
         }
 
         public Guid ViewId
@@ -116,6 +109,16 @@
             {
                 GgArea.Dispose();
             }
+        }
+
+        private void SentenceEditorView_Loaded(object sender, RoutedEventArgs e)
+        {
+            viewModel.PopulateWords();
+            viewModel.CreateSentenceGraph();
+            viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
+            GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
+            DisplayGraph();
+            ZoomToFill();
         }
 
         private void ZoomToFill(Guid viewId)
