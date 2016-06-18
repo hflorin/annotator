@@ -15,7 +15,7 @@
         protected override void OnStartup(StartupEventArgs e)
         {
             var currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += MyHandler;
+            currentDomain.UnhandledException += ExceptionHandler;
 
             base.OnStartup(e);
 
@@ -38,7 +38,7 @@
             MainWindow.Show();
         }
 
-        private void MyHandler(object sender, UnhandledExceptionEventArgs e)
+        private void ExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
             var logger = LogManager.GetCurrentClassLogger(typeof(App));
             logger.Error(e.ExceptionObject);
