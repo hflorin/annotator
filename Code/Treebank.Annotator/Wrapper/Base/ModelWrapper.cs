@@ -27,15 +27,12 @@
             Validate();
         }
 
-        protected virtual void InitializeComplexProperties(T model)
-        {
-        }
-
-        protected virtual void InitializeCollectionProperties(T model)
-        {
-        }
-
         public T Model { get; private set; }
+
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            yield break;
+        }
 
         public bool IsValid
         {
@@ -44,14 +41,14 @@
 
         public bool IsChanged
         {
-            get { return _originalValues.Count > 0 || _trackingObjects.Any(o => o.IsChanged); }
+            get { return (_originalValues.Count > 0) || _trackingObjects.Any(o => o.IsChanged); }
         }
 
         public void RejectChanges()
         {
             foreach (var originalValue in _originalValues)
             {
-                typeof (T).GetProperty(originalValue.Key).SetValue(Model, originalValue.Value);
+                typeof(T).GetProperty(originalValue.Key).SetValue(Model, originalValue.Value);
             }
             _originalValues.Clear();
 
@@ -71,6 +68,14 @@
                 trackingObject.AcceptChanges();
             }
             OnPropertyChanged(string.Empty);
+        }
+
+        protected virtual void InitializeComplexProperties(T model)
+        {
+        }
+
+        protected virtual void InitializeCollectionProperties(T model)
+        {
         }
 
         protected void SetValue<TValue>(TValue newValue, [CallerMemberName] string propertyName = null)
@@ -209,11 +214,6 @@
             {
                 OnPropertyChanged("IsValid");
             }
-        }
-
-        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            yield break;
         }
     }
 }

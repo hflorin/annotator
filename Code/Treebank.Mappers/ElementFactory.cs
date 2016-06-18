@@ -1,6 +1,6 @@
 ﻿namespace Treebank.Mappers
 {
-    using Treebank.Domain;
+    using Domain;
 
     public static class EntityFactory
     {

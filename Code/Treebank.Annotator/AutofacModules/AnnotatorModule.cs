@@ -1,14 +1,12 @@
 ﻿namespace Treebank.Annotator.AutofacModules
 {
     using Autofac;
-
+    using Loaders;
+    using Mappers;
+    using Persistence;
     using Prism.Events;
-
-    using Treebank.Annotator.View.Services;
-    using Treebank.Annotator.ViewModels;
-    using Treebank.Loaders;
-    using Treebank.Mappers;
-    using Treebank.Persistence;
+    using View.Services;
+    using ViewModels;
 
     public class AnnotatorModule : Module
     {

@@ -15,16 +15,16 @@
 
         static ChangeBehavior()
         {
-            IsActiveProperty = DependencyProperty.RegisterAttached("IsActive", typeof (bool), typeof (ChangeBehavior),
+            IsActiveProperty = DependencyProperty.RegisterAttached("IsActive", typeof(bool), typeof(ChangeBehavior),
                 new PropertyMetadata(false, OnIsActivePropertyChanged));
-            IsChangedProperty = DependencyProperty.RegisterAttached("IsChanged", typeof (bool), typeof (ChangeBehavior),
+            IsChangedProperty = DependencyProperty.RegisterAttached("IsChanged", typeof(bool), typeof(ChangeBehavior),
                 new PropertyMetadata(false));
-            OriginalValueProperty = DependencyProperty.RegisterAttached("OriginalValue", typeof (object),
-                typeof (ChangeBehavior), new PropertyMetadata(null));
+            OriginalValueProperty = DependencyProperty.RegisterAttached("OriginalValue", typeof(object),
+                typeof(ChangeBehavior), new PropertyMetadata(null));
 
             DefaultProperties = new Dictionary<Type, DependencyProperty>
             {
-                {typeof (TextBox), TextBox.TextProperty}
+                {typeof(TextBox), TextBox.TextProperty}
             };
         }
 

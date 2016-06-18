@@ -57,7 +57,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <ListBox Grid.ColumnSpan="2" Grid.Row="0" ItemsSource="{Binding Attribute.AllowedValuesSet}" SelectedItem="{Binding SelectedAllowedValue}">
+            <ListBox Grid.ColumnSpan="2" Grid.Row="0" ItemsSource="{Binding Attribute.AllowedValuesSet}"
+                     SelectedItem="{Binding SelectedAllowedValue}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Model, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -66,7 +67,8 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Button Name="AddButton" Content="Add" Command="{Binding AddButtonCommand}" Grid.Row="1" Grid.Column="0" />
-            <Button Name="DeleteButton" Content="Delete" Command="{Binding DeleteButtonCommand}" Grid.Row="1" Grid.Column="1" />
+            <Button Name="DeleteButton" Content="Delete" Command="{Binding DeleteButtonCommand}" Grid.Row="1"
+                    Grid.Column="1" />
         </Grid>
         <Button Name="OKButton" Content="Ok" Click="OKButton_OnClick" IsDefault="True"
                 Command="{Binding OkButtonCommand}" Grid.Row="6" Grid.Column="0" />

@@ -21,7 +21,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name"
                                     Binding="{Binding DisplayName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                                    Width="Auto" IsReadOnly="True"/>
+                                    Width="Auto" IsReadOnly="True" />
                 <DataGridTemplateColumn CellStyle="{StaticResource DataGridCellStyle1}" Header="Value" Width="*" />
             </DataGrid.Columns>
         </DataGrid>

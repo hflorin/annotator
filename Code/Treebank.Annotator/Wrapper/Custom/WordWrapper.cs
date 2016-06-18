@@ -1,48 +1,28 @@
 namespace Treebank.Annotator.Wrapper
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     public partial class WordWrapper
     {
         public string Form
         {
-            get
-            {
-                return GetAttributeByName("form");
-            }
+            get { return GetAttributeByName("form"); }
 
-            set
-            {
-                SetAttributeByName("form", value);
-            }
+            set { SetAttributeByName("form", value); }
         }
 
         public int Id
         {
-            get
-            {
-                return int.Parse(GetAttributeByName("id"));
-            }
+            get { return int.Parse(GetAttributeByName("id")); }
 
-            set
-            {
-                SetAttributeByName("id", value.ToString());
-            }
+            set { SetAttributeByName("id", value.ToString()); }
         }
 
         public int HeadWordId
         {
-            get
-            {
-                return int.Parse(GetAttributeByName("head"));
-            }
+            get { return int.Parse(GetAttributeByName("head")); }
 
-            set
-            {
-                SetAttributeByName("head", value.ToString());
-            }
+            set { SetAttributeByName("head", value.ToString()); }
         }
 
         //public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

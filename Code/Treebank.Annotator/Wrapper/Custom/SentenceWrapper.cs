@@ -1,19 +1,13 @@
 ﻿namespace Treebank.Annotator.Wrapper
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
-
-    using Treebank.Domain;
+    using Domain;
 
     public partial class SentenceWrapper
     {
         public AttributeWrapper Id
         {
-            get
-            {
-                return Attributes.FirstOrDefault(a => a.Name.Equals("id"));
-            }
+            get { return Attributes.FirstOrDefault(a => a.Name.Equals("id")); }
 
             set
             {
@@ -34,12 +28,12 @@
                     contentAttribute =
                         new AttributeWrapper(
                             new Attribute
-                                {
-                                    Value = string.Empty,
-                                    DisplayName = "Content",
-                                    Entity = "attribute",
-                                    Name = "content"
-                                });
+                            {
+                                Value = string.Empty,
+                                DisplayName = "Content",
+                                Entity = "attribute",
+                                Name = "content"
+                            });
 
                     Attributes.Add(contentAttribute);
                 }
@@ -61,10 +55,7 @@
 
         public AttributeWrapper Parser
         {
-            get
-            {
-                return Attributes.FirstOrDefault(a => a.Name.Equals("parser"));
-            }
+            get { return Attributes.FirstOrDefault(a => a.Name.Equals("parser")); }
 
             set
             {
@@ -76,10 +67,7 @@
 
         public AttributeWrapper User
         {
-            get
-            {
-                return Attributes.FirstOrDefault(a => a.Name.Equals("user"));
-            }
+            get { return Attributes.FirstOrDefault(a => a.Name.Equals("user")); }
 
             set
             {
@@ -91,10 +79,7 @@
 
         public AttributeWrapper Date
         {
-            get
-            {
-                return Attributes.FirstOrDefault(a => a.Name.Equals("date"));
-            }
+            get { return Attributes.FirstOrDefault(a => a.Name.Equals("date")); }
 
             set
             {
@@ -105,13 +90,13 @@
         }
 
         public bool IsTree { get; set; }
+        //    }
+        //        yield break;
+        //    {
+        //    if (Attributes == null)
+        //{
 
         //public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    if (Attributes == null)
-        //    {
-        //        yield break;
-        //    }
 
         //    var attribute = Attributes.FirstOrDefault(a => (a.Name != null) && a.Name.Equals("parser"));
 

@@ -20,21 +20,31 @@
         <Menu x:Name="MainMenu" IsMainMenu="True">
             <MenuItem x:Name="FileMenu" Header="_FILE">
                 <MenuItem x:Name="New" Header="New">
-                    <MenuItem x:Name="Treebank" Header="_Treebank" Command="{Binding NewTreeBankCommand}" ToolTip="Creates a new empty treebank document"/>
+                    <MenuItem x:Name="Treebank" Header="_Treebank" Command="{Binding NewTreeBankCommand}"
+                              ToolTip="Creates a new empty treebank document" />
                 </MenuItem>
-                <MenuItem x:Name="Load" Header="_Load" Command="{Binding OpenCommand}" ToolTip="Loads the document into the application"/>
-                <MenuItem x:Name="Close" Header="_Close" Command="{Binding CloseCommand}" ToolTip="Closes the selected document from the Treebank Explorer"/>
+                <MenuItem x:Name="Load" Header="_Load" Command="{Binding OpenCommand}"
+                          ToolTip="Loads the document into the application" />
+                <MenuItem x:Name="Close" Header="_Close" Command="{Binding CloseCommand}"
+                          ToolTip="Closes the selected document from the Treebank Explorer" />
                 <Separator />
-                <MenuItem x:Name="Save" Header="_Save" Command="{Binding SaveCommand}" ToolTip="Saves the currently selected treebank to the disk"/>
-                <MenuItem x:Name="SaveAs" Header="_Save As" Command="{Binding SaveAsCommand}" ToolTip="Saves the currently selected treebank to the disk in a new file"/>
+                <MenuItem x:Name="Save" Header="_Save" Command="{Binding SaveCommand}"
+                          ToolTip="Saves the currently selected treebank to the disk" />
+                <MenuItem x:Name="SaveAs" Header="_Save As" Command="{Binding SaveAsCommand}"
+                          ToolTip="Saves the currently selected treebank to the disk in a new file" />
                 <Separator />
-                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick" ToolTip="Closes the application"/>
+                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick" ToolTip="Closes the application" />
             </MenuItem>
             <MenuItem x:Name="EditMenu" Header="_EDIT">
-                <MenuItem x:Name="EditSentence" Header="_Sentence Graph" Command="{Binding EditSentenceCommand}" ToolTip="Opens the selected sentence graph in a new tab."/>
-                <MenuItem x:Name="EditWordOrder" Header="_Word Order" Command="{Binding EditWordOrderCommand}" ToolTip="Reorders the words of the selected sentence. Updates the IDs and head word IDs." />
-                <MenuItem x:Name="AddSentence" Header="_Add sentence" Command="{Binding AddSentenceCommand}" ToolTip="Adds a new empty sentence into the selected treebank" />
-                <MenuItem x:Name="DeleteSentence" Header="_Delete selected sentence" Command="{Binding DeleteSentenceCommand}" ToolTip="Deletes the selected sentence from the Sentence Explorer" />
+                <MenuItem x:Name="EditSentence" Header="_Sentence Graph" Command="{Binding EditSentenceCommand}"
+                          ToolTip="Opens the selected sentence graph in a new tab." />
+                <MenuItem x:Name="EditWordOrder" Header="_Word Order" Command="{Binding EditWordOrderCommand}"
+                          ToolTip="Reorders the words of the selected sentence. Updates the IDs and head word IDs." />
+                <MenuItem x:Name="AddSentence" Header="_Add sentence" Command="{Binding AddSentenceCommand}"
+                          ToolTip="Adds a new empty sentence into the selected treebank" />
+                <MenuItem x:Name="DeleteSentence" Header="_Delete selected sentence"
+                          Command="{Binding DeleteSentenceCommand}"
+                          ToolTip="Deletes the selected sentence from the Sentence Explorer" />
             </MenuItem>
         </Menu>
 
@@ -46,7 +56,8 @@
 
         <xcad:DockingManager x:Name="ContentDockingManager" Grid.Row="1"
                              DocumentsSource="{Binding SentenceEditViews, UpdateSourceTrigger=PropertyChanged}"
-                             ActiveContent="{Binding ActiveSentenceEditorView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DocumentClosing="ContentDockingManager_OnDocumentClosing">
+                             ActiveContent="{Binding ActiveSentenceEditorView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             DocumentClosing="ContentDockingManager_OnDocumentClosing">
             <xcad:DockingManager.DocumentHeaderTemplate>
                 <ItemContainerTemplate>
                     <TextBlock Text="{Binding Content.DataContext.Sentence.Id.Value}" />
@@ -68,8 +79,11 @@
                 <xcad:LayoutRoot.BottomSide>
                     <xcad:LayoutAnchorSide>
                         <xcad:LayoutAnchorGroup>
-                            <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False" CanClose="False" ToolTip="The list of sentences for the selected document">
-                                <DataGrid ItemsSource="{Binding SelectedDocument.Sentences}" LoadingRow="DataGrid_OnLoadingRow"
+                            <xcad:LayoutAnchorable ContentId="sentences" Title="Sentence Explorer" CanHide="False"
+                                                   CanClose="False"
+                                                   ToolTip="The list of sentences for the selected document">
+                                <DataGrid ItemsSource="{Binding SelectedDocument.Sentences}"
+                                          LoadingRow="DataGrid_OnLoadingRow"
                                           SelectedItem="{Binding SelectedSentence,Mode=TwoWay}" Margin="0 5 0 0"
                                           AutoGenerateColumns="False" SelectionUnit="FullRow">
                                     <i:Interaction.Triggers>
@@ -79,7 +93,7 @@
                                     </i:Interaction.Triggers>
                                     <DataGrid.Resources>
                                         <Style TargetType="DataGridRow">
-                                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
+                                            <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick" />
                                         </Style>
                                     </DataGrid.Resources>
                                     <DataGrid.Columns>
@@ -115,18 +129,21 @@
                         <xcad:LayoutAnchorGroup>
                             <xcad:LayoutAnchorable ContentId="documents" Title="Document Explorer" CanHide="False"
                                                    CanClose="False"
-                                                   AutoHideWidth="200" FloatingWidth="200" ToolTip="A list of all the loaded documents">
+                                                   AutoHideWidth="200" FloatingWidth="200"
+                                                   ToolTip="A list of all the loaded documents">
                                 <ListBox x:Name="DocumentExplorerList" ItemsSource="{Binding Documents}"
-                                         DisplayMemberPath="IdValue" 
+                                         DisplayMemberPath="IdValue"
                                          SelectedItem="{Binding SelectedDocument}" SelectionMode="Single">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonUp">
                                             <i:InvokeCommandAction Command="{Binding BindAttributesCommand}" />
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
-                                    </ListBox>
+                                </ListBox>
                             </xcad:LayoutAnchorable>
-                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200" FloatingWidth="200" CanHide="False" CanClose="False" ToolTip="The list of attributes for the selected element">
+                            <xcad:LayoutAnchorable Title="Attributes" ContentId="attributes" AutoHideWidth="200"
+                                                   FloatingWidth="200" CanHide="False" CanClose="False"
+                                                   ToolTip="The list of attributes for the selected element">
                                 <view:ElementAttributeEditorView
                                     DataContext="{Binding SelectedElementAttributeEditorViewModel}" />
                             </xcad:LayoutAnchorable>

@@ -9,7 +9,7 @@
     {
         protected Element()
         {
-            Attributes = new List<Domain.Attribute>();
+            Attributes = new List<Attribute>();
         }
 
         public string Name { get; set; }
@@ -22,18 +22,20 @@
 
         public string Entity { get; set; }
 
-        public ICollection<Domain.Attribute> Attributes { get; set; }
+        public ICollection<Attribute> Attributes { get; set; }
 
         public string GetAttributeByName(string attributeName)
         {
-            var attribute = Attributes.FirstOrDefault(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant()));
+            var attribute =
+                Attributes.FirstOrDefault(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant()));
 
             return attribute == null ? string.Empty : attribute.Value;
         }
 
         public void SetAttributeByName(string attributeName, string value)
         {
-            var attribute = Attributes.FirstOrDefault(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant()));
+            var attribute =
+                Attributes.FirstOrDefault(a => a.Name.ToLowerInvariant().Equals(attributeName.ToLowerInvariant()));
 
             if (attribute != null)
             {

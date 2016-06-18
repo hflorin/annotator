@@ -1,5 +1,6 @@
 ﻿namespace Treebank.Annotator.Graph
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -62,12 +63,12 @@
                 var vertexWidth = VertexSizes[vertex].Width;
                 var vertexHeight = VertexSizes[vertex].Height;
 
-                if (vertexPositionXOffset != 0.0d)
+                if (Math.Abs(vertexPositionXOffset) > 0.0d)
                 {
                     startingPoint.X += vertexWidth + vertexPositionXOffset;
                 }
 
-                if (vertexPositionYOffset != 0.0d)
+                if (Math.Abs(vertexPositionYOffset) > 0.0d)
                 {
                     startingPoint.Y += vertexHeight + vertexPositionYOffset;
                 }

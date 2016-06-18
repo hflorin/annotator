@@ -17,7 +17,8 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <DataGrid ItemsSource="{Binding Sentence.Words}" Margin="0 5 0 0" SelectionUnit="FullRow" SelectedItem="{Binding SelectedWord}"
+        <DataGrid ItemsSource="{Binding Sentence.Words}" Margin="0 5 0 0" SelectionUnit="FullRow"
+                  SelectedItem="{Binding SelectedWord}"
                   AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id"
@@ -31,9 +32,9 @@
                                     Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        
+
         <Button Name="UpButton" Content="Move Up" Command="{Binding MoveUpCommand}" Grid.Row="1" Grid.Column="0" />
-        <Button Name="DownButton" Content="Move Down" Command="{Binding MoveDownCommand}"  Grid.Row="1" Grid.Column="1" />
+        <Button Name="DownButton" Content="Move Down" Command="{Binding MoveDownCommand}" Grid.Row="1" Grid.Column="1" />
 
         <Button Name="OKButton" Content="Ok" Click="OKButton_Click" IsDefault="True"
                 Command="{Binding OkButtonCommand}" Grid.Row="2" Grid.Column="0" />

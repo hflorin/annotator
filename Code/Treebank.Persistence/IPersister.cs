@@ -1,6 +1,6 @@
 ﻿namespace Treebank.Persistence
 {
-    using Treebank.Domain;
+    using Domain;
 
     public interface IPersister
     {

@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using Treebank.Annotator.ViewModels;
+    using ViewModels;
 
     public class NotifyDataErrorInfoBase : Observable, INotifyDataErrorInfo
     {
@@ -20,7 +20,7 @@
 
         public IEnumerable GetErrors(string propertyName)
         {
-            return propertyName != null && Errors.ContainsKey(propertyName)
+            return (propertyName != null) && Errors.ContainsKey(propertyName)
                 ? Errors[propertyName]
                 : Enumerable.Empty<string>();
         }

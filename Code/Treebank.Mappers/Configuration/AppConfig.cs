@@ -1,8 +1,7 @@
 ﻿namespace Treebank.Mappers.Configuration
 {
     using System.Collections.Generic;
-
-    using Treebank.Domain;
+    using Domain;
 
     public class AppConfig : IAppConfig
     {

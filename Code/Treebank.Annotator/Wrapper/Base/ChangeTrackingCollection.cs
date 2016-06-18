@@ -50,7 +50,7 @@
 
         public bool IsChanged
         {
-            get { return AddedItems.Count > 0 || RemovedItems.Count > 0 || ModifiedItems.Count > 0; }
+            get { return (AddedItems.Count > 0) || (RemovedItems.Count > 0) || (ModifiedItems.Count > 0); }
         }
 
         public void RejectChanges()
@@ -94,7 +94,6 @@
             }
             else
             {
-
                 var item = (T) sender;
                 if (_addedItems.Contains(item))
                 {

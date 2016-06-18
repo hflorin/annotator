@@ -2,9 +2,8 @@
 {
     using System;
     using System.Windows.Input;
-
-    using Treebank.Annotator.Commands;
-    using Treebank.Annotator.Wrapper;
+    using Commands;
+    using Wrapper;
 
     public class WordReorderingViewModel : Observable
     {

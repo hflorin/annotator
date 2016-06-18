@@ -2,7 +2,7 @@
 {
     using System;
     using System.Windows;
-    using Treebank.Annotator.ViewModels;
+    using ViewModels;
 
     public partial class AddWordWindow : Window
     {

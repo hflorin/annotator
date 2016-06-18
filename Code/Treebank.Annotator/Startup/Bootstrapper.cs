@@ -1,7 +1,7 @@
 ﻿namespace Treebank.Annotator.Startup
 {
     using Autofac;
-    using Treebank.Annotator.AutofacModules;
+    using AutofacModules;
 
     public class Bootstrapper
     {

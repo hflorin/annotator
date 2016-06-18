@@ -46,9 +46,11 @@
                 <StackPanel Orientation="Horizontal">
                     <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 </StackPanel>
-                <Button Content="Save" Width="90" Command="{Binding AcceptChangesCommand}" IsEnabled="{Binding Sentence.IsChanged}"
+                <Button Content="Save" Width="90" Command="{Binding AcceptChangesCommand}"
+                        IsEnabled="{Binding Sentence.IsChanged}"
                         ToolTip="Accept the change to the current sentence. Does not save to disk" />
-                <Button Content="Undo" Width="90" Command="{Binding RejectChangesCommand}" IsEnabled="{Binding Sentence.IsChanged}"
+                <Button Content="Undo" Width="90" Command="{Binding RejectChangesCommand}"
+                        IsEnabled="{Binding Sentence.IsChanged}"
                         ToolTip="Undo all the changes to the current sentence since last save" />
                 <StackPanel Orientation="Horizontal">
                     <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />

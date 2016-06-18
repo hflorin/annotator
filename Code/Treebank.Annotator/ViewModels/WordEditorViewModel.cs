@@ -14,7 +14,8 @@
         private readonly IEventAggregator eventAggregator;
 
         private readonly WordWrapper wordWrapper;
-        private Guid viewId;
+
+        private readonly Guid viewId;
 
         public WordEditorViewModel(WordWrapper wordWrapper, IEventAggregator eventAggregator, Guid viewId)
         {

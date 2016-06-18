@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Treebank.Annotator.View"
         mc:Ignorable="d"
-        Title="Input Dialog" MinHeight="100" MaxHeight="100"  Width="300" ResizeMode="CanResize">
+        Title="Input Dialog" MinHeight="100" MaxHeight="100" Width="300" ResizeMode="CanResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -16,11 +16,12 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Row="0" Grid.ColumnSpan="2" LastChildFill="True" HorizontalAlignment="Stretch">
-            <Label Content="Input value" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label Content="Input value" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
             <TextBox Name="tb_input" ToolTip="Write the input value here" HorizontalAlignment="Stretch"
-                     VerticalAlignment="Stretch" TextAlignment="Left" VerticalContentAlignment="Center"/>
+                     VerticalAlignment="Stretch" TextAlignment="Left" VerticalContentAlignment="Center" />
         </DockPanel>
-        
+
         <Button Name="OKButton" Content="Ok" Click="OKButton_OnClick" IsDefault="True" Grid.Row="1" Grid.Column="0" />
         <Button Name="CancelButton" Content="Cancel" IsCancel="True" Grid.Row="1" Grid.Column="1" />
     </Grid>

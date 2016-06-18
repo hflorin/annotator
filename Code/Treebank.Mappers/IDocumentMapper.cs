@@ -1,7 +1,7 @@
 ﻿namespace Treebank.Mappers
 {
     using System.Threading.Tasks;
-    using Treebank.Domain;
+    using Domain;
 
     public interface IDocumentMapper
     {
