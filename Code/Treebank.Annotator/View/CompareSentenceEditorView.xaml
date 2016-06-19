@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="Treebank.Annotator.View.CompareSentenceEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:graphx="http://schemas.panthernet.ru/graphx/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:events="clr-namespace:Treebank.Events;assembly=Treebank.Events"
+             xmlns:graph="clr-namespace:Treebank.Annotator.Graph"
+             xmlns:events1="clr-namespace:Treebank.Events;assembly=Treebank.Events"
+             xmlns:viewModels="clr-namespace:Treebank.Annotator.ViewModels"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignData SentenceEditorViewModel}">
+
+    <DockPanel LastChildFill="True">
+        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical">
+                <WrapPanel Orientation="Horizontal">
+                    <Label Content="Configurations:" HorizontalAlignment="Left" FontWeight="Bold" />
+                    <ComboBox Name="GraphConfigurations" SelectedItem="{Binding SelectedGraphConfiguration}"
+                              ItemsSource="{Binding GraphConfigurations}" IsReadOnly="True"
+                              HorizontalAlignment="Stretch" SelectedValuePath="Name" DisplayMemberPath="Name"
+                              ToolTip="Choose a configuration to draw the graph">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding GraphConfigurationChangedCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <StackPanel Orientation="Horizontal">
+                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                    </StackPanel>
+                    <Button Content="Refresh" Width="70" Click="RefreshButton_OnClick"
+                            ToolTip="Refresh the graph vizualization" />
+                </WrapPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Grid.Column="0" Width="10" Height="10">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="DarkBlue" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Label Grid.Column="1" Content="{Binding LeftSentenceInfo.Model}"></Label>
+                </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                <Rectangle Width="10" Height="10">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="Brown" />
+                    </Rectangle.Fill>
+                </Rectangle>
+                    <Label Grid.Column="1" Content="{Binding RightSentenceInfo.Model}"></Label>
+                    </Grid>
+            </StackPanel>
+        </ScrollViewer>
+        <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+            <WrapPanel Orientation="Horizontal">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">
+                    <ItemsControl ItemsSource="{Binding Words, UpdateSourceTrigger=PropertyChanged}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="viewModels:WordEditorViewModel">
+                                <TextBox Text="{Binding Form, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         HorizontalAlignment="Stretch" Margin="0,0,2,0" IsReadOnly="True">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="LostKeyboardFocus">
+                                            <i:InvokeCommandAction Command="{Binding WordChangedCommand}" />
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="GotFocus">
+                                            <i:InvokeCommandAction Command="{Binding WordGotFocusCommand}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </WrapPanel>
+        </ScrollViewer>
+        <graphx:ZoomControl x:Name="GgZoomCtrl">
+            <graph:SentenceGraphArea
+                LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}"
+                x:Name="GgArea">
+                <graph:SentenceGraphArea.GraphLogicCoreData>
+                    <Binding Path="SentenceGraphLogicCore" UpdateSourceTrigger="PropertyChanged" />
+                </graph:SentenceGraphArea.GraphLogicCoreData>
+            </graph:SentenceGraphArea>
+        </graphx:ZoomControl>
+    </DockPanel>
+</UserControl>

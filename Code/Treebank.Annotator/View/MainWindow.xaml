@@ -45,6 +45,9 @@
                 <MenuItem x:Name="DeleteSentence" Header="_Delete selected sentence"
                           Command="{Binding DeleteSentenceCommand}"
                           ToolTip="Deletes the selected sentence from the Sentence Explorer" />
+                <MenuItem x:Name="Compare" Header="_Compare sentences"
+                          Command="{Binding CompareSentencesCommand}"
+                          ToolTip="Compares two sentences" />
             </MenuItem>
         </Menu>
 

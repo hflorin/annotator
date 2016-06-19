@@ -28,7 +28,7 @@
 
     public class MainViewModel : Observable
     {
-        private SentenceEditorView activeSentenceEditorView;
+        private ISentenceEditorView activeSentenceEditorView;
 
         private IAppConfig appConfig;
 
@@ -54,7 +54,7 @@
 
         private SentenceWrapper sentence;
 
-        private ObservableCollection<SentenceEditorView> sentenceEditViewModels;
+        private ObservableCollection<ISentenceEditorView> sentenceEditViewModels;
 
         private IShowInfoMessage showInfoMessage;
 
@@ -136,7 +136,7 @@
             }
         }
 
-        public ObservableCollection<SentenceEditorView> SentenceEditViews
+        public ObservableCollection<ISentenceEditorView> SentenceEditViews
         {
             get { return sentenceEditViewModels; }
 
@@ -155,6 +155,8 @@
 
         public ICommand SaveCommand { get; set; }
 
+        public ICommand CompareSentencesCommand { get; set; }
+
         public ICommand SaveAsCommand { get; set; }
 
         public ICommand CloseCommand { get; set; }
@@ -169,7 +171,7 @@
 
         public ICommand SelectedSentenceChangedCommand { get; set; }
 
-        public SentenceEditorView ActiveSentenceEditorView
+        public ISentenceEditorView ActiveSentenceEditorView
         {
             get { return activeSentenceEditorView; }
 
@@ -220,7 +222,7 @@
             documentsWrappers = new Dictionary<string, DocumentWrapper>();
             DocumentLoadExceptions = new ObservableCollection<string>();
             Documents = new ObservableCollection<DocumentWrapper>();
-            sentenceEditViewModels = new ObservableCollection<SentenceEditorView>();
+            sentenceEditViewModels = new ObservableCollection<ISentenceEditorView>();
         }
 
         private void SubscribeToEvents()
@@ -393,6 +395,88 @@
             AddSentenceCommand = new DelegateCommand(AddSentenceCommandExecute, AddSentenceCommandCanExecute);
             DeleteSentenceCommand = new DelegateCommand(DeleteSentenceCommandExecute, DeleteSentenceCommandCanExecute);
             BindAttributesCommand = new DelegateCommand(BindAttributesCommandExecute, BindAttributesCommandCanExecute);
+            CompareSentencesCommand = new DelegateCommand(CompareSentencesCommandExecute,
+                CompareSentencesCommandCanExecute);
+        }
+
+        private void CompareSentencesCommandExecute(object obj)
+        {
+            var compareSentencesWindow =
+                new CompareSentencesWindow(new CompareSentencesViewModel(eventAggregator, Documents));
+
+            if (!compareSentencesWindow.ShowDialog().GetValueOrDefault())
+                return;
+
+            var dataContext = compareSentencesWindow.DataContext as CompareSentencesViewModel;
+            if (dataContext != null)
+            {
+                if ((dataContext.LeftSelectedDocument == null) || (dataContext.RightSelectedDocument == null) ||
+                    (SentenceEditViews == null))
+                {
+                    return;
+                }
+
+
+                var leftSentenceIdAttribute =
+                    dataContext.LeftSelectedSentence.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+                var leftDocumentIdAttribute =
+                    dataContext.LeftSelectedDocument.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+
+
+                var rightSentenceIdAttribute =
+                    dataContext.RightSelectedSentence.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+                var rightDocumentIdAttribute =
+                    dataContext.RightSelectedDocument.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+
+                var leftSentenceIdAttributeValue = leftSentenceIdAttribute == null
+                    ? string.Empty
+                    : leftSentenceIdAttribute.Value;
+                var leftDocumentIdAttributeValue = leftDocumentIdAttribute == null
+                    ? string.Empty
+                    : leftDocumentIdAttribute.Value;
+
+                var rightSentenceIdAttributeValue = rightSentenceIdAttribute == null
+                    ? string.Empty
+                    : rightSentenceIdAttribute.Value;
+                var rightDocumentIdAttributeValue = rightDocumentIdAttribute == null
+                    ? string.Empty
+                    : rightDocumentIdAttribute.Value;
+
+                var sentenceEditView =
+                    new CompareSentenceEditorView(
+                        new SentenceEditorViewModel(eventAggregator, AppConfig, dataContext.LeftSelectedSentence,
+                            dataContext.RightSelectedSentence,
+                            showInfoMessage)
+                        {
+                            LeftSentenceInfo =
+                                new StringWrapper(string.Format("Sentence id {0}, Document Id {1}",
+                                    leftSentenceIdAttributeValue, leftDocumentIdAttributeValue)),
+                            RightSentenceInfo =
+                                new StringWrapper(string.Format("Sentence id {0}, Document Id {1}",
+                                    rightSentenceIdAttributeValue, rightDocumentIdAttributeValue))
+                        },
+                        eventAggregator,
+                        AppConfig);
+
+                SentenceEditViews.Add(sentenceEditView);
+                ActiveSentenceEditorView = sentenceEditView;
+
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(
+                        string.Format(
+                            "Comparing sentences: {0} (document {1}) and {2} (document {3}) ",
+                            leftSentenceIdAttributeValue,
+                            leftDocumentIdAttributeValue,
+                            rightSentenceIdAttributeValue,
+                            rightDocumentIdAttributeValue));
+            }
+
+            InvalidateCommands();
+        }
+
+        private bool CompareSentencesCommandCanExecute(object arg)
+        {
+            return Documents.Any();
         }
 
         private void BindAttributesCommandExecute(object obj)
@@ -578,15 +662,22 @@
                 var sentenceEditView = SentenceEditViews.FirstOrDefault(
                     s =>
                     {
-                        var sentenceEditorViewModel = s.DataContext as SentenceEditorViewModel;
-                        return (sentenceEditorViewModel != null)
-                               && (sentenceEditorViewModel.Sentence.Id == SelectedSentence.Id);
+                        var view = s as SentenceEditorView;
+                        if (view != null)
+                        {
+                            var sentenceEditorViewModel =
+                                view.DataContext as SentenceEditorViewModel;
+                            return (sentenceEditorViewModel != null)
+                                   && (sentenceEditorViewModel.Sentence.Id == SelectedSentence.Id);
+                        }
+
+                        return false;
                     });
 
                 if (sentenceEditView != null)
                 {
                     SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(
-                        eventAggregator, sentenceEditView.ViewId)
+                        eventAggregator, ((SentenceEditorView) sentenceEditView).ViewId)
                     {
                         Attributes = SelectedSentence.Attributes
                     };
@@ -661,6 +752,7 @@
             ((DelegateCommand) DeleteSentenceCommand).RaiseCanExecuteChanged();
             ((DelegateCommand) EditSentenceCommand).RaiseCanExecuteChanged();
             ((DelegateCommand) EditWordOrderCommand).RaiseCanExecuteChanged();
+            ((DelegateCommand) CompareSentencesCommand).RaiseCanExecuteChanged();
         }
 
         private bool CloseCommandCanExecute(object arg)

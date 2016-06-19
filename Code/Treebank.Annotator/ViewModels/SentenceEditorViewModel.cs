@@ -33,7 +33,11 @@
             new ObservableCollection<GraphLayoutAlgorithmTypeEnum>(
                 Enum.GetValues(typeof(GraphLayoutAlgorithmTypeEnum)).Cast<GraphLayoutAlgorithmTypeEnum>());
 
+        private StringWrapper leftStringWrapper;
+
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
+        private SentenceWrapper rightSentence;
+        private StringWrapper rightStringWrapper;
 
         private SentenceGxLogicCore sentenceLogicCore;
 
@@ -79,6 +83,53 @@
             sentenceLogicCore = new SentenceGxLogicCore {Graph = sentenceGraph};
         }
 
+        public SentenceEditorViewModel(
+            IEventAggregator eventAggregator,
+            IAppConfig appConfig,
+            SentenceWrapper leftSentence,
+            SentenceWrapper rightSentence,
+            IShowInfoMessage showMessage)
+        {
+            if (leftSentence == null)
+            {
+                throw new ArgumentNullException("leftSentence");
+            }
+
+            if (rightSentence == null)
+            {
+                throw new ArgumentNullException("rightSentence");
+            }
+
+            if (eventAggregator == null)
+            {
+                throw new ArgumentNullException("eventAggregator");
+            }
+
+            if (appConfig == null)
+            {
+                throw new ArgumentNullException("appConfig");
+            }
+
+            if (showMessage == null)
+            {
+                throw new ArgumentNullException("showMessage");
+            }
+
+            InitializeCommands();
+
+            EventAggregator = eventAggregator;
+            Sentence = leftSentence;
+            RightSentence = rightSentence;
+            graphBuilder = new GraphBuilder(appConfig, appConfig.Definitions.First());
+            this.appConfig = appConfig;
+            this.showMessage = showMessage;
+            GraphConfigurations = new ObservableCollection<Definition>(this.appConfig.Definitions);
+            SelectedGraphConfiguration = GraphConfigurations.First();
+
+            var sentenceGraph = new SentenceGraph();
+            sentenceLogicCore = new SentenceGxLogicCore {Graph = sentenceGraph};
+        }
+
         public SenteceGraphOperationMode SenteceGraphOperationMode
         {
             get { return operationMode; }
@@ -98,6 +149,26 @@
 
         public ICommand ToggleEditModeCommand { get; set; }
 
+        public StringWrapper RightSentenceInfo
+        {
+            get { return rightStringWrapper; }
+            set
+            {
+                rightStringWrapper = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public StringWrapper LeftSentenceInfo
+        {
+            get { return leftStringWrapper; }
+            set
+            {
+                leftStringWrapper = value;
+                OnPropertyChanged();
+            }
+        }
+
         public SentenceWrapper Sentence
         {
             get { return sentenceWrapper; }
@@ -105,6 +176,17 @@
             set
             {
                 sentenceWrapper = value;
+                InvalidateCommands();
+                OnPropertyChanged();
+            }
+        }
+
+        public SentenceWrapper RightSentence
+        {
+            get { return rightSentence; }
+            set
+            {
+                rightSentence = value;
                 InvalidateCommands();
                 OnPropertyChanged();
             }
@@ -153,9 +235,18 @@
 
         public void CreateSentenceGraph()
         {
-            graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
-            var logicCore = graphBuilder.SetupGraphLogic(Sentence);
-            SentenceGraphLogicCore = logicCore;
+            if (RightSentence == null)
+            {
+                graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
+                var logicCore = graphBuilder.SetupGraphLogic(Sentence);
+                SentenceGraphLogicCore = logicCore;
+            }
+            else if (Sentence != null)
+            {
+                graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
+                var logicCore = graphBuilder.SetupGraphLogic(Sentence, RightSentence);
+                SentenceGraphLogicCore = logicCore;
+            }
         }
 
         public void SetLayoutAlgorithm(SentenceGxLogicCore logicCore)

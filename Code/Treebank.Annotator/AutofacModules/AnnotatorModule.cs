@@ -24,6 +24,7 @@
             builder.RegisterType<AddWordViewModel>().AsSelf();
             builder.RegisterType<WordReorderingViewModel>().AsSelf();
             builder.RegisterType<ElementAttributeEditorViewModel>().AsSelf();
+            builder.RegisterType<CompareSentencesViewModel>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
         }
     }

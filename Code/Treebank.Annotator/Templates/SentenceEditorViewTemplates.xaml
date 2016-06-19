@@ -189,6 +189,86 @@
         </Style.Triggers>
     </Style>
 
+    <!-- LEFT EDGE CONTROL -->
+    <Style x:Key="LeftEdge" TargetType="{x:Type graphx:EdgeControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type graphx:EdgeControl}">
+                    <Grid>
+                        <Path Stroke="{TemplateBinding Foreground}"
+                              StrokeThickness="2" MinWidth="1" MinHeight="1"
+                              ToolTip="{TemplateBinding ToolTip}"
+                              x:Name="PART_edgePath" />
+                        <graphx:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget">
+                            <Path Name="EdgePointer" Data="M0,0.5 L1,1 1,0" Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform" Width="10" Height="10" />
+                        </graphx:DefaultEdgePointer>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="MinWidth"
+                Value="1" />
+        <Setter Property="MinHeight"
+                Value="1" />
+        <Setter Property="Background"
+                Value="DarkCyan" />
+        <Setter Property="Foreground"
+                Value="DarkBlue" />
+        <Setter Property="Opacity"
+                Value="1" />
+        <Setter Property="graphx:HighlightBehaviour.IsHighlightEnabled" Value="False" />
+
+        <Style.Triggers>
+            <Trigger Property="graphx:HighlightBehaviour.Highlighted" Value="True">
+                <Setter Property="Foreground" Value="DeepSkyBlue" />
+                <Setter Property="StrokeThickness" Value="5" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- RIGHT EDGE CONTROL -->
+    <Style x:Key="RightEdge" TargetType="{x:Type graphx:EdgeControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type graphx:EdgeControl}">
+                    <Grid>
+                        <Path Stroke="{TemplateBinding Foreground}"
+                              StrokeThickness="2" MinWidth="1" MinHeight="1"
+                              ToolTip="{TemplateBinding ToolTip}"
+                              x:Name="PART_edgePath" />
+                        <graphx:DefaultEdgePointer NeedRotation="true" x:Name="PART_EdgePointerForTarget">
+                            <Path Name="EdgePointer" Data="M0,0.5 L1,1 1,0" Fill="{TemplateBinding Foreground}"
+                                  Stretch="Uniform" Width="10" Height="10" />
+                        </graphx:DefaultEdgePointer>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="MinWidth"
+                Value="1" />
+        <Setter Property="MinHeight"
+                Value="1" />
+        <Setter Property="Background"
+                Value="Bisque" />
+        <Setter Property="Foreground"
+                Value="Brown" />
+        <Setter Property="Opacity"
+                Value="1" />
+        <Setter Property="graphx:HighlightBehaviour.IsHighlightEnabled" Value="False" />
+
+        <Style.Triggers>
+            <Trigger Property="graphx:HighlightBehaviour.Highlighted" Value="True">
+                <Setter Property="Foreground" Value="Chartreuse" />
+                <Setter Property="StrokeThickness" Value="5" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!--EDGE LABEL CONTROL -->
     <Style TargetType="{x:Type graphx:AttachableEdgeLabelControl}">
         <Setter Property="Template">

@@ -43,15 +43,84 @@
         {
             var sentenceGraph = new SentenceGraph();
 
-            string to, from;
+            foreach (var word in sentence.Words)
+            {
+                sentenceGraph.AddVertex(new WordVertex(word, CurrentDefinition.Vertex.LabelAttributeName));
+            }
+
+            AddEdges(sentence, sentenceGraph);
+
+            return sentenceGraph;
+        }
+
+        public SentenceGxLogicCore SetupGraphLogic(SentenceWrapper sentence, SentenceWrapper rightSentence)
+        {
+            var sentenceGraph = BuildSentenceGraph(sentence, rightSentence);
+
+            return new SentenceGxLogicCore
+            {
+                EdgeCurvingEnabled = false,
+                Graph = sentenceGraph,
+                EnableParallelEdges = false
+            };
+        }
+
+        private SentenceGraph BuildSentenceGraph(SentenceWrapper sentence, SentenceWrapper rightSentence)
+
+        {
+            var sentenceGraph = new SentenceGraph();
 
             foreach (var word in sentence.Words)
             {
                 sentenceGraph.AddVertex(new WordVertex(word, CurrentDefinition.Vertex.LabelAttributeName));
             }
 
-            var vertices = sentenceGraph.Vertices.ToList();
+            AddComparableEdges(sentence, sentenceGraph, true, false);
+            AddComparableEdges(rightSentence, sentenceGraph, false, true);
 
+            return sentenceGraph;
+        }
+
+        private void AddComparableEdges(SentenceWrapper sentence, SentenceGraph sentenceGraph, bool isLeft, bool isRight)
+        {
+            string to, from;
+            var vertices = sentenceGraph.Vertices.ToList();
+            foreach (var word in sentence.Words)
+            {
+                from = word.GetAttributeByName(CurrentDefinition.Vertex.FromAttributeName);
+
+                if (from == "0")
+                {
+                    continue;
+                }
+
+                to = word.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName);
+
+                var toWordVertex =
+                    vertices.FirstOrDefault(
+                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(to));
+                var fromWordVertex =
+                    vertices.FirstOrDefault(
+                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(from));
+                if ((toWordVertex != null) && (fromWordVertex != null))
+                {
+                    sentenceGraph.AddEdge(
+                        new OrderedWordEdge(fromWordVertex, toWordVertex)
+                        {
+                            Text = word.GetAttributeByName(CurrentDefinition.Edge.LabelAttributeName),
+                            SourceConnectionPointId = 1,
+                            TargetConnectionPointId = 1,
+                            IsLeft = isLeft,
+                            IsRight = isRight
+                        });
+                }
+            }
+        }
+
+        private void AddEdges(SentenceWrapper sentence, SentenceGraph sentenceGraph)
+        {
+            string to, from;
+            var vertices = sentenceGraph.Vertices.ToList();
             foreach (var word in sentence.Words)
             {
                 from = word.GetAttributeByName(CurrentDefinition.Vertex.FromAttributeName);
@@ -80,8 +149,6 @@
                         });
                 }
             }
-
-            return sentenceGraph;
         }
     }
 }

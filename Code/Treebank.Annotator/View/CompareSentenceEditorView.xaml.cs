@@ -6,8 +6,6 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
-    using Domain;
-    using Events;
     using Graph;
     using Graph.Algos;
     using GraphX.Controls;
@@ -18,29 +16,20 @@
     using Prism.Events;
     using Treebank.Events;
     using ViewModels;
-    using Wrapper;
     using Point = GraphX.Measure.Point;
 
-    public partial class SentenceEditorView : UserControl, IDisposable, ISentenceEditorView
+    public partial class CompareSentenceEditorView : UserControl, IDisposable, ISentenceEditorView
     {
-        private readonly IAppConfig appConfig;
-
         private readonly SentenceEditorManager editorManager;
 
-        private readonly IEventAggregator eventAggregator;
-
         private readonly SentenceEditorViewModel viewModel;
+
+        private Dictionary<VertexControl, int> numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
 
         // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
         private Guid viewUniqueId = Guid.NewGuid();
 
-        private Dictionary<VertexControl, int> numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
-
-        private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
-
-        private VertexControl sourceVertexControl;
-
-        public SentenceEditorView(IEventAggregator eventAggregator, IAppConfig appConfig)
+        public CompareSentenceEditorView(IEventAggregator eventAggregator, IAppConfig appConfig)
         {
             InitializeComponent();
             if (eventAggregator == null)
@@ -54,11 +43,9 @@
             }
 
             editorManager = new SentenceEditorManager(GgArea, GgZoomCtrl);
-            this.eventAggregator = eventAggregator;
-            this.appConfig = appConfig;
         }
 
-        public SentenceEditorView(
+        public CompareSentenceEditorView(
             SentenceEditorViewModel sentenceEditorViewModel,
             IEventAggregator eventAggregator,
             IAppConfig appConfig)
@@ -77,22 +64,12 @@
             GgArea.ShowAllEdgesArrows();
             GgArea.ShowAllEdgesLabels();
             GgZoomCtrl.MouseLeftButtonUp += GgZoomCtrlMouseLeftButtonUp;
-            GgArea.VertexSelected += GgAreaVertexSelected;
-            GgArea.EdgeSelected += GgAreaEdgeSelected;
             GgArea.GenerateGraphFinished += GgAreaGenerateGraphFinished;
             GgArea.EdgeLabelFactory = new DefaultEdgelabelFactory();
 
             eventAggregator.GetEvent<GenerateGraphEvent>().Subscribe(OnGenerateGraph);
-            eventAggregator.GetEvent<SetSentenceEditModeEvent>().Subscribe(OnSetSentenceEditMode);
-            eventAggregator.GetEvent<AddWordVertexEvent>().Subscribe(OnAddWordVertexControl);
             eventAggregator.GetEvent<ZoomOnWordVertexEvent>().Subscribe(OnZoomOnWordVertex);
             eventAggregator.GetEvent<ZoomToFillEvent>().Subscribe(ZoomToFill);
-        }
-
-        public Guid ViewId
-        {
-            get { return viewUniqueId; }
-            set { viewUniqueId = value; }
         }
 
         public Definition CurrentConfiguration
@@ -111,6 +88,12 @@
             {
                 GgArea.Dispose();
             }
+        }
+
+        public Guid ViewId
+        {
+            get { return viewUniqueId; }
+            set { viewUniqueId = value; }
         }
 
         private void SentenceEditorView_Loaded(object sender, RoutedEventArgs e)
@@ -209,6 +192,11 @@
                 }
             }
 
+            //foreach (var i in numberOfEdgesPerVertexControl)
+            //{
+            //    numberOfEdgesPerVertexControl[i.Key] = i.Value/2;
+            //}
+
             // var resourceDictionary = new ResourceDictionary
             // {
             // Source =
@@ -242,6 +230,7 @@
 
                     vertex.VCPRoot.Children.Add(cc);
                     vertex.VertexConnectionPointsList.Add(newVcp);
+                    vertex.ToolTip = null;
                 }
             }
         }
@@ -271,10 +260,30 @@
 
             var vertexPositions = GgArea.GetVertexPositions();
             var offset = -25;
+
+            var resourceDictionary = new ResourceDictionary
+            {
+                Source =
+                    new Uri(
+                        "/Treebank.Annotator;component/Templates/SentenceEditorViewTemplates.xaml",
+                        UriKind.RelativeOrAbsolute)
+            };
+
             for (var j = 0; j < sortedEdgeGaps.Count; j++)
             {
                 var pair = sortedEdgeGaps[j];
                 var edgeControl = GgArea.EdgesList[pair.Key];
+
+                var isLeft = (edgeControl.Edge as OrderedWordEdge).IsLeft;
+
+                if (isLeft)
+                {
+                    edgeControl.Style = resourceDictionary["LeftEdge"] as Style;
+                }
+                else
+                {
+                    edgeControl.Style = resourceDictionary["RightEdge"] as Style;
+                }
 
                 var source = edgeControl.Source;
                 var target = edgeControl.Target;
@@ -345,8 +354,8 @@
                     pair.Key.RoutingPoints = new[]
                     {
                         new Point(sourcePos.X, sourcePos.Y),
-                        new Point(sourcePos.X, sourcePos.Y + offset),
-                        new Point(targetPos.X, sourcePos.Y + offset),
+                        new Point(sourcePos.X, sourcePos.Y + (isLeft ? offset : -offset)),
+                        new Point(targetPos.X, sourcePos.Y + (isLeft ? offset : -offset)),
                         new Point(targetPos.X, targetPos.Y)
                     };
                 }
@@ -404,8 +413,8 @@
                     pair.Key.RoutingPoints = new[]
                     {
                         new Point(sourcePos.X, sourcePos.Y),
-                        new Point(sourcePos.X, sourcePos.Y + offset),
-                        new Point(targetPos.X, sourcePos.Y + offset),
+                        new Point(sourcePos.X, sourcePos.Y + (isLeft ? offset : -offset)),
+                        new Point(targetPos.X, sourcePos.Y + (isLeft ? offset : -offset)),
                         new Point(targetPos.X, targetPos.Y)
                     };
                 }
@@ -426,120 +435,6 @@
             return distancesBetweenEdgeNodes;
         }
 
-        private void GgAreaEdgeSelected(object sender, EdgeSelectedEventArgs args)
-        {
-            if ((args.MouseArgs.LeftButton == MouseButtonState.Pressed)
-                && (operationMode == SenteceGraphOperationMode.Delete))
-            {
-                var edge = args.EdgeControl.Edge as WordEdge;
-                if (edge != null)
-                {
-                    GgArea.RemoveEdge(edge, true);
-                    var targetVertex = edge.Target;
-                    targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName, "0");
-                    targetVertex.WordWrapper.SetAttributeByName(
-                        CurrentConfiguration.Edge.LabelAttributeName,
-                        string.Empty);
-
-                    viewModel.InvalidateCommands();
-                }
-            }
-        }
-
-        private void OnAddWordVertexControl(WordWrapper word)
-        {
-            var vertexControl = AddWordVertexControl(word);
-            var headWordId = word.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName);
-            var headWordVertexControl =
-                GgArea.VertexList.Where(
-                    p =>
-                        p.Key.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName)
-                            .Equals(headWordId))
-                    .Select(p => p.Value)
-                    .SingleOrDefault();
-
-            if (headWordVertexControl != null)
-            {
-                sourceVertexControl = headWordVertexControl;
-                CreateEdgeControl(vertexControl);
-            }
-
-            DisplayGraph();
-            ZoomToFill();
-        }
-
-        private void OnSetSentenceEditMode(SetSenteceGraphOperationModeRequest setSenteceGraphOperationModeRequest)
-        {
-            if ((butDelete.IsChecked == true)
-                && (setSenteceGraphOperationModeRequest.Mode == SenteceGraphOperationMode.Delete))
-            {
-                butEdit.IsChecked = false;
-                butSelect.IsChecked = false;
-                GgZoomCtrl.Cursor = Cursors.Help;
-                viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Delete;
-                operationMode = SenteceGraphOperationMode.Delete;
-                ClearEditMode();
-                ClearSelectMode();
-                GgArea.SetVerticesDrag(false);
-                return;
-            }
-
-            if ((butEdit.IsChecked == true)
-                && (setSenteceGraphOperationModeRequest.Mode == SenteceGraphOperationMode.Edit))
-            {
-                butDelete.IsChecked = false;
-                butSelect.IsChecked = false;
-                GgZoomCtrl.Cursor = Cursors.Pen;
-                viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Edit;
-                operationMode = SenteceGraphOperationMode.Edit;
-                ClearSelectMode();
-                GgArea.SetVerticesDrag(false);
-                return;
-            }
-
-            if ((butSelect.IsChecked == true)
-                && (setSenteceGraphOperationModeRequest.Mode == SenteceGraphOperationMode.Select))
-            {
-                butEdit.IsChecked = false;
-                butDelete.IsChecked = false;
-                GgZoomCtrl.Cursor = Cursors.Hand;
-                viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Select;
-                operationMode = SenteceGraphOperationMode.Select;
-                ClearEditMode();
-                GgArea.SetVerticesDrag(true, true);
-            }
-            else
-            {
-                GgArea.SetVerticesDrag(false);
-            }
-        }
-
-        private void ClearSelectMode(bool soft = false)
-        {
-            GgArea.VertexList.Values.Where(DragBehaviour.GetIsTagged).ToList().ForEach(
-                a =>
-                {
-                    HighlightBehaviour.SetHighlighted(a, false);
-                    DragBehaviour.SetIsTagged(a, false);
-                });
-
-            if (!soft)
-            {
-                GgArea.SetVerticesDrag(false);
-            }
-        }
-
-        private void ClearEditMode()
-        {
-            if (sourceVertexControl != null)
-            {
-                HighlightBehaviour.SetHighlighted(sourceVertexControl, false);
-            }
-
-            editorManager.DestroyVirtualEdge();
-            sourceVertexControl = null;
-        }
-
         private void GgZoomCtrlMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             ClearAllSelectedVertices();
@@ -556,157 +451,6 @@
                         DragBehaviour.SetIsTagged(pair.Value, false);
                     }
                 });
-        }
-
-        private void GgAreaVertexSelected(object sender, VertexSelectedEventArgs args)
-        {
-            if (args.MouseArgs.LeftButton != MouseButtonState.Pressed)
-            {
-                return;
-            }
-
-            switch (viewModel.SenteceGraphOperationMode)
-            {
-                case SenteceGraphOperationMode.Edit :
-                    CreateEdgeControl(args.VertexControl);
-                    break;
-                case SenteceGraphOperationMode.Delete :
-                    SafeRemoveVertex(args.VertexControl);
-                    break;
-                case SenteceGraphOperationMode.Select :
-                    SelectVertex(args.VertexControl);
-                    break;
-            }
-        }
-
-        private void CreateEdgeControl(VertexControl targetVertexControl)
-        {
-            if (sourceVertexControl == null)
-            {
-                editorManager.CreateVirtualEdge(targetVertexControl, targetVertexControl.GetPosition());
-                sourceVertexControl = targetVertexControl;
-                HighlightBehaviour.SetHighlighted(sourceVertexControl, true);
-                return;
-            }
-
-            if (Equals(sourceVertexControl, targetVertexControl))
-            {
-                return;
-            }
-
-            var wordPrototype = appConfig.Elements.OfType<Word>().Single();
-
-            var addEdgeDialog =
-                new AddEdgeWindow(
-                    new AddEdgeViewModel(
-                        wordPrototype.Attributes.Single(
-                            a => a.Name.Equals(CurrentConfiguration.Edge.LabelAttributeName))));
-
-            if (addEdgeDialog.ShowDialog().GetValueOrDefault())
-            {
-                var edgeLabelText = string.Empty;
-                var dataContext = addEdgeDialog.DataContext as AddEdgeViewModel;
-                if (dataContext != null)
-                {
-                    edgeLabelText = dataContext.Attributes.First().Value;
-                }
-
-                var sourceWordVertex = sourceVertexControl.Vertex as WordVertex;
-                var targetWordVertex = targetVertexControl.Vertex as WordVertex;
-
-                if ((sourceWordVertex == null) || (targetWordVertex == null))
-                {
-                    return;
-                }
-
-                targetWordVertex.WordWrapper.SetAttributeByName(
-                    CurrentConfiguration.Vertex.FromAttributeName,
-                    sourceWordVertex.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName));
-                targetWordVertex.WordWrapper.SetAttributeByName(
-                    CurrentConfiguration.Edge.LabelAttributeName,
-                    edgeLabelText);
-
-                var data = new WordEdge((WordVertex) sourceVertexControl.Vertex, targetWordVertex)
-                {
-                    Text = edgeLabelText
-                };
-
-                var ec = new EdgeControl(sourceVertexControl, targetVertexControl, data);
-                GgArea.InsertEdgeAndData(data, ec, 0, true);
-
-                HighlightBehaviour.SetHighlighted(sourceVertexControl, false);
-                sourceVertexControl = null;
-                editorManager.DestroyVirtualEdge();
-            }
-
-            viewModel.InvalidateCommands();
-        }
-
-        private VertexControl AddWordVertexControl(WordWrapper wordWrapper)
-        {
-            var vertex = new WordVertex(wordWrapper, CurrentConfiguration.Vertex.LabelAttributeName);
-            var vertexControl = new VertexControl(vertex);
-            GgArea.AddVertexAndData(vertex, vertexControl, true);
-            return vertexControl;
-        }
-
-        private void SafeRemoveVertex(VertexControl vc)
-        {
-            var wordToRemove = vc.Vertex as WordVertex;
-
-            if (wordToRemove != null)
-            {
-                GgArea.RemoveVertexAndEdges(wordToRemove);
-                viewModel.Sentence.Words.Remove(wordToRemove.WordWrapper);
-
-                foreach (var word in viewModel.Sentence.Words)
-                {
-                    if (word.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName)
-                        == wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName))
-                    {
-                        word.SetAttributeByName(
-                            CurrentConfiguration.Vertex.FromAttributeName,
-                            wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName));
-                    }
-                }
-
-                viewModel.CreateSentenceGraph();
-                viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
-                GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
-                viewModel.PopulateWords();
-                DisplayGraph();
-                ZoomToFill();
-            }
-        }
-
-        private void SelectVertex(VertexControl vertexControl)
-        {
-            var vertex = vertexControl.Vertex as WordVertex;
-            if (vertex != null)
-            {
-                eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
-                    .Publish(
-                        new ElementAttributeEditorViewModel(eventAggregator, viewModel.ViewId)
-                        {
-                            Attributes =
-                                vertex
-                                    .WordWrapper
-                                    .Attributes
-                        });
-            }
-
-            ClearAllSelectedVertices();
-
-            if (DragBehaviour.GetIsTagged(vertexControl))
-            {
-                HighlightBehaviour.SetHighlighted(vertexControl, false);
-                DragBehaviour.SetIsTagged(vertexControl, false);
-            }
-            else
-            {
-                HighlightBehaviour.SetHighlighted(vertexControl, true);
-                DragBehaviour.SetIsTagged(vertexControl, true);
-            }
         }
 
         private void GgAreaGenerateGraphFinished(object sender, EventArgs e)

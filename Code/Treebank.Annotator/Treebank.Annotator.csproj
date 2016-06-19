@@ -142,10 +142,12 @@
     <Compile Include="Graph\MotherObjects.cs" />
     <Compile Include="Graph\SentenceEditorManager.cs" />
     <Compile Include="Graph\LiniarLayoutAlgorithm.cs" />
+    <Compile Include="Graph\OrderedWordEdge.cs" />
     <Compile Include="Graph\WordEdge.cs" />
     <Compile Include="Graph\SentenceGraph.cs" />
     <Compile Include="Graph\SentenceGraphArea.cs" />
     <Compile Include="Graph\SentenceGxLogicCore.cs" />
+    <Compile Include="Graph\OrderedWordVertex.cs" />
     <Compile Include="Graph\WordVertex.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -156,6 +158,7 @@
     <Compile Include="ViewModels\AddAttributeViewModel.cs" />
     <Compile Include="ViewModels\AddEdgeViewModel.cs" />
     <Compile Include="ViewModels\AddWordViewModel.cs" />
+    <Compile Include="ViewModels\CompareSentencesViewModel.cs" />
     <Compile Include="ViewModels\ElementAttributeEditorViewModel.cs" />
     <Compile Include="ViewModels\Observable.cs" />
     <Compile Include="ViewModels\SentenceEditorViewModel.cs" />
@@ -170,12 +173,19 @@
     <Compile Include="View\AddWordWindow.xaml.cs">
       <DependentUpon>AddWordWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\CompareSentencesWindow.xaml.cs">
+      <DependentUpon>CompareSentencesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ElementAttributeEditorView.xaml.cs">
       <DependentUpon>ElementAttributeEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\CompareSentenceEditorView.xaml.cs">
+      <DependentUpon>CompareSentenceEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ISentenceEditorView.cs" />
     <Compile Include="View\SentenceEditorView.xaml.cs">
       <DependentUpon>SentenceEditorView.xaml</DependentUpon>
     </Compile>
@@ -226,6 +236,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\CompareSentencesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ElementAttributeEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -233,6 +247,10 @@
     <Page Include="View\InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CompareSentenceEditorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\SentenceEditorView.xaml">
       <SubType>Designer</SubType>
