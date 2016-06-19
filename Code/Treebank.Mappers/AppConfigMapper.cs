@@ -107,12 +107,8 @@
                         {
                             Entity =
                                 attributes[ConfigurationStaticData.EntityAttributeName],
-                            FromAttributeName =
-                                attributes[ConfigurationStaticData.FromAttributeName],
                             LabelAttributeName =
-                                attributes[ConfigurationStaticData.LabelAttributeName],
-                            ToAttributeName =
-                                attributes[ConfigurationStaticData.ToAttributeName]
+                                attributes[ConfigurationStaticData.LabelAttributeName]
                         };
 
                         definition.Vertex = vertexConfig;
@@ -126,7 +122,11 @@
                             Entity =
                                 attributes[ConfigurationStaticData.EntityAttributeName],
                             LabelAttributeName =
-                                attributes[ConfigurationStaticData.LabelAttributeName]
+                                attributes[ConfigurationStaticData.LabelAttributeName],
+                            SourceVertexAttributeName =
+                                attributes[ConfigurationStaticData.SourceVertexAttributeName],
+                            TargetVertexAttributeName =
+                                attributes[ConfigurationStaticData.TargetVertexAttributeName]
                         };
 
                         definition.Edge = edgeConfig;

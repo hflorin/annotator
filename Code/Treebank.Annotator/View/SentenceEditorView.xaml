@@ -18,7 +18,7 @@
                 <Label Content="Layouts:" HorizontalAlignment="Left" FontWeight="Bold" />
                 <ComboBox Name="LayoutAlgos" SelectedItem="{Binding SelectedLayoutAlgorithmType}"
                           ItemsSource="{Binding LayoutAlgorithmTypes}" IsReadOnly="True" HorizontalAlignment="Stretch"
-                          ToolTip="Choose a vertex layout algorithm">
+                          ToolTip="Choose graph layout algorithm">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding LayoutAlgorithmChangedCommand}" />
@@ -42,13 +42,13 @@
                 <Button Content="Refresh" Width="70" Click="RefreshButton_OnClick"
                         ToolTip="Refresh the graph vizualization" />
                 <Button Content="Is Tree?" Width="70" Command="{Binding CheckIsTreeCommand}"
-                        ToolTip="Checks if the sentence graph is tree" />
+                        ToolTip="Checks if the sentence graph is a tree" />
                 <StackPanel Orientation="Horizontal">
                     <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                 </StackPanel>
-                <Button Content="Save" Width="90" Command="{Binding AcceptChangesCommand}"
+                <Button Content="Accept" Width="90" Command="{Binding AcceptChangesCommand}"
                         IsEnabled="{Binding Sentence.IsChanged}"
-                        ToolTip="Accept the change to the current sentence. Does not save to disk" />
+                        ToolTip="Accept the changes to the current sentence. Does not save to disk" />
                 <Button Content="Undo" Width="90" Command="{Binding RejectChangesCommand}"
                         IsEnabled="{Binding Sentence.IsChanged}"
                         ToolTip="Undo all the changes to the current sentence since last save" />
@@ -57,11 +57,11 @@
                 </StackPanel>
                 <ToggleButton Name="butSelect" Content="Drag" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events1:SenteceGraphOperationMode.Select}"
-                              ToolTip="Drag the vertices on the graph to reposition them"
+                              ToolTip="Reposition vertices by dragging them"
                               x:FieldModifier="private" Width="70" />
                 <ToggleButton Name="butEdit" Content="Create edge" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events1:SenteceGraphOperationMode.Edit}"
-                              ToolTip="Click on a vertex, then click on another to create an edge between them"
+                              ToolTip="Click on a vertex, then click on another to create an edge between the two"
                               x:FieldModifier="private" Width="70" />
                 <ToggleButton Name="butDelete" Content="Delete" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events:SenteceGraphOperationMode.Delete}"

@@ -15,21 +15,21 @@
 
             foreach (var word in sentence.Words)
             {
-                wordToVertexMapping.Add(word.GetAttributeByName(definition.Vertex.ToAttributeName), vertexId++);
+                wordToVertexMapping.Add(word.GetAttributeByName(definition.Edge.TargetVertexAttributeName), vertexId++);
             }
 
             var result = new Graph(sentence.Words.Count, wordToVertexMapping);
 
             foreach (var word in sentence.Words)
             {
-                var from = word.GetAttributeByName(definition.Vertex.FromAttributeName);
+                var from = word.GetAttributeByName(definition.Edge.SourceVertexAttributeName);
 
                 if (from == "0")
                 {
                     continue;
                 }
 
-                var to = word.GetAttributeByName(definition.Vertex.ToAttributeName);
+                var to = word.GetAttributeByName(definition.Edge.TargetVertexAttributeName);
 
                 if (wordToVertexMapping.ContainsKey(to) && wordToVertexMapping.ContainsKey(from))
                 {

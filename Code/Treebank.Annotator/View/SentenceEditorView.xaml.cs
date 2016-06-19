@@ -436,7 +436,7 @@
                 {
                     GgArea.RemoveEdge(edge, true);
                     var targetVertex = edge.Target;
-                    targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName, "0");
+                    targetVertex.WordWrapper.SetAttributeByName(CurrentConfiguration.Edge.SourceVertexAttributeName, "0");
                     targetVertex.WordWrapper.SetAttributeByName(
                         CurrentConfiguration.Edge.LabelAttributeName,
                         string.Empty);
@@ -449,11 +449,11 @@
         private void OnAddWordVertexControl(WordWrapper word)
         {
             var vertexControl = AddWordVertexControl(word);
-            var headWordId = word.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName);
+            var headWordId = word.GetAttributeByName(CurrentConfiguration.Edge.SourceVertexAttributeName);
             var headWordVertexControl =
                 GgArea.VertexList.Where(
                     p =>
-                        p.Key.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName)
+                        p.Key.WordWrapper.GetAttributeByName(CurrentConfiguration.Edge.TargetVertexAttributeName)
                             .Equals(headWordId))
                     .Select(p => p.Value)
                     .SingleOrDefault();
@@ -620,8 +620,8 @@
                 }
 
                 targetWordVertex.WordWrapper.SetAttributeByName(
-                    CurrentConfiguration.Vertex.FromAttributeName,
-                    sourceWordVertex.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName));
+                    CurrentConfiguration.Edge.SourceVertexAttributeName,
+                    sourceWordVertex.WordWrapper.GetAttributeByName(CurrentConfiguration.Edge.TargetVertexAttributeName));
                 targetWordVertex.WordWrapper.SetAttributeByName(
                     CurrentConfiguration.Edge.LabelAttributeName,
                     edgeLabelText);
@@ -661,12 +661,12 @@
 
                 foreach (var word in viewModel.Sentence.Words)
                 {
-                    if (word.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName)
-                        == wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.ToAttributeName))
+                    if (word.GetAttributeByName(CurrentConfiguration.Edge.SourceVertexAttributeName)
+                        == wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Edge.TargetVertexAttributeName))
                     {
                         word.SetAttributeByName(
-                            CurrentConfiguration.Vertex.FromAttributeName,
-                            wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Vertex.FromAttributeName));
+                            CurrentConfiguration.Edge.SourceVertexAttributeName,
+                            wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Edge.SourceVertexAttributeName));
                     }
                 }
 

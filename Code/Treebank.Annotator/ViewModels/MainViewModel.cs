@@ -573,7 +573,7 @@
                                     })
                         };
 
-                        var words = sentenceContent.Split(' ');
+                        var words = sentenceContent.Split(' ').Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
 
                         for (var i = 0; i < words.Length; i++)
                         {
@@ -581,8 +581,8 @@
                             var newWord = ObjectCopier.Clone(wordPrototype);
                             newWord.Value = wordContent;
 
-                            newWord.SetAttributeByName(configuration.Vertex.ToAttributeName, (i + 1).ToString());
-                            newWord.SetAttributeByName(configuration.Vertex.FromAttributeName, "0");
+                            newWord.SetAttributeByName(configuration.Edge.TargetVertexAttributeName, (i + 1).ToString());
+                            newWord.SetAttributeByName(configuration.Edge.SourceVertexAttributeName, "0");
 
                             newWord.Attributes.Add(
                                 new Attribute

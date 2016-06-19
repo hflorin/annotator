@@ -14,13 +14,13 @@
                     Edge = new EdgeConfig
                     {
                         Entity = ConfigurationStaticData.WordEntityName,
-                        LabelAttributeName = "deprel"
+                        LabelAttributeName = "deprel",
+                        SourceVertexAttributeName = "head",
+                        TargetVertexAttributeName = "id",
                     },
                     Vertex = new VertexConfig
                     {
                         Entity = ConfigurationStaticData.WordEntityName,
-                        FromAttributeName = "head",
-                        ToAttributeName = "id",
                         LabelAttributeName = "form"
                     }
                 };

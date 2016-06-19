@@ -27,8 +27,8 @@
         public static readonly string IsOptionalAttributeName = "isOptional";
         public static readonly string IsEditableAttributeName = "isEditable";
         public static readonly string LabelAttributeName = "labelAttributeName";
-        public static readonly string FromAttributeName = "fromAttributeName";
-        public static readonly string ToAttributeName = "toAttributeName";
+        public static readonly string SourceVertexAttributeName = "sourceVertexAttributeName";
+        public static readonly string TargetVertexAttributeName = "targetVertexAttributeName";
 
         #endregion
 

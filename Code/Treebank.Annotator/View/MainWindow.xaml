@@ -21,33 +21,33 @@
             <MenuItem x:Name="FileMenu" Header="_FILE">
                 <MenuItem x:Name="New" Header="New">
                     <MenuItem x:Name="Treebank" Header="_Treebank" Command="{Binding NewTreeBankCommand}"
-                              ToolTip="Creates a new empty treebank document" />
+                              ToolTip="Create a new, empty treebank" />
                 </MenuItem>
                 <MenuItem x:Name="Load" Header="_Load" Command="{Binding OpenCommand}"
-                          ToolTip="Loads the document into the application" />
+                          ToolTip="Choose a treebank file to load" />
                 <MenuItem x:Name="Close" Header="_Close" Command="{Binding CloseCommand}"
-                          ToolTip="Closes the selected document from the Treebank Explorer" />
+                          ToolTip="Close the selected treebank from the Treebank Explorer" />
                 <Separator />
                 <MenuItem x:Name="Save" Header="_Save" Command="{Binding SaveCommand}"
-                          ToolTip="Saves the currently selected treebank to the disk" />
+                          ToolTip="Save the selected treebank to the disk" />
                 <MenuItem x:Name="SaveAs" Header="_Save As" Command="{Binding SaveAsCommand}"
-                          ToolTip="Saves the currently selected treebank to the disk in a new file" />
+                          ToolTip="Save the selected treebank to the disk in a new file" />
                 <Separator />
-                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick" ToolTip="Closes the application" />
+                <MenuItem x:Name="Exit" Header="_Exit" Click="ExitClick" ToolTip="Close the application" />
             </MenuItem>
             <MenuItem x:Name="EditMenu" Header="_EDIT">
                 <MenuItem x:Name="EditSentence" Header="_Sentence Graph" Command="{Binding EditSentenceCommand}"
-                          ToolTip="Opens the selected sentence graph in a new tab." />
+                          ToolTip="Edit the graph for the selected sentence" />
                 <MenuItem x:Name="EditWordOrder" Header="_Word Order" Command="{Binding EditWordOrderCommand}"
-                          ToolTip="Reorders the words of the selected sentence. Updates the IDs and head word IDs." />
+                          ToolTip="Reorder the words from the selected sentence" />
                 <MenuItem x:Name="AddSentence" Header="_Add sentence" Command="{Binding AddSentenceCommand}"
-                          ToolTip="Adds a new empty sentence into the selected treebank" />
+                          ToolTip="Add a new, empty sentence into the selected treebank" />
                 <MenuItem x:Name="DeleteSentence" Header="_Delete selected sentence"
                           Command="{Binding DeleteSentenceCommand}"
-                          ToolTip="Deletes the selected sentence from the Sentence Explorer" />
+                          ToolTip="Delete the selected sentence from the treebank" />
                 <MenuItem x:Name="Compare" Header="_Compare sentences"
                           Command="{Binding CompareSentencesCommand}"
-                          ToolTip="Compares two sentences" />
+                          ToolTip="Compare two sentences" />
             </MenuItem>
         </Menu>
 

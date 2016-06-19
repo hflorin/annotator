@@ -87,21 +87,21 @@
             var vertices = sentenceGraph.Vertices.ToList();
             foreach (var word in sentence.Words)
             {
-                from = word.GetAttributeByName(CurrentDefinition.Vertex.FromAttributeName);
+                from = word.GetAttributeByName(CurrentDefinition.Edge.SourceVertexAttributeName);
 
                 if (from == "0")
                 {
                     continue;
                 }
 
-                to = word.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName);
+                to = word.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName);
 
                 var toWordVertex =
                     vertices.FirstOrDefault(
-                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(to));
+                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName).Equals(to));
                 var fromWordVertex =
                     vertices.FirstOrDefault(
-                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(from));
+                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName).Equals(from));
                 if ((toWordVertex != null) && (fromWordVertex != null))
                 {
                     sentenceGraph.AddEdge(
@@ -123,21 +123,21 @@
             var vertices = sentenceGraph.Vertices.ToList();
             foreach (var word in sentence.Words)
             {
-                from = word.GetAttributeByName(CurrentDefinition.Vertex.FromAttributeName);
+                from = word.GetAttributeByName(CurrentDefinition.Edge.SourceVertexAttributeName);
 
                 if (from == "0")
                 {
                     continue;
                 }
 
-                to = word.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName);
+                to = word.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName);
 
                 var toWordVertex =
                     vertices.FirstOrDefault(
-                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(to));
+                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName).Equals(to));
                 var fromWordVertex =
                     vertices.FirstOrDefault(
-                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Vertex.ToAttributeName).Equals(from));
+                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName).Equals(from));
                 if ((toWordVertex != null) && (fromWordVertex != null))
                 {
                     sentenceGraph.AddEdge(
