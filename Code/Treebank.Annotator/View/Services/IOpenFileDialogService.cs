@@ -3,5 +3,6 @@
     public interface IOpenFileDialogService
     {
         string GetFileLocation(string fileFilters);
+        string GetFolderLocation();
     }
 }

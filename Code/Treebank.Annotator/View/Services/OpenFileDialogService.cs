@@ -1,6 +1,7 @@
 ﻿namespace Treebank.Annotator.View.Services
 {
-    using Microsoft.Win32;
+    using System.Windows.Forms;
+    using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
     public class OpenFileDialogService : IOpenFileDialogService
     {
@@ -9,6 +10,12 @@
             var openFileDialog = new OpenFileDialog {Filter = fileFilters};
 
             return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : string.Empty;
+        }
+
+        public string GetFolderLocation()
+        {
+            var dialog = new FolderBrowserDialog();
+            return dialog.ShowDialog() == DialogResult.OK ? dialog.SelectedPath : string.Empty;
         }
     }
 }

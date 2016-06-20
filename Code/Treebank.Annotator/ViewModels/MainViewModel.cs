@@ -7,6 +7,7 @@
     using System.Configuration;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
@@ -767,6 +768,21 @@
                 return;
             }
 
+            if (selectedDocument.IsChanged)
+            {
+                if (showInfoMessage.ShowInfoMessage(
+                    "Unsaved changes will be lost upon closing the document.\r\nDo you want to save the changes?",
+                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    if (string.IsNullOrEmpty(selectedDocument.FilePath))
+                    {
+                        selectedDocument.FilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+                    }
+
+                    persisterService.Save(selectedDocument.Model, selectedDocument.FilePath);
+                }
+            }
+
             var closedDocumentFilepath = SelectedDocument.Model.FilePath;
 
             if (closedDocumentFilepath != null)
@@ -894,6 +910,17 @@
         {
             var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
 
+            if (string.IsNullOrWhiteSpace(configFilesDirectoryPath) || !Directory.Exists(configFilesDirectoryPath))
+            {
+                if (showInfoMessage.ShowInfoMessage(
+                    "The folder path to the configuration file is not set. Would you like to set it now?",
+                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    configFilesDirectoryPath = openFileDialogService.GetFolderLocation();
+                    SetPathInAppSettings(configFilesDirectoryPath);
+                }
+            }
+
             var filenameToPathMapping = new Dictionary<string, string>();
 
             if (Directory.Exists(configFilesDirectoryPath))
@@ -908,6 +935,17 @@
             }
 
             return filenameToPathMapping;
+        }
+
+        private void SetPathInAppSettings(string configFilesDirectoryPath)
+        {
+            var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var configFile = Path.Combine(appPath, "App.config");
+            var configFileMap = new ExeConfigurationFileMap {ExeConfigFilename = configFile};
+            var config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
+
+            config.AppSettings.Settings["configurationFilesDirectoryPath"].Value = configFilesDirectoryPath;
+            config.Save();
         }
 
         private void RefreshDocumentsExplorerList()
