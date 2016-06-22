@@ -8,22 +8,22 @@
         {
             var cleanEntity = entity.Trim().ToLowerInvariant();
 
-            if (cleanEntity.Equals("attribute"))
+            if (cleanEntity.Equals(ConfigurationStaticData.AttributeEntityName))
             {
                 return new Attribute();
             }
 
-            if (cleanEntity.Equals("word"))
+            if (cleanEntity.Equals(ConfigurationStaticData.WordEntityName))
             {
                 return new Word();
             }
 
-            if (cleanEntity.Equals("sentence"))
+            if (cleanEntity.Equals(ConfigurationStaticData.SentenceEntityName))
             {
                 return new Sentence();
             }
 
-            if (cleanEntity.Equals("document"))
+            if (cleanEntity.Equals(ConfigurationStaticData.DocumentEntityName))
             {
                 return new Document();
             }

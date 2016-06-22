@@ -3,6 +3,7 @@
     using System.Windows.Input;
     using Commands;
     using Domain;
+    using Mappers;
     using View;
     using Wrapper;
     using Wrapper.Base;
@@ -14,7 +15,8 @@
             Attribute = new AttributeWrapper(new Attribute
             {
                 IsEditable = true,
-                IsOptional = true
+                IsOptional = true,
+                Entity = ConfigurationStaticData.AttributeEntityName
             });
 
             OkButtonCommand = new DelegateCommand(OkButtonCommandExecute, OkButtonCommandCanExecute);

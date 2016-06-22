@@ -939,6 +939,11 @@
 
         private void SetPathInAppSettings(string configFilesDirectoryPath)
         {
+            if (string.IsNullOrWhiteSpace(configFilesDirectoryPath))
+            {
+                return;
+            }
+
             var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var configFile = Path.Combine(appPath, "App.config");
             var configFileMap = new ExeConfigurationFileMap {ExeConfigFilename = configFile};
