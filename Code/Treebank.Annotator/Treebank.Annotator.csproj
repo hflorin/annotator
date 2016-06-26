@@ -180,6 +180,9 @@
     <Compile Include="View\ElementAttributeEditorView.xaml.cs">
       <DependentUpon>ElementAttributeEditorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ChooseConfigurationWindow.xaml.cs">
+      <DependentUpon>ChooseConfigurationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\InputDialog.xaml.cs">
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
@@ -245,6 +248,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\ChooseConfigurationWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -288,7 +295,6 @@
     </Compile>
     <None Include="App.config">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

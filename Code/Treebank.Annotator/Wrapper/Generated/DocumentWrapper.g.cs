@@ -2,12 +2,12 @@ namespace Treebank.Annotator.Wrapper
 {
 	using System;
 	using System.Linq;
-	using Treebank.Annotator.Wrapper.Base;
+	using Base;
 	using Treebank.Domain;
 
-    public partial class DocumentWrapper : Treebank.Annotator.Wrapper.ElementWrapper<Document>
+	public partial class DocumentWrapper : ElementWrapper<Domain.Document>
 	{
-		public DocumentWrapper(Document model) : base(model)
+		public DocumentWrapper(Domain.Document model) : base(model)
 		{
 		}
 
@@ -27,9 +27,9 @@ namespace Treebank.Annotator.Wrapper
             get { return GetIsChanged("FilePath"); }
         }
 
-		public ChangeTrackingCollection<Treebank.Annotator.Wrapper.SentenceWrapper> Sentences { get; set; }
+		public ChangeTrackingCollection<SentenceWrapper> Sentences { get; set; }
 
-		protected override void InitializeCollectionProperties(Document model)
+		protected override void InitializeCollectionProperties(Domain.Document model)
 		{
 			if(model == null)
 			{
@@ -42,7 +42,7 @@ namespace Treebank.Annotator.Wrapper
 			{
 				throw new ArgumentException("Sentences cannot be null.");
 			}
-			Sentences = new ChangeTrackingCollection<Treebank.Annotator.Wrapper.SentenceWrapper>(model.Sentences.Select(e => new Treebank.Annotator.Wrapper.SentenceWrapper(e)));
+			Sentences = new ChangeTrackingCollection<SentenceWrapper>(model.Sentences.Select(e => new SentenceWrapper(e)));
 			RegisterCollection(Sentences, model.Sentences);
 		}
 	}

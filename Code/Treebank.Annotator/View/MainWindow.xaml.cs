@@ -8,6 +8,7 @@
     using System.Windows.Threading;
     using Events;
     using Prism.Events;
+    using Treebank.Events;
     using ViewModels;
     using Wrapper;
     using Xceed.Wpf.AvalonDock;
@@ -23,6 +24,12 @@
             this.viewModel = viewModel;
             DataContext = this.viewModel;
             this.eventAggregator = eventAggregator;
+            this.eventAggregator.GetEvent<CloseApplicationEvent>().Subscribe(OnCloseApp);
+        }
+
+        private void OnCloseApp(bool obj)
+        {
+            Close();
         }
 
         protected override void OnClosing(CancelEventArgs e)

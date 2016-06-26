@@ -31,8 +31,6 @@
     {
         private ISentenceEditorView activeSentenceEditorView;
 
-        private IAppConfig appConfig;
-
         private IAppConfigMapper appConfigMapper;
 
         private string currentStatus;
@@ -79,18 +77,14 @@
                 showInfoMessage,
                 persister);
 
+            if (!EnsureConfigurationsAreAvailable())
+            {
+                return;
+            }
+
             SubscribeToEvents();
 
             InitializeMembers();
-        }
-
-        public IAppConfig AppConfig
-        {
-            get
-            {
-                appConfig = LoadConfig().GetAwaiter().GetResult();
-                return appConfig;
-            }
         }
 
         public ObservableCollection<DocumentWrapper> Documents { get; set; }
@@ -194,6 +188,43 @@
             }
         }
 
+        private bool EnsureConfigurationsAreAvailable()
+        {
+            var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
+
+            var filesCount = 0;
+
+            if (!string.IsNullOrWhiteSpace(configFilesDirectoryPath) && Directory.Exists(configFilesDirectoryPath))
+            {
+                filesCount = Directory.GetFiles(configFilesDirectoryPath).Length;
+            }
+
+            while (string.IsNullOrWhiteSpace(configFilesDirectoryPath) || !Directory.Exists(configFilesDirectoryPath) ||
+                   (filesCount == 0))
+            {
+                if (showInfoMessage.ShowInfoMessage(
+                    "The folder path to the configuration files is not set.\r\nPlease choose the location where the configuration files are located.",
+                    MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    configFilesDirectoryPath = openFileDialogService.GetFolderLocation();
+                }
+                else
+                {
+                    eventAggregator.GetEvent<CloseApplicationEvent>().Publish(true);
+                    return false;
+                }
+
+                if (!string.IsNullOrWhiteSpace(configFilesDirectoryPath))
+                {
+                    filesCount = Directory.GetFiles(configFilesDirectoryPath).Length;
+                }
+            }
+
+            SetPathInAppSettings(configFilesDirectoryPath);
+
+            return true;
+        }
+
         public void OnClosing(CancelEventArgs cancelEventArgs)
         {
             var modifiedDocs =
@@ -234,43 +265,6 @@
             eventAggregator.GetEvent<CheckIsTreeOnSentenceEvent>().Subscribe(OnCheckIsTreeOnSentence);
         }
 
-        private async Task<IAppConfig> LoadConfig()
-        {
-            if ((appConfig == null) ||
-                ((SelectedDocument != null) &&
-                 (appConfig.Filepath != SelectedDocument.Model.GetAttributeByName("configuration"))))
-            {
-                var configFilePath = string.Empty;
-
-                var filePathToName = GetConfigFileNameToFilePathMapping();
-
-                if (SelectedDocument != null)
-                {
-                    var configurationFileName = SelectedDocument.Model.GetAttributeByName("configuration");
-                    configFilePath =
-                        filePathToName.Where(p => p.Value == configurationFileName).Select(p => p.Key).FirstOrDefault();
-                }
-
-                if (string.IsNullOrEmpty(configFilePath))
-                {
-                    configFilePath = filePathToName.Keys.FirstOrDefault();
-
-                    if (string.IsNullOrWhiteSpace(configFilePath))
-                    {
-                        var configFilesDirectoryPath =
-                            ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
-                        MessageBox.Show(
-                            string.Format("Please add a configuration file in the configurations folder {0}",
-                                configFilesDirectoryPath), "Missing configuration file");
-                    }
-                }
-
-                appConfig = await appConfigMapper.Map(configFilePath);
-            }
-
-            return appConfig;
-        }
-
         private void OnCheckIsTreeOnSentence(SentenceWrapper sentenceWrapper)
         {
             if (sentenceWrapper == null)
@@ -279,8 +273,12 @@
             }
 
             var validationResult = new CheckGraphResult();
+            //todo no bueno with the app config
+
+            var appConfig = appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configuration")).GetAwaiter().GetResult();
+
             sentenceWrapper.IsTree =
-                GraphOperations.GetGraph(sentenceWrapper, AppConfig.Definitions.First(), eventAggregator)
+                GraphOperations.GetGraph(sentenceWrapper, appConfig.Definitions.First(), eventAggregator)
                     .IsTree(validationResult);
 
             if (!sentenceWrapper.IsTree)
@@ -443,9 +441,12 @@
                     ? string.Empty
                     : rightDocumentIdAttribute.Value;
 
+                var appConfig = appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configuration")).GetAwaiter().GetResult();
+
                 var sentenceEditView =
                     new CompareSentenceEditorView(
-                        new SentenceEditorViewModel(eventAggregator, AppConfig, dataContext.LeftSelectedSentence,
+                        new SentenceEditorViewModel(eventAggregator, appConfig,
+                            dataContext.LeftSelectedSentence,
                             dataContext.RightSelectedSentence,
                             showInfoMessage)
                         {
@@ -457,7 +458,7 @@
                                     rightSentenceIdAttributeValue, rightDocumentIdAttributeValue))
                         },
                         eventAggregator,
-                        AppConfig);
+                        appConfig);
 
                 SentenceEditViews.Add(sentenceEditView);
                 ActiveSentenceEditorView = sentenceEditView;
@@ -534,9 +535,11 @@
         {
             if (SelectedDocument != null)
             {
-                var sentencePrototype = AppConfig.Elements.OfType<Sentence>().FirstOrDefault();
-                var wordPrototype = AppConfig.Elements.OfType<Word>().FirstOrDefault();
-                var configuration = AppConfig.Definitions.FirstOrDefault();
+                var appconfig = appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configuration")).GetAwaiter().GetResult();
+
+                var sentencePrototype = appconfig.Elements.OfType<Sentence>().FirstOrDefault();
+                var wordPrototype = appconfig.Elements.OfType<Word>().FirstOrDefault();
+                var configuration = appconfig.Definitions.FirstOrDefault();
 
                 if (configuration == null)
                 {
@@ -705,11 +708,14 @@
                 return;
             }
 
+            var appConfig = appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configuration")).GetAwaiter().GetResult();
+
             var sentenceEditView =
                 new SentenceEditorView(
-                    new SentenceEditorViewModel(eventAggregator, AppConfig, SelectedSentence, showInfoMessage),
+                    new SentenceEditorViewModel(eventAggregator, appConfig, SelectedSentence,
+                        showInfoMessage),
                     eventAggregator,
-                    AppConfig);
+                    appConfig);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
@@ -816,40 +822,57 @@
 
         private void NewTreeBankCommandExecute(object obj)
         {
-            var filenameToPathMapping = GetConfigFileNameToFilePathMapping();
+            if (EnsureConfigurationsAreAvailable())
+            {
+                IAppConfig appConfig;
 
-            var documentPrototype = AppConfig.Elements.OfType<Document>().Single();
+                var chooseConfigWindow = new ChooseConfigurationWindow();
 
-            var document = ObjectCopier.Clone(documentPrototype);
-
-            document.SetAttributeByName("id", "Treebank" + Documents.Count);
-
-            document.Attributes.Add(
-                new Attribute
+                if (chooseConfigWindow.ShowDialog().GetValueOrDefault())
                 {
-                    AllowedValuesSet = filenameToPathMapping.Values,
-                    Value = AppConfig.Name,
-                    Name = "configuration",
-                    DisplayName = "Configuration",
-                    Entity = "attribute",
-                    IsEditable = true,
-                    IsOptional = false
-                });
+                    var configFilePath = chooseConfigWindow.SelectedConfigFile.FilePath;
+                    appConfig = appConfigMapper.Map(configFilePath).GetAwaiter().GetResult();
+                }
+                else
+                {
+                    return;
+                }
 
-            if (Documents == null)
-            {
-                Documents =
-                    new ChangeTrackingCollection<DocumentWrapper>(
-                        new List<DocumentWrapper> {new DocumentWrapper(document)});
+                var documentPrototype = appConfig.Elements.OfType<Document>().Single();
+
+                var document = ObjectCopier.Clone(documentPrototype);
+
+                document.SetAttributeByName("id", "Treebank" + Documents.Count);
+
+                var filenameToPathMapping = DocumentMapperWithReader.GetConfigFileNameToFilePathMapping();
+
+                document.Attributes.Add(
+                    new Attribute
+                    {
+                        AllowedValuesSet = filenameToPathMapping.Values,
+                        Value = appConfig.Name,
+                        Name = "configuration",
+                        DisplayName = "Configuration",
+                        Entity = "attribute",
+                        IsEditable = true,
+                        IsOptional = false
+                    });
+
+                if (Documents == null)
+                {
+                    Documents =
+                        new ChangeTrackingCollection<DocumentWrapper>(
+                            new List<DocumentWrapper> {new DocumentWrapper(document)});
+                }
+                else
+                {
+                    Documents.Add(new DocumentWrapper(document));
+                }
+
+                InvalidateCommands();
+
+                eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Treebank created");
             }
-            else
-            {
-                Documents.Add(new DocumentWrapper(document));
-            }
-
-            InvalidateCommands();
-
-            eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Treebank created");
         }
 
         private bool OpenCommandCanExecute(object arg)
@@ -859,84 +882,56 @@
 
         private async void OpenCommandExecute(object obj)
         {
-            var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
-
-            eventAggregator.GetEvent<StatusNotificationEvent>()
-                .Publish(string.Format("Loading document: {0}. Please wait...", documentFilePath));
-
-            if (string.IsNullOrWhiteSpace(documentFilePath))
+            if (EnsureConfigurationsAreAvailable())
             {
-                return;
+                IAppConfig appConfig;
+
+                var chooseConfigWindow = new ChooseConfigurationWindow();
+
+                if (chooseConfigWindow.ShowDialog().GetValueOrDefault())
+                {
+                    var configFilePath = chooseConfigWindow.SelectedConfigFile.FilePath;
+                    appConfig = await appConfigMapper.Map(configFilePath);
+                }
+                else
+                {
+                    return;
+                }
+
+                var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
+
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(string.Format("Loading document: {0}. Please wait...", documentFilePath));
+
+                if (string.IsNullOrWhiteSpace(documentFilePath))
+                {
+                    return;
+                }
+
+                DocumentLoadExceptions.Clear();
+
+                var documentModel = await MapDocumentModel(documentFilePath, appConfig);
+
+                var documentWrapper = new DocumentWrapper(documentModel);
+
+                documentsWrappers[documentFilePath] = documentWrapper;
+
+                RefreshDocumentsExplorerList();
+
+                InvalidateCommands();
+
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(string.Format("Document loaded: {0}", documentFilePath));
             }
-
-            DocumentLoadExceptions.Clear();
-
-            var documentModel = await MapDocumentModel(documentFilePath);
-
-            var documentWrapper = new DocumentWrapper(documentModel);
-
-            documentsWrappers[documentFilePath] = documentWrapper;
-
-            RefreshDocumentsExplorerList();
-
-            InvalidateCommands();
-
-            eventAggregator.GetEvent<StatusNotificationEvent>()
-                .Publish(string.Format("Document loaded: {0}", documentFilePath));
         }
 
-        private async Task<Document> MapDocumentModel(string documentFilePath)
+        private async Task<Document> MapDocumentModel(string documentFilePath, IAppConfig appConfig)
         {
-            var filenameToPathMapping = GetConfigFileNameToFilePathMapping();
-
-            var documentModel = await documentMapper.Map(documentFilePath, AppConfig.Filepath);
-
-            documentModel.Attributes.Add(
-                new Attribute
-                {
-                    AllowedValuesSet = filenameToPathMapping.Values,
-                    Value = AppConfig.Name,
-                    Name = "configuration",
-                    DisplayName = "Configuration",
-                    Entity = "attribute",
-                    IsEditable = true,
-                    IsOptional = false
-                });
+            var documentModel = await documentMapper.Map(documentFilePath, appConfig.Filepath);
 
             return documentModel;
         }
-
-        private Dictionary<string, string> GetConfigFileNameToFilePathMapping()
-        {
-            var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
-
-            if (string.IsNullOrWhiteSpace(configFilesDirectoryPath) || !Directory.Exists(configFilesDirectoryPath))
-            {
-                if (showInfoMessage.ShowInfoMessage(
-                    "The folder path to the configuration file is not set. Would you like to set it now?",
-                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    configFilesDirectoryPath = openFileDialogService.GetFolderLocation();
-                    SetPathInAppSettings(configFilesDirectoryPath);
-                }
-            }
-
-            var filenameToPathMapping = new Dictionary<string, string>();
-
-            if (Directory.Exists(configFilesDirectoryPath))
-            {
-                var configFilesPaths = Directory.GetFiles(configFilesDirectoryPath).ToList();
-
-                foreach (var configFilePath in configFilesPaths)
-                {
-                    var filename = Path.GetFileName(configFilePath);
-                    filenameToPathMapping.Add(configFilePath, filename);
-                }
-            }
-
-            return filenameToPathMapping;
-        }
-
+        
         private void SetPathInAppSettings(string configFilesDirectoryPath)
         {
             if (string.IsNullOrWhiteSpace(configFilesDirectoryPath))
@@ -945,7 +940,7 @@
             }
 
             var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var configFile = Path.Combine(appPath, "App.config");
+            var configFile = Path.Combine(appPath, Assembly.GetExecutingAssembly().GetName().Name + ".exe.config");
             var configFileMap = new ExeConfigurationFileMap {ExeConfigFilename = configFile};
             var config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
 

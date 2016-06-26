@@ -1,19 +1,19 @@
 namespace Treebank.Annotator.Wrapper
 {
-    using System;
-    using System.Linq;
-    using Treebank.Annotator.Wrapper.Base;
-    using Treebank.Domain;
+	using System;
+	using System.Linq;
+	using Base;
+	using Treebank.Domain;
 
-    public partial class SentenceWrapper : Treebank.Annotator.Wrapper.ElementWrapper<Sentence>
+	public partial class SentenceWrapper : ElementWrapper<Domain.Sentence>
 	{
-		public SentenceWrapper(Sentence model) : base(model)
+		public SentenceWrapper(Domain.Sentence model) : base(model)
 		{
 		}
 
-		public ChangeTrackingCollection<Treebank.Annotator.Wrapper.WordWrapper> Words { get; set; }
+		public ChangeTrackingCollection<WordWrapper> Words { get; set; }
 
-		protected override void InitializeCollectionProperties(Sentence model)
+		protected override void InitializeCollectionProperties(Domain.Sentence model)
 		{
 			if(model == null)
 			{
@@ -26,7 +26,7 @@ namespace Treebank.Annotator.Wrapper
 			{
 				throw new ArgumentException("Words cannot be null.");
 			}
-			Words = new ChangeTrackingCollection<Treebank.Annotator.Wrapper.WordWrapper>(model.Words.Select(e => new Treebank.Annotator.Wrapper.WordWrapper(e)));
+			Words = new ChangeTrackingCollection<WordWrapper>(model.Words.Select(e => new WordWrapper(e)));
 			RegisterCollection(Words, model.Words);
 		}
 	}

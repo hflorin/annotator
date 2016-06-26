@@ -2,13 +2,29 @@ namespace Treebank.Annotator.Wrapper
 {
 	using System;
 	using System.Linq;
-	using Treebank.Annotator.Wrapper.Base;
-	using Attribute = Treebank.Domain.Attribute;
+	using Base;
+	using Treebank.Domain;
 
-    public partial class AttributeWrapper : ModelWrapper<Attribute>
+	public partial class AttributeWrapper : ModelWrapper<Domain.Attribute>
 	{
-		public AttributeWrapper(Attribute model) : base(model)
+		public AttributeWrapper(Domain.Attribute model) : base(model)
 		{
+        }
+
+		public System.String Entity
+        {
+            get { return GetValue<System.String>(); }
+            set { SetValue(value); }
+        }
+
+        public System.String EntityOriginalValue
+        {
+            get { return GetOriginalValue<System.String>("Entity"); }
+        }
+
+        public bool EntityIsChanged
+        {
+            get { return GetIsChanged("Entity"); }
         }
 
 		public System.Boolean IsEditable
@@ -59,23 +75,7 @@ namespace Treebank.Annotator.Wrapper
             get { return GetIsChanged("Name"); }
         }
 
-        public System.String Entity
-        {
-            get { return GetValue<System.String>(); }
-            set { SetValue(value); }
-        }
-
-        public System.String EntityOriginalValue
-        {
-            get { return GetOriginalValue<System.String>("Entity"); }
-        }
-
-        public bool EntityIsChanged
-        {
-            get { return GetIsChanged("Entity"); }
-        }
-
-        public System.String DisplayName
+		public System.String DisplayName
         {
             get { return GetValue<System.String>(); }
             set { SetValue(value); }
@@ -109,7 +109,7 @@ namespace Treebank.Annotator.Wrapper
 
 		public ChangeTrackingCollection<StringWrapper> AllowedValuesSet { get; set; }
 
-		protected override void InitializeCollectionProperties(Attribute model)
+		protected override void InitializeCollectionProperties(Domain.Attribute model)
 		{
 			if(model == null)
 			{

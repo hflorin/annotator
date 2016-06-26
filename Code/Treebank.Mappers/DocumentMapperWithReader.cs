@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
@@ -23,6 +25,25 @@
 
         public IAppConfigMapper AppConfigMapper { get; set; }
 
+        public static Dictionary<string, string> GetConfigFileNameToFilePathMapping()
+        {
+            var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
+
+            var filenameToPathMapping = new Dictionary<string, string>();
+
+            if ((configFilesDirectoryPath != null) && Directory.Exists(configFilesDirectoryPath))
+            {
+                var configFilesPaths = Directory.GetFiles(configFilesDirectoryPath).ToList();
+
+                foreach (var configFilePath in configFilesPaths)
+                {
+                    var filename = Path.GetFileName(configFilePath);
+                    filenameToPathMapping.Add(configFilePath, filename);
+                }
+            }
+
+            return filenameToPathMapping;
+        }
         public async Task<Document> Map(string filepath, string configFilepath)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
@@ -41,6 +62,20 @@
             var document = await CreateDocument(filepath, appConfig);
 
             document.FilePath = filepath;
+
+            var filenameToPathMapping = GetConfigFileNameToFilePathMapping();
+
+            document.Attributes.Add(
+                new Attribute
+                {
+                    AllowedValuesSet = filenameToPathMapping.Values,
+                    Value = appConfig.Name,
+                    Name = "configuration",
+                    DisplayName = "Configuration",
+                    Entity = "attribute",
+                    IsEditable = true,
+                    IsOptional = false
+                });
 
             return document;
         }

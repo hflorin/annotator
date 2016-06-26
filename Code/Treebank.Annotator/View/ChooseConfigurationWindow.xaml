@@ -1,0 +1,28 @@
+﻿<Window x:Name="Input" x:Class="Treebank.Annotator.View.ChooseConfigurationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Treebank.Annotator.View"
+        mc:Ignorable="d"
+        Title="Choose Configuration File" MinHeight="100" MaxHeight="100" Width="300" ResizeMode="CanResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="25" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2" LastChildFill="True" HorizontalAlignment="Stretch">
+            <Label Content="Configuration Files" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                   VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+            <ComboBox Name="configurationFiles" ItemsSource="{Binding ConfigurationFiles}"
+                      DisplayMemberPath="FileName" />
+        </DockPanel>
+
+        <Button Name="OKButton" Content="Ok" Click="OKButton_OnClick" IsDefault="True" Grid.Row="1" Grid.Column="0" />
+        <Button Name="CancelButton" Content="Cancel" IsCancel="True" Grid.Row="1" Grid.Column="1" />
+    </Grid>
+</Window>

@@ -2,11 +2,12 @@ namespace Treebank.Annotator.Wrapper
 {
 	using System;
 	using System.Linq;
+	using Base;
 	using Treebank.Domain;
 
-    public partial class WordWrapper : Treebank.Annotator.Wrapper.ElementWrapper<Word>
+	public partial class WordWrapper : ElementWrapper<Domain.Word>
 	{
-		public WordWrapper(Word model) : base(model)
+		public WordWrapper(Domain.Word model) : base(model)
 		{
 		}
 	}

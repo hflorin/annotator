@@ -2,11 +2,11 @@ namespace Treebank.Annotator.Wrapper
 {
 	using System;
 	using System.Linq;
-	using Treebank.Annotator.Wrapper.Base;
+	using Base;
 	using Treebank.Domain;
 
-    public partial class ElementWrapper<T> : ModelWrapper<T>
-	where T : Element
+	public partial class ElementWrapper<T> : ModelWrapper<T>
+	where T : Domain.Element
 	{
 		public ElementWrapper(T model) : base(model)
 		{
@@ -76,7 +76,23 @@ namespace Treebank.Annotator.Wrapper
             get { return GetIsChanged("IsOptional"); }
         }
 
-		public ChangeTrackingCollection<Treebank.Annotator.Wrapper.AttributeWrapper> Attributes { get; set; }
+		public System.String Entity
+        {
+            get { return GetValue<System.String>(); }
+            set { SetValue(value); }
+        }
+
+        public System.String EntityOriginalValue
+        {
+            get { return GetOriginalValue<System.String>("Entity"); }
+        }
+
+        public bool EntityIsChanged
+        {
+            get { return GetIsChanged("Entity"); }
+        }
+
+		public ChangeTrackingCollection<AttributeWrapper> Attributes { get; set; }
 
 		protected override void InitializeCollectionProperties(T model)
 		{
@@ -91,7 +107,7 @@ namespace Treebank.Annotator.Wrapper
 			{
 				throw new ArgumentException("Attributes cannot be null.");
 			}
-			Attributes = new ChangeTrackingCollection<Treebank.Annotator.Wrapper.AttributeWrapper>(model.Attributes.Select(e => new Treebank.Annotator.Wrapper.AttributeWrapper(e)));
+			Attributes = new ChangeTrackingCollection<AttributeWrapper>(model.Attributes.Select(e => new AttributeWrapper(e)));
 			AddAttributesMetadata();
 			RegisterCollection(Attributes, model.Attributes);
 		}
