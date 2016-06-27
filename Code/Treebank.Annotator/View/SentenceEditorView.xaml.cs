@@ -38,7 +38,7 @@
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
-        private VertexControl sourceVertexControl;
+        private VertexControl sourceVertexControl; 
 
         public SentenceEditorView(IEventAggregator eventAggregator, IAppConfig appConfig)
         {
