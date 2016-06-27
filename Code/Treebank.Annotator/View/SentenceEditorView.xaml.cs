@@ -31,6 +31,8 @@
 
         private readonly SentenceEditorViewModel viewModel;
 
+        public SentenceEditorViewModel ViewModel { get { return viewModel; } }
+
         // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
         private Guid viewUniqueId = Guid.NewGuid();
 
@@ -759,16 +761,19 @@
 
         private void DisplayGraph()
         {
-            GgArea.GenerateGraph(); // this will trigger and execute GgArea_GenerateGraphFinished
-            GgArea.RelayoutGraph(true);
-
-            if ((viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.DiagonalLiniar)
-                || (viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.Liniar))
+            if (GgArea.IsVisible)
             {
-                AddEdgesBetweenVertexConnectionPoints(numberOfEdgesPerVertexControl);
-            }
+                GgArea.GenerateGraph(); // this will trigger and execute GgArea_GenerateGraphFinished
+                GgArea.RelayoutGraph(true);
 
-            GgArea.UpdateAllEdges(true);
+                if ((viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.DiagonalLiniar)
+                    || (viewModel.SelectedLayoutAlgorithmType == GraphLayoutAlgorithmTypeEnum.Liniar))
+                {
+                    AddEdgesBetweenVertexConnectionPoints(numberOfEdgesPerVertexControl);
+                }
+
+                GgArea.UpdateAllEdges(true);
+            }
         }
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)

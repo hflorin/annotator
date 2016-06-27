@@ -263,6 +263,29 @@
             eventAggregator.GetEvent<StatusNotificationEvent>().Subscribe(OnStatusNotification);
             eventAggregator.GetEvent<ChangeAttributesEditorViewModel>().Subscribe(OnAttributesChanged);
             eventAggregator.GetEvent<CheckIsTreeOnSentenceEvent>().Subscribe(OnCheckIsTreeOnSentence);
+            eventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Subscribe(OnUpdateAllViewsForSentenceByViewId);
+        }
+
+        private void OnUpdateAllViewsForSentenceByViewId(Guid viewId)
+        {
+            if (sentenceEditViewModels == null || !sentenceEditViewModels.Any())
+            {
+                return;
+            }
+
+            var sentenceViewToUpdate = sentenceEditViewModels.FirstOrDefault(sev => sev is SentenceEditorView && sev.ViewId == viewId) as SentenceEditorView;
+
+            if (sentenceViewToUpdate != null)
+            {
+                var sentenceId = sentenceViewToUpdate.ViewModel.Sentence.Id.Value;
+                var sentenceEditViewsToUpdate = sentenceEditViewModels.Where(sev => sev is SentenceEditorView && ((SentenceEditorView)sev).ViewModel.Sentence.Id.Value == sentenceId).ToList();
+
+                if (sentenceEditViewsToUpdate.Any())
+                {
+                    sentenceEditViewsToUpdate.ForEach(
+                        v => eventAggregator.GetEvent<GenerateGraphEvent>().Publish(v.ViewId));
+                }
+            }
         }
 
         private void OnCheckIsTreeOnSentence(SentenceWrapper sentenceWrapper)
@@ -644,7 +667,7 @@
             var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(SelectedSentence));
             if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
             {
-                eventAggregator.GetEvent<GenerateGraphEvent>().Publish(ActiveSentenceEditorView.ViewId);
+                eventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Publish(ActiveSentenceEditorView.ViewId);
                 eventAggregator.GetEvent<ZoomToFillEvent>().Publish(ActiveSentenceEditorView.ViewId);
             }
         }

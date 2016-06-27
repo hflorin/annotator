@@ -91,7 +91,7 @@
         {
             if (wordWrapper.IsChanged)
             {
-                eventAggregator.GetEvent<GenerateGraphEvent>().Publish(viewId);
+                eventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Publish(viewId);
                 wordWrapper.AcceptChanges();
             }
         }

@@ -71,7 +71,7 @@
         private void SaveAttributeCommandExecute(object obj)
         {
             Attributes.AcceptChanges();
-            eventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
+            eventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Publish(ViewId);
         }
 
         private bool SaveAttributeCommandCanExecute(object arg)

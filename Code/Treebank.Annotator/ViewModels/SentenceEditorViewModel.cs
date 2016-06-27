@@ -327,13 +327,13 @@
         private void RejectChangesCommandExecute(object obj)
         {
             Sentence.RejectChanges();
-            EventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
+            EventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Publish(ViewId);
         }
 
         private void AcceptChangesCommandExecute(object obj)
         {
             Sentence.AcceptChanges();
-            EventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
+            EventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Publish(ViewId);
         }
 
         private bool AcceptChangesCommandCanExecute(object arg)
@@ -414,7 +414,7 @@
                 var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(Sentence));
                 if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
                 {
-                    EventAggregator.GetEvent<GenerateGraphEvent>().Publish(ViewId);
+                    EventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Publish(ViewId);
                     EventAggregator.GetEvent<ZoomToFillEvent>().Publish(ViewId);
                 }
             }
