@@ -29,7 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test Data", "Test Data", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{EAF00DB7-BF79-4879-B873-1A03EE373847}"
 	ProjectSection(SolutionItems) = preProject
-		Resources\Documentation.odt = Resources\Documentation.odt
+		Resources\Hociung Florin -Dissertation - Treebank Annotator.doc = Resources\Hociung Florin -Dissertation - Treebank Annotator.doc
+		Resources\Hociung Florin- Treebank Annotator - Presentation.pptx = Resources\Hociung Florin- Treebank Annotator - Presentation.pptx
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{FA543F16-CC59-4DBF-81D6-4B06A511E508}"
