@@ -33,7 +33,7 @@
 
         public SentenceEditorViewModel ViewModel { get { return viewModel; } }
 
-        // uniquly identifies the view for Prism events to avoidmultiple registration on event aggregator
+        // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
         private Guid viewUniqueId = Guid.NewGuid();
 
         private Dictionary<VertexControl, int> numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
