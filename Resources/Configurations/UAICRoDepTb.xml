@@ -33,7 +33,8 @@
                              value18="c.d." value19="c.i." value20="c.prep." value21="comp." value22="coord"
                              value23="coord." value24="det." value25="el.pred." value26="incid." value27="n.pred."
                              value28="narativ." value29="neg." value30="part." value31="prep." value32="punct."
-                             value33="refl." value34="sbj." value35="subord." value36="superl." />
+                             value33="refl." value34="sbj." value35="subord." value36="superl." value37="c.c.rel" value38="c.c.exc." value39="c.c.instr."
+                             value40="c.c.cond." value41="c.c.cumul." value42="c.c.opoz" value43="voc." value44="interj." value45="textual"/>
           </attribute>
         </attributes>
       </element>
@@ -41,13 +42,9 @@
   </dataStructure>
   <treeStructure>
     <definitions>
-      <definition name="Configuration 3">
+      <definition name="Dependency relation">
         <vertex entity="word" labelAttributeName="form" />
         <edge entity="word" labelAttributeName="deprel" sourceVertexAttributeName="head" targetVertexAttributeName="id" />
-      </definition>
-      <definition name="Configuration 4">
-        <vertex entity="word" labelAttributeName="lemma" />
-        <edge entity="word" labelAttributeName="postag" sourceVertexAttributeName="head" targetVertexAttributeName="id" />
       </definition>
     </definitions>
   </treeStructure>

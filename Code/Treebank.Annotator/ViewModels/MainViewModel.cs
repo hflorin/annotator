@@ -196,7 +196,7 @@
 
             if (!string.IsNullOrWhiteSpace(configFilesDirectoryPath) && Directory.Exists(configFilesDirectoryPath))
             {
-                filesCount = Directory.GetFiles(configFilesDirectoryPath).Length;
+                filesCount = Directory.GetFiles(configFilesDirectoryPath, "*.xml").Length;
             }
 
             while (string.IsNullOrWhiteSpace(configFilesDirectoryPath) || !Directory.Exists(configFilesDirectoryPath) ||
@@ -216,7 +216,7 @@
 
                 if (!string.IsNullOrWhiteSpace(configFilesDirectoryPath))
                 {
-                    filesCount = Directory.GetFiles(configFilesDirectoryPath).Length;
+                    filesCount = Directory.GetFiles(configFilesDirectoryPath, "*.xml").Length;
                 }
             }
 
@@ -268,17 +268,23 @@
 
         private void OnUpdateAllViewsForSentenceByViewId(Guid viewId)
         {
-            if (sentenceEditViewModels == null || !sentenceEditViewModels.Any())
+            if ((sentenceEditViewModels == null) || !sentenceEditViewModels.Any())
             {
                 return;
             }
 
-            var sentenceViewToUpdate = sentenceEditViewModels.FirstOrDefault(sev => sev is SentenceEditorView && sev.ViewId == viewId) as SentenceEditorView;
+            var sentenceViewToUpdate =
+                sentenceEditViewModels.FirstOrDefault(sev => sev is SentenceEditorView && (sev.ViewId == viewId)) as
+                    SentenceEditorView;
 
             if (sentenceViewToUpdate != null)
             {
                 var sentenceId = sentenceViewToUpdate.ViewModel.Sentence.Id.Value;
-                var sentenceEditViewsToUpdate = sentenceEditViewModels.Where(sev => sev is SentenceEditorView && ((SentenceEditorView)sev).ViewModel.Sentence.Id.Value == sentenceId).ToList();
+                var sentenceEditViewsToUpdate =
+                    sentenceEditViewModels.Where(
+                        sev =>
+                            sev is SentenceEditorView &&
+                            (((SentenceEditorView) sev).ViewModel.Sentence.Id.Value == sentenceId)).ToList();
 
                 if (sentenceEditViewsToUpdate.Any())
                 {
@@ -298,7 +304,10 @@
             var validationResult = new CheckGraphResult();
             //todo no bueno with the app config
 
-            var appConfig = appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configuration")).GetAwaiter().GetResult();
+            var appConfig =
+                appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
+                    .GetAwaiter()
+                    .GetResult();
 
             sentenceWrapper.IsTree =
                 GraphOperations.GetGraph(sentenceWrapper, appConfig.Definitions.First(), eventAggregator)
@@ -464,7 +473,10 @@
                     ? string.Empty
                     : rightDocumentIdAttribute.Value;
 
-                var appConfig = appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configuration")).GetAwaiter().GetResult();
+                var appConfig =
+                    appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
+                        .GetAwaiter()
+                        .GetResult();
 
                 var sentenceEditView =
                     new CompareSentenceEditorView(
@@ -558,7 +570,10 @@
         {
             if (SelectedDocument != null)
             {
-                var appconfig = appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configuration")).GetAwaiter().GetResult();
+                var appconfig =
+                    appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
+                        .GetAwaiter()
+                        .GetResult();
 
                 var sentencePrototype = appconfig.Elements.OfType<Sentence>().FirstOrDefault();
                 var wordPrototype = appconfig.Elements.OfType<Word>().FirstOrDefault();
@@ -731,7 +746,10 @@
                 return;
             }
 
-            var appConfig = appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configuration")).GetAwaiter().GetResult();
+            var appConfig =
+                appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
+                    .GetAwaiter()
+                    .GetResult();
 
             var sentenceEditView =
                 new SentenceEditorView(
@@ -849,7 +867,7 @@
             {
                 IAppConfig appConfig;
 
-                var chooseConfigWindow = new ChooseConfigurationWindow();
+                var chooseConfigWindow = new ChooseConfigurationWindow(appConfigMapper);
 
                 if (chooseConfigWindow.ShowDialog().GetValueOrDefault())
                 {
@@ -867,7 +885,7 @@
 
                 document.SetAttributeByName("id", "Treebank" + Documents.Count);
 
-                var filenameToPathMapping = DocumentMapperWithReader.GetConfigFileNameToFilePathMapping();
+                var filenameToPathMapping = AppConfig.GetConfigFileNameToFilePathMapping();
 
                 document.Attributes.Add(
                     new Attribute
@@ -909,7 +927,7 @@
             {
                 IAppConfig appConfig;
 
-                var chooseConfigWindow = new ChooseConfigurationWindow();
+                var chooseConfigWindow = new ChooseConfigurationWindow(appConfigMapper);
 
                 if (chooseConfigWindow.ShowDialog().GetValueOrDefault())
                 {
@@ -954,7 +972,7 @@
 
             return documentModel;
         }
-        
+
         private void SetPathInAppSettings(string configFilesDirectoryPath)
         {
             if (string.IsNullOrWhiteSpace(configFilesDirectoryPath))
@@ -964,7 +982,7 @@
 
             var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var configFile = Path.Combine(appPath, Assembly.GetExecutingAssembly().GetName().Name + ".exe.config");
-            var configFileMap = new ExeConfigurationFileMap {ExeConfigFilename = configFile};
+            var configFileMap = new ExeConfigurationFileMap { ExeConfigFilename = configFile };
             var config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
 
             config.AppSettings.Settings["configurationFilesDirectoryPath"].Value = configFilesDirectoryPath;

@@ -1,0 +1,58 @@
+<configuration id="Config1">
+  <dataStructure>
+    <elements>
+      <element entity="document" name="treebank" displayName="Treebank" isOptional="false">
+        <attributes>
+          <attribute entity="attribute" name="id" displayName="Id" isEditable="true" isOptional="false" />
+        </attributes>
+      </element>
+      <element entity="sentence" name="sentence" displayName="Sentence" isOptional="false">
+        <attributes>
+          <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="false" />
+          <attribute entity="attribute" name="parser" displayName="Parser" isEditable="true" isOptional="true" />
+          <attribute entity="attribute" name="user" displayName="User" isEditable="true" isOptional="true" />
+          <attribute entity="attribute" name="date" displayName="Date added" isEditable="false" isOptional="true" />
+        </attributes>
+      </element>
+      <element entity="word" name="word" displayName="Word" isOptional="false">
+        <attributes>
+          <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="false" />
+          <attribute entity="attribute" name="form" displayName="Form" isEditable="true" isOptional="false" />
+          <attribute entity="attribute" name="lemma" displayName="Lemma" isEditable="true" isOptional="false" />
+          <attribute entity="attribute" name="postag" displayName="Part of speech tag" isEditable="true"
+                     isOptional="false" />
+          <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
+                     type="" />
+          <attribute entity="attribute" name="chunk" displayName="Chunk" isEditable="true" isOptional="true" />
+          <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
+                     isOptional="false">
+            <allowedValueSet value1="Comparative" value2="Quantifier:universal" value3="Deictic" value4="Emphatic" value5="Interrogative"
+                             value6="Inexistent" value7="Possesion" value8="Qualifier"
+                             value9="Quantity" value10="Undefined" value11="Local" value12="Modal" value13="Private"
+                             value14="Restrictive" value15="Iterative" value16="Temporal" value17="Resumption"
+                             value18="Associative" value19="Causality" value20="Concession" value21="Condition" value22="Consequence"
+                             value23="Cumulative" value24="Definiendum" value25="Exception" value26="Instrumental" value27="Opposite"
+                             value28="Pars" value29="Politness" value30="Privative" value31="Purpose" value32="Reference"
+                             value33="Ability" value34="Permission" value35="Competence" value36="Future" value37="Optative" value38="Opportunity" value39="Passive" value40="Past" value41="Potentiality" value42="Partitive" value43="Patient" value44="Agent" value45="Acquiescent"
+                             value46="Intensifier" value47="Quantifier:Possibility" value48="Beneficiary" value49="Content" value50="Experience"
+                             value51="Greeting" value52="Performance" value53="Expericencer" value54="Recipient" value55="Possessive" value56="Connect:conclusion" value57="Connect:disjunction" value58="Ellipse" value59="Connect:opposition" value60="Connect:reunion"
+                             value61="Blame" value62="Consecutive" value63="Equivalent" value64="Imposition" value65="Object" value66="Occurence"
+                             value67="Defined"  value68="Ordinal" value69="Identifier" value70="Possessor" value71="Result" value72="Exogene" value73="Affect" value74="Alert" value75="Imitation" value76="Imperative"
+                             value77="Connect:subord" value78="Quantifier:negation" value79="Appurtenance" value80="Emitter" value81="Generic" value82="Uncertain" value83="Dislocation" value84="Quotation" 
+                             value85="Non-appurtenance" value86="Elaboration" value87="End" value88="Exclamation" value89="Continuative" value90="Dynamic" value91="Impersonal" value92="Reciprocal" 
+                             value93="Definiens" value94="Existent" value95="Theme" value96="Qunatifier:possibility" value97="Qunatifier:necessity" value98="Superlative" value99="Reunion" value100="Quantifier:existence"
+                             value101="Addresse" value102="Expletive"/>
+          </attribute>
+        </attributes>
+      </element>
+    </elements>
+  </dataStructure>
+  <treeStructure>
+    <definitions>
+      <definition name="Dependency relation">
+        <vertex entity="word" labelAttributeName="form" />
+        <edge entity="word" labelAttributeName="deprel" sourceVertexAttributeName="head" targetVertexAttributeName="id" />
+      </definition>
+    </definitions>
+  </treeStructure>
+</configuration>

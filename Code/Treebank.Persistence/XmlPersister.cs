@@ -45,7 +45,7 @@
 
         private void WriteAttributes(ICollection<Attribute> attributes, XmlWriter writer)
         {
-            var internalAttributes = new List<string> {"configuration", "content"};
+            var internalAttributes = new List<string> {"configuration", "content", "configurationFilePath" };
 
             foreach (var attribute in attributes)
             {

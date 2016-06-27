@@ -19,21 +19,24 @@
           <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="false" />
           <attribute entity="attribute" name="form" displayName="Form" isEditable="true" isOptional="false" />
           <attribute entity="attribute" name="lemma" displayName="Lemma" isEditable="true" isOptional="false" />
-          <attribute entity="attribute" name="postag" displayName="Part of speech tag" isEditable="true"
-                     isOptional="false" />
+          <attribute entity="attribute" name="postag" displayName="Part of speech tag" isEditable="true" isOptional="false">
+            <allowedValueSet value1="ADJ" value2="ADV" value3="ADP" value4="DET" value5="CONJ" value6="INTJ" value7="NOUN" value8="PROPN" value9="NUM"
+              value10="PRON" value11="PART" value12="AUX" value13="VERB" value14="X" value15="SYM"/>
+          </attribute>
           <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
                      type="" />
           <attribute entity="attribute" name="chunk" displayName="Chunk" isEditable="true" isOptional="true" />
           <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
                      isOptional="false">
-            <allowedValueSet value1="a.adj." value2="a.adv." value3="a.pron." value4="a.subst" value5="a.subst."
-                             value6="a.vb." value7="ap." value8="aux."
-                             value9="c.ag." value10="c.c.conc." value11="c.c.cons." value12="c.c.cz." value13="c.c.l."
-                             value14="c.c.m." value15="c.c.scop." value16="c.c.soc." value17="c.c.t."
-                             value18="c.d." value19="c.i." value20="c.prep." value21="comp." value22="coord"
-                             value23="coord." value24="det." value25="el.pred." value26="incid." value27="n.pred."
-                             value28="narativ." value29="neg." value30="part." value31="prep." value32="punct."
-                             value33="refl." value34="sbj." value35="subord." value36="superl." />
+            <allowedValueSet value1="acl" value2="advcl" value3="advmod" value4="amod" value5="appos" value6="aux"
+                             value7="auxpass" value8="case" value9="cc"
+                             value10="ccomp" value11="compound" value12="conj" value13="cop" value14="csubj"
+                             value15="csubjpass" value16="dep" value17="det" value18="discourse"
+                             value19="dislocated" value20="dobj" value21="expl" value22="foreign" value23="goeswith"
+                             value24="iobj" value25="list" value26="mark" value27="mwe" value28="name"
+                             value29="neg" value30="nmod" value31="nsubj" value32="nsubjpass" value33="nummod"
+                             value34="parataxis" value35="punct" value36="remnant" value37="reparandum" 
+                             value38="root" value39="vocative" value40="xcomp" />
           </attribute>
         </attributes>
       </element>
@@ -41,13 +44,9 @@
   </dataStructure>
   <treeStructure>
     <definitions>
-      <definition name="Configuration 1">
+      <definition name="Dependency relation">
         <vertex entity="word" labelAttributeName="form" />
         <edge entity="word" labelAttributeName="deprel" sourceVertexAttributeName="head" targetVertexAttributeName="id" />
-      </definition>
-      <definition name="Configuration 2">
-        <vertex entity="word" labelAttributeName="lemma" />
-        <edge entity="word" labelAttributeName="postag" sourceVertexAttributeName="head" targetVertexAttributeName="id" />
       </definition>
     </definitions>
   </treeStructure>

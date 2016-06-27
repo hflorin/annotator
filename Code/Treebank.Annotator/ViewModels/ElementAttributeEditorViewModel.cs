@@ -1,9 +1,11 @@
 ﻿namespace Treebank.Annotator.ViewModels
 {
     using System;
+    using System.IO;
     using System.Linq;
     using System.Windows.Input;
     using Commands;
+    using Mappers.Configuration;
     using Prism.Events;
     using Treebank.Events;
     using View;
@@ -70,6 +72,29 @@
 
         private void SaveAttributeCommandExecute(object obj)
         {
+            var configurationAttribute = Attributes.FirstOrDefault(a => a.Name == "configuration");
+            if (configurationAttribute != null)
+            {
+                var configurationFilePathAttribute = Attributes.FirstOrDefault(a => a.Name == "configurationFilePath");
+                if (configurationFilePathAttribute != null)
+                {
+                    var name = Path.GetFileName(configurationFilePathAttribute.Value);
+
+                    if (name != configurationAttribute.Value)
+                    {
+                        var mapping = AppConfig.GetConfigFileNameToFilePathMapping();
+
+                        var pair = mapping.FirstOrDefault(p => p.Value == configurationAttribute.Value);
+
+                        if (!string.IsNullOrWhiteSpace(pair.Key))
+                        {
+                            configurationFilePathAttribute.Value = pair.Key;
+                        }
+                    }
+                }
+            }
+
+
             Attributes.AcceptChanges();
             eventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Publish(ViewId);
         }
