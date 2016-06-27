@@ -35,8 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{FA543F16-CC59-4DBF-81D6-4B06A511E508}"
 	ProjectSection(SolutionItems) = preProject
-		Resources\Configurations\Configuration1.xml = Resources\Configurations\Configuration1.xml
-		Resources\Configurations\Configuration2.xml = Resources\Configurations\Configuration2.xml
+		Resources\Configurations\UAICRoDepTb - Semantic.xml = Resources\Configurations\UAICRoDepTb - Semantic.xml
+		Resources\Configurations\UAICRoDepTb.xml = Resources\Configurations\UAICRoDepTb.xml
+		Resources\Configurations\UD.xml = Resources\Configurations\UD.xml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treebank.Persistence", "Code\Treebank.Persistence\Treebank.Persistence.csproj", "{A7F6448A-1A73-4C05-8B63-8E5F5DAA2823}"
