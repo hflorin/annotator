@@ -200,18 +200,15 @@
 
         private void ParseDocument(Document document, ConfigurationPair item)
         {
-            document.Attributes.Clear();
-
-            AddAttributesToElement(item, documentPrototype, document);
+            AddAttributesToElement(item, document);
             NotifyIfAnyNonOptionalAttributeIsMissing(document, documentPrototype, document);
         }
 
         private void ParseSentence(Document document, ConfigurationPair item)
         {
             var newSentence = ObjectCopier.Clone(sentencePrototype);
-            newSentence.Attributes.Clear();
 
-            AddAttributesToElement(item, sentencePrototype, newSentence);
+            AddAttributesToElement(item, newSentence);
             NotifyIfAnyNonOptionalAttributeIsMissing(document, sentencePrototype, newSentence);
 
             document.Sentences.Add(newSentence);
@@ -220,38 +217,27 @@
         private void ParseWord(Document document, ConfigurationPair item)
         {
             var newWord = ObjectCopier.Clone(wordPrototype);
-            newWord.Attributes.Clear();
 
-            AddAttributesToElement(item, wordPrototype, newWord);
+            AddAttributesToElement(item, newWord);
             NotifyIfAnyNonOptionalAttributeIsMissing(document, wordPrototype, newWord);
 
             var lastSentence = document.Sentences.Last();
             lastSentence.Words.Add(newWord);
         }
 
-        private void AddAttributesToElement(ConfigurationPair item, Element elementPrototype, Element elementToModify)
+        private void AddAttributesToElement(ConfigurationPair item, Element elementToModify)
         {
             foreach (var itemAttributes in item.Attributes)
             {
                 foreach (var itemAttribute in itemAttributes)
                 {
-                    var attributeAdded = false;
+                    var attrib0 = elementToModify.Attributes.FirstOrDefault(a => a.Name == itemAttribute.Key);
 
-                    foreach (var wordPrototypeAttribute in elementPrototype.Attributes)
+                    if (attrib0 != null)
                     {
-                        if (itemAttribute.Key.Equals(wordPrototypeAttribute.Name))
-                        {
-                            var prototypeAttributeCopy = ObjectCopier.Clone(wordPrototypeAttribute);
-
-                            prototypeAttributeCopy.Value = itemAttribute.Value;
-
-                            elementToModify.Attributes.Add(prototypeAttributeCopy);
-                            attributeAdded = true;
-                            break;
-                        }
+                        attrib0.Value = itemAttribute.Value;
                     }
-
-                    if (!attributeAdded)
+                    else
                     {
                         elementToModify.Attributes.Add(
                             new Attribute

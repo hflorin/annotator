@@ -5,6 +5,8 @@
 
     public partial class SentenceWrapper
     {
+        private bool isTree;
+
         public AttributeWrapper Id
         {
             get { return Attributes.FirstOrDefault(a => a.Name.Equals("id")); }
@@ -89,16 +91,24 @@
             }
         }
 
-        public bool IsTree { get; set; }
-        //    }
-        //        yield break;
-        //    {
-        //    if (Attributes == null)
-        //{
-
-        //public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public bool IsTree
+        {
+            get { return isTree; }
+            set
+            {
+                isTree = value;
+                OnPropertyChanged();
+            }
+        }
 
         //    var attribute = Attributes.FirstOrDefault(a => (a.Name != null) && a.Name.Equals("parser"));
+
+        //public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    if (Attributes == null)
+        //    {
+        //        yield break;
+        //    }
 
         //    if (attribute == null || string.IsNullOrWhiteSpace(attribute.Value))
         //    {
