@@ -716,16 +716,20 @@
                         return false;
                     });
 
+                var sentenceEditViewId = Guid.Empty;
+
                 if (sentenceEditView != null)
                 {
-                    SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(
-                        eventAggregator, ((SentenceEditorView) sentenceEditView).ViewId)
-                    {
-                        Attributes = SelectedSentence.Attributes
-                    };
+                    sentenceEditViewId = sentenceEditView.ViewId;
 
                     ActiveSentenceEditorView = sentenceEditView;
                 }
+
+                SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(
+                        eventAggregator, sentenceEditViewId)
+                {
+                    Attributes = SelectedSentence.Attributes
+                };
             }
 
             var sentenceIdAttribute = SelectedSentence.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
