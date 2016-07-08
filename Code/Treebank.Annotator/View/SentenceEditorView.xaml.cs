@@ -40,7 +40,7 @@
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
 
-        private VertexControl sourceVertexControl; 
+        private VertexControl sourceVertexControl;
 
         public SentenceEditorView(IEventAggregator eventAggregator, IAppConfig appConfig)
         {
@@ -281,14 +281,16 @@
                 var source = edgeControl.Source;
                 var target = edgeControl.Target;
 
-                if ((j + 1 < sortedEdgeGaps.Count) && (sortedEdgeGaps[j].Value != sortedEdgeGaps[j + 1].Value))
-                {
-                    offset -= 25;
-                }
-                else if (j + 1 == sortedEdgeGaps.Count)
-                {
-                    offset -= 25;
-                }
+                //if ((j + 1 < sortedEdgeGaps.Count) && (sortedEdgeGaps[j].Value != sortedEdgeGaps[j + 1].Value))
+                //{
+                //    offset -= 25;
+                //}
+                //else if (j + 1 == sortedEdgeGaps.Count)
+                //{
+                //    offset -= 25;
+                //}
+
+                offset -= 25;
 
                 var nextVcPid = 1;
 
