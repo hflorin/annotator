@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Windows.Input;
     using Commands;
+    using Events;
     using Mappers.Configuration;
     using Prism.Events;
     using Treebank.Events;
@@ -41,6 +42,10 @@
 
         public ICommand RemoveAttributeCommand { get; set; }
 
+        public ICommand NextAttributesCommand { get; set; }
+
+        public ICommand PreviousAttributesCommand { get; set; }
+
         public AttributeWrapper SelectedAttribute { get; set; }
 
         public bool AnyAttributes
@@ -58,6 +63,48 @@
             RemoveAttributeCommand = new DelegateCommand(RemoveAttributeCommandExecute, RemoveAttributeCommandCanExecute);
             SaveAttributeCommand = new DelegateCommand(SaveAttributeCommandExecute, SaveAttributeCommandCanExecute);
             CancelAttributeCommand = new DelegateCommand(CancelAttributeCommandExecute, CancelAttributeCommandCanExecute);
+            NextAttributesCommand = new DelegateCommand(NextAttributesCommandExecute, NextAttributesCommandCanExecute);
+            PreviousAttributesCommand = new DelegateCommand(PreviousAttributesCommandExecute, PreviousAttributesCommandCanExecute);
+        }
+
+        private void PreviousAttributesCommandExecute(object obj)
+        {
+            var idAttribute = Attributes.FirstOrDefault(a => a.Name == "id");
+
+            if (idAttribute != null)
+            {
+                eventAggregator.GetEvent<LoadAttributesForNextWordEvent>().Publish(new NextElementAttributesRequest
+                {
+                    ViewId = ViewId,
+                    ElementId = idAttribute.Value,
+                    Direction = Directions.Previous
+                });
+            }
+        }
+
+        private bool PreviousAttributesCommandCanExecute(object arg)
+        {
+            return true;
+        }
+
+        private bool NextAttributesCommandCanExecute(object arg)
+        {
+            return true;
+        }
+
+        private void NextAttributesCommandExecute(object obj)
+        {
+            var idAttribute = Attributes.FirstOrDefault(a => a.Name == "id");
+
+            if (idAttribute != null)
+            {
+                eventAggregator.GetEvent<LoadAttributesForNextWordEvent>().Publish(new NextElementAttributesRequest
+                {
+                    ViewId = ViewId,
+                    ElementId = idAttribute.Value,
+                    Direction = Directions.Next
+                });
+            }
         }
 
         private void CancelAttributeCommandExecute(object obj)

@@ -29,6 +29,7 @@
         public static readonly string LabelAttributeName = "labelAttributeName";
         public static readonly string SourceVertexAttributeName = "sourceVertexAttributeName";
         public static readonly string TargetVertexAttributeName = "targetVertexAttributeName";
+        public static readonly string PositionAttributeName = "position";
 
         #endregion
 
@@ -38,6 +39,13 @@
         public static readonly string DocumentEntityName = "document";
         public static readonly string SentenceEntityName = "sentence";
         public static readonly string WordEntityName = "word";
+
+        #endregion
+
+        #region file formats
+
+        public static readonly string XmlFormat = "xml";
+        public static readonly string ConllxFormat = "conllx";
 
         #endregion
     }

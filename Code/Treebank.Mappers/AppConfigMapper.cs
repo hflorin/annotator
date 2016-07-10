@@ -54,6 +54,9 @@
 
                         if (pair.ElementName.Equals(ConfigurationStaticData.DataStructureTagName))
                         {
+                            var dataStructure = new DataStructure();
+                            appConfig.DataStructures.Add(dataStructure);
+
                             isParsingDataStructure = true;
                             isParsingTreeStructure = false;
                         }
@@ -81,7 +84,7 @@
             return appConfig;
         }
 
-        private static void ParseTreeStructure(List<ConfigurationPair> queue, IAppConfig appConfig)
+        private static void ParseTreeStructure(ICollection<ConfigurationPair> queue, IAppConfig appConfig)
         {
             foreach (var item in queue)
             {
@@ -137,8 +140,20 @@
             queue.Clear();
         }
 
-        private static void ParseDataStructure(List<ConfigurationPair> queue, IAppConfig appConfig)
+        private static void ParseDataStructure(ICollection<ConfigurationPair> queue, IAppConfig appConfig)
         {
+            if (queue.Count <= 0)
+            {
+                return;
+            }
+
+            var dataStructure = appConfig.DataStructures.LastOrDefault();
+
+            if (dataStructure == null)
+            {
+                return;
+            }
+
             foreach (var item in queue)
             {
                 var elementName = item.ElementName;
@@ -150,11 +165,22 @@
 
                 foreach (var attributes in item.Attributes)
                 {
-                    if (elementName.Equals(ConfigurationStaticData.AllowedValueSetTagName))
+                    if (elementName.Equals(ConfigurationStaticData.DataStructureTagName))
                     {
-                        if (appConfig.Elements.Any())
+                        foreach (var attribute in attributes)
                         {
-                            var element = appConfig.Elements.Last();
+                            if (attribute.Key == "format")
+                            {
+                                dataStructure.Format = attribute.Value;
+                                break;
+                            }
+                        }
+                    }
+                    else if (elementName.Equals(ConfigurationStaticData.AllowedValueSetTagName))
+                    {
+                        if (dataStructure.Elements.Any())
+                        {
+                            var element = dataStructure.Elements.Last();
                             if (element.Attributes.Any())
                             {
                                 var lastAttribute = element.Attributes.Last();
@@ -175,9 +201,9 @@
                         if (entity is Attribute)
                         {
                             var attribute = entity as Attribute;
-                            if (appConfig.Elements.Any())
+                            if (dataStructure.Elements.Any())
                             {
-                                var element = appConfig.Elements.Last();
+                                var element = dataStructure.Elements.Last();
 
                                 attribute.DisplayName = attributes[ConfigurationStaticData.DisplayNameAttributeName];
                                 attribute.Name = attributes[ConfigurationStaticData.NameStructureAttributeName];
@@ -185,6 +211,13 @@
                                     bool.Parse(attributes[ConfigurationStaticData.IsOptionalAttributeName]);
                                 attribute.IsEditable =
                                     bool.Parse(attributes[ConfigurationStaticData.IsEditableAttributeName]);
+
+                                if (attributes.ContainsKey(ConfigurationStaticData.PositionAttributeName))
+                                {
+                                    attribute.Position =
+                                        int.Parse(attributes[ConfigurationStaticData.PositionAttributeName]);
+                                }
+
                                 element.Attributes.Add(attribute);
                             }
                         }
@@ -199,13 +232,12 @@
                                 element.IsOptional =
                                     bool.Parse(attributes[ConfigurationStaticData.IsOptionalAttributeName]);
 
-                                appConfig.Elements.Add(element);
+                                dataStructure.Elements.Add(element);
                             }
                         }
                     }
                 }
             }
-
             queue.Clear();
         }
     }

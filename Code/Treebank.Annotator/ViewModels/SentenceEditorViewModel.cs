@@ -24,6 +24,7 @@
     public class SentenceEditorViewModel : Observable
     {
         private readonly IAppConfig appConfig;
+        private readonly DataStructure dataStructure;
 
         private readonly GraphBuilder graphBuilder;
 
@@ -46,6 +47,7 @@
         public SentenceEditorViewModel(
             IEventAggregator eventAggregator,
             IAppConfig appConfig,
+            DataStructure dataStructure,
             SentenceWrapper sentence,
             IShowInfoMessage showMessage)
         {
@@ -69,6 +71,11 @@
                 throw new ArgumentNullException("showMessage");
             }
 
+            if (dataStructure == null)
+            {
+                throw new ArgumentNullException("dataStructure");
+            }
+
             InitializeCommands();
 
             EventAggregator = eventAggregator;
@@ -76,6 +83,7 @@
             graphBuilder = new GraphBuilder(appConfig, appConfig.Definitions.First());
             this.appConfig = appConfig;
             this.showMessage = showMessage;
+            this.dataStructure = dataStructure;
             GraphConfigurations = new ObservableCollection<Definition>(this.appConfig.Definitions);
             SelectedGraphConfiguration = GraphConfigurations.First();
 
@@ -128,6 +136,11 @@
 
             var sentenceGraph = new SentenceGraph();
             sentenceLogicCore = new SentenceGxLogicCore {Graph = sentenceGraph};
+        }
+
+        public DataStructure DataStructure
+        {
+            get { return dataStructure; }
         }
 
         public SenteceGraphOperationMode SenteceGraphOperationMode
@@ -399,7 +412,7 @@
 
         private void AddWordCommandExecute(object obj)
         {
-            var wordPrototype = ObjectCopier.Clone(appConfig.Elements.OfType<Word>().Single());
+            var wordPrototype = ObjectCopier.Clone(dataStructure.Elements.OfType<Word>().Single());
             var wordIds =
                 Sentence.Words.Select(
                     w => new Pair {Id = int.Parse(w.GetAttributeByName("id")), Form = w.GetAttributeByName("form")})

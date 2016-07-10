@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConllxPersister.cs" />
+    <Compile Include="PersisterClient.cs" />
     <Compile Include="XmlPersister.cs" />
     <Compile Include="IPersister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -49,6 +51,10 @@
     <ProjectReference Include="..\Treebank.Domain\Treebank.Domain.csproj">
       <Project>{34c8855b-c3ba-4e0e-a4f2-68c5406f1382}</Project>
       <Name>Treebank.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Treebank.Mappers\Treebank.Mappers.csproj">
+      <Project>{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}</Project>
+      <Name>Treebank.Mappers</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

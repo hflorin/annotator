@@ -17,6 +17,8 @@
 
         public bool IsOptional { get; set; }
 
+        public int Position { get; set; }
+
         public string Name { get; set; }
 
         public string DisplayName { get; set; }

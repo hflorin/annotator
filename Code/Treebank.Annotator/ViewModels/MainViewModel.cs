@@ -35,15 +35,11 @@
 
         private string currentStatus;
 
-        private IDocumentMapper documentMapper;
-
         private Dictionary<string, DocumentWrapper> documentsWrappers;
 
         private IEventAggregator eventAggregator;
 
         private IOpenFileDialogService openFileDialogService;
-
-        private IPersister persisterService;
 
         private ISaveDialogService saveDialogService;
 
@@ -61,10 +57,8 @@
             IEventAggregator eventAggregator,
             ISaveDialogService saveDialogService,
             IOpenFileDialogService openFileDialogService,
-            IDocumentMapper documentMapper,
             IAppConfigMapper appConfigMapper,
-            IShowInfoMessage showInfoMessage,
-            IPersister persister)
+            IShowInfoMessage showInfoMessage)
         {
             InitializeCommands();
 
@@ -72,10 +66,8 @@
                 eventAggregator,
                 saveDialogService,
                 openFileDialogService,
-                documentMapper,
                 appConfigMapper,
-                showInfoMessage,
-                persister);
+                showInfoMessage);
 
             if (!EnsureConfigurationsAreAvailable())
             {
@@ -188,6 +180,21 @@
             }
         }
 
+        public DataStructure DataStructure
+        {
+            get
+            {
+                var fileFormat = Path.GetExtension(selectedDocument.FilePath).Substring(1);
+
+                var appconfig =
+                    appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
+                        .GetAwaiter()
+                        .GetResult();
+
+                return appconfig.DataStructures.FirstOrDefault(d => fileFormat == d.Format);
+            }
+        }
+
         private bool EnsureConfigurationsAreAvailable()
         {
             var configFilesDirectoryPath = ConfigurationManager.AppSettings["configurationFilesDirectoryPath"];
@@ -243,9 +250,35 @@
                             doc.FilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
                         }
 
-                        persisterService.Save(doc.Model, doc.FilePath);
+                        Save(doc.Model, doc.FilePath);
                     }
                 }
+            }
+        }
+
+        //todo use abstract factory and inject the factory to encapsulate the persisting logic better
+        public void Save(Document document, string documentFilePath)
+        {
+            PersisterClient persister = null;
+
+            if (Path.GetExtension(documentFilePath).Substring(1).Equals(ConfigurationStaticData.XmlFormat))
+            {
+                persister = new PersisterClient(new XmlPersister());
+            }
+            else if (Path.GetExtension(documentFilePath).Substring(1).Equals(ConfigurationStaticData.ConllxFormat))
+            {
+                persister = new PersisterClient(new ConllxPersister());
+            }
+
+            if (persister != null)
+            {
+                persister.Save(document, documentFilePath);
+            }
+            else
+            {
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(
+                        "Cannot save the document selected,because the format is not supported. Supported formats are XML and CONLLX.");
             }
         }
 
@@ -362,10 +395,8 @@
             IEventAggregator eventAggregatorArg,
             ISaveDialogService saveDialogServiceArg,
             IOpenFileDialogService openFileDialogServiceArg,
-            IDocumentMapper documentMapperArg,
             IAppConfigMapper configMapper,
-            IShowInfoMessage showMessage,
-            IPersister persister)
+            IShowInfoMessage showMessage)
         {
             if (eventAggregatorArg == null)
             {
@@ -382,11 +413,6 @@
                 throw new ArgumentNullException("openFileDialogServiceArg");
             }
 
-            if (documentMapperArg == null)
-            {
-                throw new ArgumentNullException("documentMapperArg");
-            }
-
             if (configMapper == null)
             {
                 throw new ArgumentNullException("configMapper");
@@ -397,18 +423,11 @@
                 throw new ArgumentNullException("showMessage");
             }
 
-            if (persister == null)
-            {
-                throw new ArgumentNullException("persister");
-            }
-
             showInfoMessage = showMessage;
             saveDialogService = saveDialogServiceArg;
             openFileDialogService = openFileDialogServiceArg;
             eventAggregator = eventAggregatorArg;
-            documentMapper = documentMapperArg;
             appConfigMapper = configMapper;
-            persisterService = persister;
         }
 
         private void InitializeCommands()
@@ -575,8 +594,8 @@
                         .GetAwaiter()
                         .GetResult();
 
-                var sentencePrototype = appconfig.Elements.OfType<Sentence>().FirstOrDefault();
-                var wordPrototype = appconfig.Elements.OfType<Word>().FirstOrDefault();
+                var sentencePrototype = DataStructure.Elements.OfType<Sentence>().FirstOrDefault();
+                var wordPrototype = DataStructure.Elements.OfType<Word>().FirstOrDefault();
                 var configuration = appconfig.Definitions.FirstOrDefault();
 
                 if (configuration == null)
@@ -726,7 +745,7 @@
                 }
 
                 SelectedElementAttributeEditorViewModel = new ElementAttributeEditorViewModel(
-                        eventAggregator, sentenceEditViewId)
+                    eventAggregator, sentenceEditViewId)
                 {
                     Attributes = SelectedSentence.Attributes
                 };
@@ -757,10 +776,9 @@
 
             var sentenceEditView =
                 new SentenceEditorView(
-                    new SentenceEditorViewModel(eventAggregator, appConfig, SelectedSentence,
+                    new SentenceEditorViewModel(eventAggregator, appConfig, DataStructure, SelectedSentence,
                         showInfoMessage),
-                    eventAggregator,
-                    appConfig);
+                    eventAggregator);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
@@ -830,7 +848,7 @@
                         selectedDocument.FilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
                     }
 
-                    persisterService.Save(selectedDocument.Model, selectedDocument.FilePath);
+                    Save(selectedDocument.Model, selectedDocument.FilePath);
                 }
             }
 
@@ -883,7 +901,7 @@
                     return;
                 }
 
-                var documentPrototype = appConfig.Elements.OfType<Document>().Single();
+                var documentPrototype = DataStructure.Elements.OfType<Document>().Single();
 
                 var document = ObjectCopier.Clone(documentPrototype);
 
@@ -943,7 +961,7 @@
                     return;
                 }
 
-                var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlFilesOnlyFilter);
+                var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlAndConllxFilesOnlyFilter);
 
                 eventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(string.Format("Loading document: {0}. Please wait...", documentFilePath));
@@ -972,7 +990,30 @@
 
         private async Task<Document> MapDocumentModel(string documentFilePath, IAppConfig appConfig)
         {
-            var documentModel = await documentMapper.Map(documentFilePath, appConfig.Filepath);
+            Document documentModel = null;
+
+            if (Path.GetExtension(documentFilePath).Substring(1).Equals(ConfigurationStaticData.XmlFormat))
+            {
+                documentModel = await new DocumentMapperClient(new DocumentMapperWithReader
+                {
+                    AppConfigMapper = appConfigMapper,
+                    EventAggregator = eventAggregator
+                }).Map(documentFilePath, appConfig.Filepath);
+            }
+            else if (Path.GetExtension(documentFilePath).Substring(1).Equals(ConfigurationStaticData.ConllxFormat))
+            {
+                documentModel = await new DocumentMapperClient(new ConllxDocumentMapper
+                {
+                    AppConfigMapper = appConfigMapper,
+                    EventAggregator = eventAggregator
+                }).Map(documentFilePath, appConfig.Filepath);
+            }
+            else
+            {
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(
+                        "Cannot load the file selected,because the format is not supported. Supported formats are XML and CONLLX.");
+            }
 
             return documentModel;
         }
@@ -986,7 +1027,7 @@
 
             var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var configFile = Path.Combine(appPath, Assembly.GetExecutingAssembly().GetName().Name + ".exe.config");
-            var configFileMap = new ExeConfigurationFileMap { ExeConfigFilename = configFile };
+            var configFileMap = new ExeConfigurationFileMap {ExeConfigFilename = configFile};
             var config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
 
             config.AppSettings.Settings["configurationFilesDirectoryPath"].Value = configFilesDirectoryPath;
@@ -1021,7 +1062,7 @@
             {
                 if (SelectedDocument != null)
                 {
-                    persisterService.Save(SelectedDocument.Model, documentFilePath);
+                    Save(SelectedDocument.Model, documentFilePath);
                 }
 
                 eventAggregator.GetEvent<StatusNotificationEvent>()
@@ -1043,13 +1084,13 @@
         {
             eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Saving document");
 
-            var documentFilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+            var documentFilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlAndConllxFilesOnlyFilter);
 
             if (!string.IsNullOrWhiteSpace(documentFilePath))
             {
                 if (SelectedDocument != null)
                 {
-                    persisterService.Save(SelectedDocument.Model, documentFilePath);
+                    Save(SelectedDocument.Model, documentFilePath);
                 }
 
                 eventAggregator.GetEvent<StatusNotificationEvent>()

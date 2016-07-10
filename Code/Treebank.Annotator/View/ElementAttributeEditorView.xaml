@@ -12,6 +12,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -29,12 +30,15 @@
                 <DataGridTemplateColumn CellStyle="{StaticResource DataGridCellStyle1}" Header="Value" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Grid.Row="1" Grid.Column="0" Content="Add" IsEnabled="True" Command="{Binding AddAttributeCommand}" />
-        <Button Grid.Row="1" Grid.Column="1" Content="Remove" IsEnabled="{Binding AnyAttributes}"
+        <Button Grid.Row="1" Grid.Column="0" Content="Previous" IsEnabled="True" Command="{Binding PreviousAttributesCommand}" />
+        <Button Grid.Row="1" Grid.Column="1" Content="Next" IsEnabled="True"
+                Command="{Binding NextAttributesCommand}" />
+        <Button Grid.Row="2" Grid.Column="0" Content="Add" IsEnabled="True" Command="{Binding AddAttributeCommand}" />
+        <Button Grid.Row="2" Grid.Column="1" Content="Remove" IsEnabled="{Binding AnyAttributes}"
                 Command="{Binding RemoveAttributeCommand}" />
-        <Button Grid.Row="2" Grid.Column="0" Content="Save" IsEnabled="{Binding Attributes.IsChanged}"
+        <Button Grid.Row="3" Grid.Column="0" Content="Save" IsEnabled="{Binding Attributes.IsChanged}"
                 Command="{Binding SaveAttributeCommand}" />
-        <Button Grid.Row="2" Grid.Column="1" Content="Cancel" IsEnabled="{Binding Attributes.IsChanged}"
+        <Button Grid.Row="3" Grid.Column="1" Content="Cancel" IsEnabled="{Binding Attributes.IsChanged}"
                 Command="{Binding CancelAttributeCommand}" />
     </Grid>
 </UserControl>

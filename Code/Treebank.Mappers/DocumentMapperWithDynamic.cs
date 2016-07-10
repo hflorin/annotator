@@ -35,9 +35,19 @@
 
         private Document CreateDocument(dynamic documentContent, IAppConfig appConfig)
         {
-            var documentElementPrototype = appConfig.Elements.OfType<Document>().Single();
-            var sentenceElementPrototype = appConfig.Elements.OfType<Sentence>().Single();
-            var wordElementPrototype = appConfig.Elements.OfType<Word>().Single();
+            var datastructure =
+                appConfig.DataStructures.FirstOrDefault(d => d.Format == ConfigurationStaticData.XmlFormat);
+
+            if (datastructure == null)
+            {
+                EventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish("Could not load XML file because the structure is not defined in the configuration file.");
+                return null;
+            }
+
+            var documentElementPrototype = datastructure.Elements.OfType<Document>().Single();
+            var sentenceElementPrototype = datastructure.Elements.OfType<Sentence>().Single();
+            var wordElementPrototype = datastructure.Elements.OfType<Word>().Single();
 
             var documentElement = ObjectCopier.Clone(documentElementPrototype);
 

@@ -34,11 +34,21 @@
                     string.Format("Could not load configuration file from: {0}", configFilepath));
             }
 
-            wordPrototype = appConfig.Elements.OfType<Word>().Single();
-            sentencePrototype = appConfig.Elements.OfType<Sentence>().Single();
-            documentPrototype = appConfig.Elements.OfType<Document>().Single();
+            var datastructure =
+                appConfig.DataStructures.FirstOrDefault(d => d.Format == ConfigurationStaticData.XmlFormat);
 
-            var document = await CreateDocument(filepath, appConfig);
+            if (datastructure == null)
+            {
+                EventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish("Could not load XML file because the structure is not defined in the configuration file.");
+                return null;
+            }
+
+            wordPrototype = datastructure.Elements.OfType<Word>().Single();
+            sentencePrototype = datastructure.Elements.OfType<Sentence>().Single();
+            documentPrototype = datastructure.Elements.OfType<Document>().Single();
+
+            var document = await CreateDocument(filepath, datastructure);
 
             document.FilePath = filepath;
 
@@ -70,23 +80,23 @@
             return document;
         }
 
-        private static string GetEntityNameByElementName(IAppConfig appConfig, ConfigurationPair item)
+        private static string GetEntityNameByElementName(DataStructure dataStructure, ConfigurationPair item)
         {
-            return appConfig.Elements.Single(e => e.Name.Equals(item.ElementName)).Entity;
+            return dataStructure.Elements.Single(e => e.Name.Equals(item.ElementName)).Entity;
         }
 
-        private async Task<Document> CreateDocument(string filepath, IAppConfig appConfig)
+        private async Task<Document> CreateDocument(string filepath, DataStructure dataStructure)
         {
             var document = ObjectCopier.Clone(documentPrototype);
 
-            await ParseDocument(filepath, appConfig, document);
+            await ParseDocument(filepath, dataStructure, document);
 
             await Task.Run(() => AddInternalAttributes(document));
 
             return document;
         }
 
-        private async Task ParseDocument(string filepath, IAppConfig appConfig, Document document)
+        private async Task ParseDocument(string filepath, DataStructure dataStructure, Document document)
         {
             using (var reader = new XmlTextReader(filepath))
             {
@@ -110,7 +120,7 @@
                             queue.Add(pair);
                             break;
                         case XmlNodeType.EndElement :
-                            AddElementsToDocument(document, queue, appConfig);
+                            AddElementsToDocument(document, queue, dataStructure);
                             break;
                     }
                 }
@@ -154,7 +164,7 @@
         private void AddElementsToDocument(
             Document document,
             ICollection<ConfigurationPair> queue,
-            IAppConfig appConfig)
+            DataStructure dataStructure)
         {
             if (document == null)
             {
@@ -168,7 +178,7 @@
 
             foreach (var item in queue)
             {
-                var entityName = GetEntityNameByElementName(appConfig, item);
+                var entityName = GetEntityNameByElementName(dataStructure, item);
 
                 if (string.IsNullOrWhiteSpace(entityName))
                 {

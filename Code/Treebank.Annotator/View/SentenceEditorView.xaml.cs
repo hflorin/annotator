@@ -23,18 +23,11 @@
 
     public partial class SentenceEditorView : UserControl, IDisposable, ISentenceEditorView
     {
-        private readonly IAppConfig appConfig;
-
         private readonly SentenceEditorManager editorManager;
 
         private readonly IEventAggregator eventAggregator;
 
         private readonly SentenceEditorViewModel viewModel;
-
-        public SentenceEditorViewModel ViewModel { get { return viewModel; } }
-
-        // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
-        private Guid viewUniqueId = Guid.NewGuid();
 
         private Dictionary<VertexControl, int> numberOfEdgesPerVertexControl = new Dictionary<VertexControl, int>();
 
@@ -42,7 +35,10 @@
 
         private VertexControl sourceVertexControl;
 
-        public SentenceEditorView(IEventAggregator eventAggregator, IAppConfig appConfig)
+        // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
+        private Guid viewUniqueId = Guid.NewGuid();
+
+        public SentenceEditorView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
             if (eventAggregator == null)
@@ -50,21 +46,14 @@
                 throw new ArgumentNullException("eventAggregator");
             }
 
-            if (appConfig == null)
-            {
-                throw new ArgumentNullException("appConfig");
-            }
-
             editorManager = new SentenceEditorManager(GgArea, GgZoomCtrl);
             this.eventAggregator = eventAggregator;
-            this.appConfig = appConfig;
         }
 
         public SentenceEditorView(
             SentenceEditorViewModel sentenceEditorViewModel,
-            IEventAggregator eventAggregator,
-            IAppConfig appConfig)
-            : this(eventAggregator, appConfig)
+            IEventAggregator eventAggregator)
+            : this(eventAggregator)
         {
             if (sentenceEditorViewModel == null)
             {
@@ -89,12 +78,12 @@
             eventAggregator.GetEvent<AddWordVertexEvent>().Subscribe(OnAddWordVertexControl);
             eventAggregator.GetEvent<ZoomOnWordVertexEvent>().Subscribe(OnZoomOnWordVertex);
             eventAggregator.GetEvent<ZoomToFillEvent>().Subscribe(ZoomToFill);
+            eventAggregator.GetEvent<LoadAttributesForNextWordEvent>().Subscribe(OnLoadAttributesForNextWord);
         }
 
-        public Guid ViewId
+        public SentenceEditorViewModel ViewModel
         {
-            get { return viewUniqueId; }
-            set { viewUniqueId = value; }
+            get { return viewModel; }
         }
 
         public Definition CurrentConfiguration
@@ -112,6 +101,59 @@
             if (GgArea != null)
             {
                 GgArea.Dispose();
+            }
+        }
+
+        public Guid ViewId
+        {
+            get { return viewUniqueId; }
+            set { viewUniqueId = value; }
+        }
+
+        private void OnLoadAttributesForNextWord(NextElementAttributesRequest request)
+        {
+            //to do check if problem fixed with next and previous buttons
+            if (ViewId != request.ViewId)
+                return;
+
+            int currentWordId;
+
+            if (int.TryParse(request.ElementId, out currentWordId))
+            {
+                var currentWord = viewModel.Sentence.Words.FirstOrDefault(w => w.Id == currentWordId);
+                if (currentWord != null)
+                {
+                    var currentWordIndex = viewModel.Sentence.Words.IndexOf(currentWord);
+                    int nextWordIndex;
+                    WordWrapper nextWord;
+                    if (request.Direction == Directions.Next)
+                    {
+                        nextWordIndex = currentWordIndex < viewModel.Sentence.Words.Count - 1
+                            ? currentWordIndex + 1
+                            : viewModel.Sentence.Words.Count - 1;
+                        nextWord = viewModel.Sentence.Words[nextWordIndex];
+                    }
+                    else
+                    {
+                        nextWordIndex = currentWordIndex > 0 ? currentWordIndex - 1 : 0;
+                        nextWord = viewModel.Sentence.Words[nextWordIndex];
+                    }
+
+                    if (nextWord != null)
+                    {
+                        eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
+                            .Publish(new ElementAttributeEditorViewModel(eventAggregator, ViewId)
+                            {
+                                Attributes = nextWord.Attributes
+                            });
+
+                        eventAggregator.GetEvent<ZoomOnWordVertexEvent>().Publish(new ZoomOnWordIdentifier
+                        {
+                            ViewId = ViewId,
+                            WordId = nextWord.GetAttributeByName("id")
+                        });
+                    }
+                }
             }
         }
 
@@ -281,16 +323,16 @@
                 var source = edgeControl.Source;
                 var target = edgeControl.Target;
 
-                //if ((j + 1 < sortedEdgeGaps.Count) && (sortedEdgeGaps[j].Value != sortedEdgeGaps[j + 1].Value))
-                //{
-                //    offset -= 25;
-                //}
-                //else if (j + 1 == sortedEdgeGaps.Count)
-                //{
-                //    offset -= 25;
-                //}
+                if ((j + 1 < sortedEdgeGaps.Count) && (sortedEdgeGaps[j].Value != sortedEdgeGaps[j + 1].Value))
+                {
+                    offset -= 25;
+                }
+                else if (j + 1 == sortedEdgeGaps.Count)
+                {
+                    offset -= 25;
+                }
 
-                offset -= 25;
+               // offset -= 25;
 
                 var nextVcPid = 1;
 
@@ -598,7 +640,7 @@
                 return;
             }
 
-            var wordPrototype = appConfig.Elements.OfType<Word>().Single();
+            var wordPrototype = viewModel.DataStructure.Elements.OfType<Word>().Single();
 
             var addEdgeDialog =
                 new AddEdgeWindow(
@@ -666,11 +708,13 @@
                 foreach (var word in viewModel.Sentence.Words)
                 {
                     if (word.GetAttributeByName(CurrentConfiguration.Edge.SourceVertexAttributeName)
-                        == wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Edge.TargetVertexAttributeName))
+                        ==
+                        wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Edge.TargetVertexAttributeName))
                     {
                         word.SetAttributeByName(
                             CurrentConfiguration.Edge.SourceVertexAttributeName,
-                            wordToRemove.WordWrapper.GetAttributeByName(CurrentConfiguration.Edge.SourceVertexAttributeName));
+                            wordToRemove.WordWrapper.GetAttributeByName(
+                                CurrentConfiguration.Edge.SourceVertexAttributeName));
                     }
                 }
 

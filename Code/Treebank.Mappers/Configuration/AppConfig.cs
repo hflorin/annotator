@@ -4,13 +4,12 @@
     using System.Configuration;
     using System.IO;
     using System.Linq;
-    using Domain;
 
     public class AppConfig : IAppConfig
     {
         public AppConfig()
         {
-            Elements = new List<Element>();
+            DataStructures = new List<DataStructure>();
             Definitions = new List<Definition>();
         }
 
@@ -18,7 +17,7 @@
 
         public string Filepath { get; set; }
 
-        public IList<Element> Elements { get; set; }
+        public IList<DataStructure> DataStructures { get; set; }
 
         public IList<Definition> Definitions { get; set; }
 

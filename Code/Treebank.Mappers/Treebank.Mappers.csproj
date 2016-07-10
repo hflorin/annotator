@@ -45,10 +45,13 @@
     <Compile Include="ConfigurationPair.cs" />
     <Compile Include="ConfigurationStaticData.cs" />
     <Compile Include="Configuration\AppConfig.cs" />
+    <Compile Include="Configuration\DataStructure.cs" />
     <Compile Include="Configuration\Definition.cs" />
     <Compile Include="Configuration\EdgeConfig.cs" />
     <Compile Include="Configuration\IAppConfig.cs" />
     <Compile Include="Configuration\VertexConfig.cs" />
+    <Compile Include="ConllxDocumentMapper.cs" />
+    <Compile Include="DocumentMapperClient.cs" />
     <Compile Include="DocumentMapperWithReader.cs" />
     <Compile Include="DocumentMapperWithDynamic.cs" />
     <Compile Include="ElementFactory.cs" />

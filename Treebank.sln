@@ -35,6 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{FA543F16-CC59-4DBF-81D6-4B06A511E508}"
 	ProjectSection(SolutionItems) = preProject
+		Resources\Configurations\ConllxConfig.xml = Resources\Configurations\ConllxConfig.xml
 		Resources\Configurations\UAICRoDepTb - Semantic.xml = Resources\Configurations\UAICRoDepTb - Semantic.xml
 		Resources\Configurations\UAICRoDepTb.xml = Resources\Configurations\UAICRoDepTb.xml
 		Resources\Configurations\UD.xml = Resources\Configurations\UD.xml
