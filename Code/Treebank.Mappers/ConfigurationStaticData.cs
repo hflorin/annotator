@@ -46,6 +46,7 @@
 
         public static readonly string XmlFormat = "xml";
         public static readonly string ConllxFormat = "conllx";
+        public static readonly string ConllFormat = "conll";
 
         #endregion
     }

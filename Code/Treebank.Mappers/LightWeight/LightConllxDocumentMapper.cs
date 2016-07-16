@@ -1,4 +1,4 @@
-﻿namespace Treebank.Mappers
+﻿namespace Treebank.Mappers.LightWeight
 {
     using System;
     using System.IO;
@@ -10,7 +10,7 @@
     using Prism.Events;
     using Attribute = Domain.Attribute;
 
-    public class ConllxDocumentMapper : IDocumentMapper
+    public class LightConllxDocumentMapper : IDocumentMapper
     {
         private Document documentPrototype;
         private int sentenceIdProvider;

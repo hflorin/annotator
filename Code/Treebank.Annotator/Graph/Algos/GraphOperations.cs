@@ -24,12 +24,17 @@
             {
                 var from = word.GetAttributeByName(definition.Edge.SourceVertexAttributeName);
 
-                if (from == "0")
+                if ((from == null) || (from == "0"))
                 {
                     continue;
                 }
 
                 var to = word.GetAttributeByName(definition.Edge.TargetVertexAttributeName);
+
+                if (to == null)
+                {
+                    continue;
+                }
 
                 if (wordToVertexMapping.ContainsKey(to) && wordToVertexMapping.ContainsKey(from))
                 {

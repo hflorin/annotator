@@ -28,59 +28,59 @@
             appConfig.Filepath = filepath;
             appConfig.Name = Path.GetFileName(filepath);
 
-            var reader = new XmlTextReader(filepath);
-
-            var queue = new List<ConfigurationPair>();
-
-            var isParsingDataStructure = false;
-            var isParsingTreeStructure = false;
-
-            while (reader.Read())
+            using (var reader = new XmlTextReader(filepath))
             {
-                switch (reader.NodeType)
+                var queue = new List<ConfigurationPair>();
+
+                var isParsingDataStructure = false;
+                var isParsingTreeStructure = false;
+
+                while (reader.Read())
                 {
-                    case XmlNodeType.Element :
-                        var pair = new ConfigurationPair {ElementName = reader.Name};
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element :
+                            var pair = new ConfigurationPair {ElementName = reader.Name};
 
-                        var entityAttributes = new Dictionary<string, string>();
+                            var entityAttributes = new Dictionary<string, string>();
 
-                        while (reader.MoveToNextAttribute())
-                        {
-                            entityAttributes.Add(reader.Name, reader.Value);
-                        }
+                            while (reader.MoveToNextAttribute())
+                            {
+                                entityAttributes.Add(reader.Name, reader.Value);
+                            }
 
-                        pair.Attributes.Add(entityAttributes);
-                        queue.Add(pair);
+                            pair.Attributes.Add(entityAttributes);
+                            queue.Add(pair);
 
-                        if (pair.ElementName.Equals(ConfigurationStaticData.DataStructureTagName))
-                        {
-                            var dataStructure = new DataStructure();
-                            appConfig.DataStructures.Add(dataStructure);
+                            if (pair.ElementName.Equals(ConfigurationStaticData.DataStructureTagName))
+                            {
+                                var dataStructure = new DataStructure();
+                                appConfig.DataStructures.Add(dataStructure);
 
-                            isParsingDataStructure = true;
-                            isParsingTreeStructure = false;
-                        }
-                        else if (pair.ElementName.Equals(ConfigurationStaticData.TreeStructureTagName))
-                        {
-                            isParsingDataStructure = false;
-                            isParsingTreeStructure = true;
-                        }
+                                isParsingDataStructure = true;
+                                isParsingTreeStructure = false;
+                            }
+                            else if (pair.ElementName.Equals(ConfigurationStaticData.TreeStructureTagName))
+                            {
+                                isParsingDataStructure = false;
+                                isParsingTreeStructure = true;
+                            }
 
-                        break;
-                    case XmlNodeType.EndElement :
-                        if (isParsingDataStructure)
-                        {
-                            ParseDataStructure(queue, appConfig);
-                        }
-                        else if (isParsingTreeStructure)
-                        {
-                            ParseTreeStructure(queue, appConfig);
-                        }
+                            break;
+                        case XmlNodeType.EndElement :
+                            if (isParsingDataStructure)
+                            {
+                                ParseDataStructure(queue, appConfig);
+                            }
+                            else if (isParsingTreeStructure)
+                            {
+                                ParseTreeStructure(queue, appConfig);
+                            }
 
-                        break;
+                            break;
+                    }
                 }
             }
-
             return appConfig;
         }
 

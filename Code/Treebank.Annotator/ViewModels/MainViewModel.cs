@@ -184,7 +184,7 @@
         {
             get
             {
-                var fileFormat = Path.GetExtension(selectedDocument.FilePath).Substring(1);
+                var fileFormat = Path.GetExtension(selectedDocument.FilePath).Substring(1).ToLowerInvariant();
 
                 var appconfig =
                     appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
@@ -261,11 +261,13 @@
         {
             PersisterClient persister = null;
 
-            if (Path.GetExtension(documentFilePath).Substring(1).Equals(ConfigurationStaticData.XmlFormat))
+            var lowercaseExtension = Path.GetExtension(documentFilePath).Substring(1);
+
+            if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
             {
                 persister = new PersisterClient(new XmlPersister());
             }
-            else if (Path.GetExtension(documentFilePath).Substring(1).Equals(ConfigurationStaticData.ConllxFormat))
+            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
             {
                 persister = new PersisterClient(new ConllxPersister());
             }
@@ -975,6 +977,11 @@
 
                 var documentModel = await MapDocumentModel(documentFilePath, appConfig);
 
+                if (documentModel == null)
+                {
+                    return;
+                }
+
                 var documentWrapper = new DocumentWrapper(documentModel);
 
                 documentsWrappers[documentFilePath] = documentWrapper;
@@ -992,7 +999,9 @@
         {
             Document documentModel = null;
 
-            if (Path.GetExtension(documentFilePath).Substring(1).Equals(ConfigurationStaticData.XmlFormat))
+            var lowercaseExtension= Path.GetExtension(documentFilePath).Substring(1).ToLowerInvariant();
+
+            if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
             {
                 documentModel = await new DocumentMapperClient(new DocumentMapperWithReader
                 {
@@ -1000,7 +1009,7 @@
                     EventAggregator = eventAggregator
                 }).Map(documentFilePath, appConfig.Filepath);
             }
-            else if (Path.GetExtension(documentFilePath).Substring(1).Equals(ConfigurationStaticData.ConllxFormat))
+            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
             {
                 documentModel = await new DocumentMapperClient(new ConllxDocumentMapper
                 {

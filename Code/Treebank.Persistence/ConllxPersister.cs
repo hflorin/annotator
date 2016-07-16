@@ -30,7 +30,7 @@
 
             var appConfig = mapper.Map(configFilePath).GetAwaiter().GetResult();
             var dataStructure =
-                appConfig.DataStructures.FirstOrDefault(d => d.Format.Equals(ConfigurationStaticData.ConllxFormat));
+                appConfig.DataStructures.FirstOrDefault(d => d.Format.Equals(ConfigurationStaticData.ConllxFormat) || d.Format.Equals(ConfigurationStaticData.ConllFormat));
 
             if (dataStructure == null)
             {
