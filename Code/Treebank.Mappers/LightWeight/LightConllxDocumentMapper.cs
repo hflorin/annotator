@@ -137,29 +137,42 @@
             wordPrototype = datastructure.Elements.OfType<Word>().Single();
             sentencePrototype = datastructure.Elements.OfType<Sentence>().Single();
 
-            var sentence = await CreateSentence(filepath, sentenceId);
+            var sentence = await Task.FromResult(CreateSentence(filepath, sentenceId));
 
             return sentence;
         }
 
-        private async Task<Sentence> CreateSentence(string filepath, string sentenceId)
+        private Sentence CreateSentence(string filepath, string sentenceId)
         {
             using (var reader = new StreamReader(filepath))
             {
                 var sentence = ObjectCopier.Clone(sentencePrototype);
 
-                string line;
-                var currentSentenceId = 0;
+                sentence.SetAttributeByName("id", sentenceId);
 
-                while ((line = await reader.ReadLineAsync()) != null)
+                var currentSentenceId = 0;
+                int sentenceIdNumber;
+
+                if (int.TryParse(sentenceId, out sentenceIdNumber))
                 {
-                    if (currentSentenceId.ToString() == sentenceId)
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
                     {
-                        AddWordsToSentence(sentence, line);
-                    }
-                    else if(string.IsNullOrWhiteSpace(line))
-                    {
-                        currentSentenceId++;
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            currentSentenceId++;
+                            continue;
+                        }
+
+                        if (currentSentenceId > sentenceIdNumber)
+                        {
+                            break;
+                        }
+
+                        if (currentSentenceId == sentenceIdNumber)
+                        {
+                            AddWordsToSentence(sentence, line);
+                        }
                     }
                 }
                 return sentence;

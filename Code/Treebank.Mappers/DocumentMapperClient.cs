@@ -22,7 +22,7 @@
             return await documentMapper.Map(filepath, configFilepath);
         }
 
-        public async Task<Sentence> LoadSentence(string filepath, string configFilepath, string sentenceId)
+        public async Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath)
         {
             return await documentMapper.LoadSentence(sentenceId, filepath, configFilepath);
         }
