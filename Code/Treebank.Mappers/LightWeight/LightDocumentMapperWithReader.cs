@@ -62,7 +62,7 @@
             sentencePrototype = datastructure.Elements.OfType<Sentence>().Single();
             documentPrototype = datastructure.Elements.OfType<Document>().Single();
 
-            var document = await CreateDocument(filepath, datastructure);
+            var document = await Task.FromResult(CreateDocument(filepath, datastructure));
 
             document.FilePath = filepath;
 
@@ -94,10 +94,134 @@
             return document;
         }
 
-        public Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath, DataStructure dataStructure = null,
+        public async Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath,
+            DataStructure dataStructure = null,
             Definition definition = null)
         {
-            return Task.FromResult(new Sentence());
+            var appConfig = await AppConfigMapper.Map(configFilepath);
+
+            if (appConfig == null)
+            {
+                throw new ArgumentNullException(
+                    "configFilepath",
+                    string.Format("Could not load configuration file from: {0}", configFilepath));
+            }
+
+            var datastructure =
+                appConfig.DataStructures.FirstOrDefault(
+                    d => d.Format == ConfigurationStaticData.XmlFormat);
+
+            if (datastructure == null)
+            {
+                EventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(
+                        "Could not load CONLLX file because the structure is not defined in the configuration file.");
+                return null;
+            }
+            this.definition = definition ?? appConfig.Definitions.FirstOrDefault();
+
+            if (this.definition == null)
+            {
+                EventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(
+                        "Could not load XML file because the tree definition is not defined in the configuration file.");
+                return null;
+            }
+
+
+            wordPrototype = datastructure.Elements.OfType<Word>().Single();
+            sentencePrototype = datastructure.Elements.OfType<Sentence>().Single();
+
+            var sentence = await Task.FromResult(CreateSentence(filepath, sentenceId, datastructure));
+
+            return sentence;
+        }
+
+        private Sentence CreateSentence(string filepath, string sentenceId, DataStructure dataStructure)
+        {
+            using (var reader = new XmlTextReader(filepath))
+            {
+                var queue = new List<ConfigurationPair>();
+                Sentence sentence = null;
+
+                while (reader.Read())
+                {
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element :
+                            var pair = new ConfigurationPair {ElementName = reader.Name};
+
+                            var entityAttributes = new Dictionary<string, string>();
+
+                            while (reader.MoveToNextAttribute())
+                            {
+                                entityAttributes.Add(reader.Name, reader.Value);
+                            }
+
+                            pair.Attributes.Add(entityAttributes);
+                            queue.Add(pair);
+                            break;
+                        case XmlNodeType.EndElement :
+                            sentence = CreateSentence(queue, dataStructure, sentenceId);
+                            break;
+                    }
+                    if (sentence != null)
+                    {
+                        ProcessPreviousSentence(sentence);
+
+                        return sentence;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private Sentence CreateSentence(
+            ICollection<ConfigurationPair> queue,
+            DataStructure dataStructure, string sentenceId)
+        {
+            if (!queue.Any())
+            {
+                return null;
+            }
+
+            Sentence sentence = null;
+
+            foreach (var item in queue)
+            {
+                var entityName = GetEntityNameByElementName(dataStructure, item);
+
+                if (string.IsNullOrWhiteSpace(entityName))
+                {
+                    break;
+                }
+
+                var entity = EntityFactory.GetEntity(entityName);
+
+                if (entity is Word)
+                {
+                    if (sentence == null)
+                    {
+                        continue;
+                    }
+
+                    ParseWord(sentence, item);
+                }
+                else if (entity is Sentence)
+                {
+                    sentence = ParseSentence(item);
+
+                    if ((sentence != null) && (sentence.GetAttributeByName("id") != sentenceId))
+                    {
+                        sentence = null;
+                        break;
+                    }
+                }
+            }
+
+            queue.Clear();
+
+            return sentence;
         }
 
         private static string GetEntityNameByElementName(DataStructure dataStructure, ConfigurationPair item)
@@ -105,24 +229,24 @@
             return dataStructure.Elements.Single(e => e.Name.Equals(item.ElementName)).Entity;
         }
 
-        private async Task<Document> CreateDocument(string filepath, DataStructure dataStructure)
+        private Document CreateDocument(string filepath, DataStructure dataStructure)
         {
             var document = ObjectCopier.Clone(documentPrototype);
 
-            await ParseDocument(filepath, dataStructure, document);
+            ParseDocument(filepath, dataStructure, document);
 
             //await Task.Run(() => AddDocumentInternalAttributes(document));
 
             return document;
         }
 
-        private async Task ParseDocument(string filepath, DataStructure dataStructure, Document document)
+        private void ParseDocument(string filepath, DataStructure dataStructure, Document document)
         {
             using (var reader = new XmlTextReader(filepath))
             {
                 var queue = new List<ConfigurationPair>();
 
-                while (await Task.Run(() => reader.Read()))
+                while (reader.Read())
                 {
                     switch (reader.NodeType)
                     {
@@ -170,7 +294,7 @@
             foreach (var word in sentence.Words)
             {
                 AddWordInternalAttributes(word);
-                sentenceContent += word.GetAttributeByName("content") +" ";
+                sentenceContent += word.GetAttributeByName("content") + " ";
             }
 
             sentence.Attributes.Add(
@@ -230,10 +354,6 @@
                 {
                     ParseDocument(document, item);
                 }
-                else
-                {
-                    throw new UnknownEntityTypeException(string.Format("Unkown entity {0}", item.ElementName));
-                }
             }
 
             queue.Clear();
@@ -257,6 +377,15 @@
             document.Sentences.Add(newSentence);
         }
 
+        private Sentence ParseSentence(ConfigurationPair item)
+        {
+            var newSentence = ObjectCopier.Clone(sentencePrototype);
+
+            AddAttributesToElement(item, newSentence);
+
+            return newSentence;
+        }
+
         private void ProcessPreviousSentence(Document document)
         {
             var previousSentece = document.Sentences.LastOrDefault();
@@ -266,20 +395,30 @@
                 return;
             }
 
-            AddSentenceInternalAttributes(previousSentece);
+            ProcessPreviousSentence(previousSentece);
+
+            previousSentece.Words.Clear();
+        }
+
+        private void ProcessPreviousSentence(Sentence sentence)
+        {
+            if ((sentence == null) || (sentence.Words.Count <= 1))
+            {
+                return;
+            }
+
+            AddSentenceInternalAttributes(sentence);
 
             EventAggregator.GetEvent<StatusNotificationEvent>()
-                .Publish(string.Format("Loaded sentence: {0} {1}", previousSentece.GetAttributeByName("id"),
-                    previousSentece.GetAttributeByName("content")));
+                .Publish(string.Format("Loaded sentence: {0} {1}", sentence.GetAttributeByName("id"),
+                    sentence.GetAttributeByName("content")));
 
             var validationResult = new CheckGraphResult();
 
-            previousSentece.IsTree =
-                GraphOperations.GetGraph(previousSentece, definition, EventAggregator).IsTree(validationResult);
+            sentence.IsTree =
+                GraphOperations.GetGraph(sentence, definition, EventAggregator).IsTree(validationResult);
 
-            ProcessGraphValidationResult(validationResult, previousSentece.GetAttributeByName("id"));
-
-            previousSentece.Words.Clear();
+            ProcessGraphValidationResult(validationResult, sentence.GetAttributeByName("id"));
         }
 
         private void ProcessGraphValidationResult(CheckGraphResult validationResult, string sentenceId)
@@ -320,6 +459,15 @@
 
             var lastSentence = document.Sentences.Last();
             lastSentence.Words.Add(newWord);
+        }
+
+        private void ParseWord(Sentence sentence, ConfigurationPair item)
+        {
+            var newWord = ObjectCopier.Clone(wordPrototype);
+
+            AddAttributesToElement(item, newWord);
+
+            sentence.Words.Add(newWord);
         }
 
         private void AddAttributesToElement(ConfigurationPair item, Element elementToModify)

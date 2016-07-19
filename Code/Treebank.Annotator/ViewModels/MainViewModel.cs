@@ -268,7 +268,8 @@
             {
                 persister = new PersisterClient(new XmlPersister());
             }
-            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
+            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
+                     lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
             {
                 persister = new PersisterClient(new ConllxPersister());
             }
@@ -777,9 +778,11 @@
                     .GetAwaiter()
                     .GetResult();
 
-            if (SelectedSentence.Words == null || !SelectedSentence.Words.Any())
+            if ((SelectedSentence.Words == null) || !SelectedSentence.Words.Any())
             {
-                LoadWordsForSentence(SelectedSentence,SelectedDocument.FilePath, appConfig.Filepath).GetAwaiter().GetResult();
+                LoadWordsForSentence(SelectedSentence, SelectedDocument.FilePath, appConfig.Filepath)
+                    .GetAwaiter()
+                    .GetResult();
             }
 
             var sentenceEditView =
@@ -808,20 +811,51 @@
                         documentIdAttribute != null ? documentIdAttribute.Value : string.Empty));
         }
 
-        private async Task LoadWordsForSentence(SentenceWrapper selectedSentence, string documentFilePath, string configFilePath)
+        private async Task LoadWordsForSentence(SentenceWrapper selectedSentence, string documentFilePath,
+            string configFilePath)
         {
-           var sentence = await new DocumentMapperClient(new LightConllxDocumentMapper
+            var lowercaseExtension = Path.GetExtension(documentFilePath).Substring(1);
+
+            DocumentMapperClient documentMapper = null;
+
+            if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
             {
-                AppConfigMapper = appConfigMapper,
-                EventAggregator = eventAggregator
-            }).LoadSentence(selectedSentence.Id.Value, documentFilePath, configFilePath);
+                documentMapper = new DocumentMapperClient(new LightDocumentMapperWithReader
+                {
+                    AppConfigMapper = appConfigMapper,
+                    EventAggregator = eventAggregator
+                });
+            }
+            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
+                     lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
+            {
+                documentMapper = new DocumentMapperClient(new LightConllxDocumentMapper
+                {
+                    AppConfigMapper = appConfigMapper,
+                    EventAggregator = eventAggregator
+                });
+            }
+
+            if (documentMapper == null)
+            {
+                return;
+            }
+
+            var sentence =
+                await documentMapper.LoadSentence(selectedSentence.Id.Value, documentFilePath, configFilePath);
 
             if (sentence == null)
             {
                 return;
             }
 
-            SelectedSentence = new SentenceWrapper(sentence);
+            var  selectedSentenceIndex=SelectedDocument.Sentences.IndexOf(SelectedSentence);
+
+            SelectedDocument.Sentences[selectedSentenceIndex] = new SentenceWrapper(sentence);
+
+            SelectedSentence = SelectedDocument.Sentences[selectedSentenceIndex];
+
+            SelectedDocument.AcceptChanges();
         }
 
         private bool EditSentenceCommandCanExecute(object arg)
@@ -1021,7 +1055,7 @@
         {
             Document documentModel = null;
 
-            var lowercaseExtension= Path.GetExtension(documentFilePath).Substring(1).ToLowerInvariant();
+            var lowercaseExtension = Path.GetExtension(documentFilePath).Substring(1).ToLowerInvariant();
 
             if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
             {
@@ -1031,7 +1065,8 @@
                     EventAggregator = eventAggregator
                 }).Map(documentFilePath, appConfig.Filepath);
             }
-            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
+            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
+                     lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
             {
                 documentModel = await new DocumentMapperClient(new LightConllxDocumentMapper
                 {

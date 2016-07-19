@@ -56,7 +56,6 @@
     <Compile Include="ConllxDocumentMapper.cs" />
     <Compile Include="DocumentMapperClient.cs" />
     <Compile Include="DocumentMapperWithReader.cs" />
-    <Compile Include="DocumentMapperWithDynamic.cs" />
     <Compile Include="ElementFactory.cs" />
     <Compile Include="IAppConfigMapper.cs" />
     <Compile Include="IDocumentMapper.cs" />
