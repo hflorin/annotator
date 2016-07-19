@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algos\CheckGraphResult.cs" />
+    <Compile Include="Algos\Graph.cs" />
+    <Compile Include="Algos\GraphOperations.cs" />
     <Compile Include="AppConfigMapper.cs" />
     <Compile Include="ConfigurationPair.cs" />
     <Compile Include="ConfigurationStaticData.cs" />

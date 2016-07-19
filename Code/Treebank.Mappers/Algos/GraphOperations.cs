@@ -1,13 +1,13 @@
-﻿namespace Treebank.Annotator.Graph.Algos
+﻿namespace Treebank.Mappers.Algos
 {
     using System.Collections.Generic;
+    using Domain;
     using Mappers.Configuration;
     using Prism.Events;
-    using Wrapper;
 
     public static class GraphOperations
     {
-        public static Graph GetGraph(SentenceWrapper sentence, Definition definition, IEventAggregator eventAggregator)
+        public static Graph GetGraph(Sentence sentence, Definition definition, IEventAggregator eventAggregator)
         {
             var wordToVertexMapping = new Dictionary<string, int>();
 

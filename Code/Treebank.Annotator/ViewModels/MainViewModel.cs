@@ -14,10 +14,11 @@
     using Commands;
     using Domain;
     using Events;
-    using Graph.Algos;
     using GraphX.PCL.Logic.Helpers;
     using Mappers;
+    using Mappers.Algos;
     using Mappers.Configuration;
+    using Mappers.LightWeight;
     using Persistence;
     using Prism.Events;
     using Treebank.Events;
@@ -345,7 +346,7 @@
                     .GetResult();
 
             sentenceWrapper.IsTree =
-                GraphOperations.GetGraph(sentenceWrapper, appConfig.Definitions.First(), eventAggregator)
+                GraphOperations.GetGraph(sentenceWrapper.Model, appConfig.Definitions.First(), eventAggregator)
                     .IsTree(validationResult);
 
             if (!sentenceWrapper.IsTree)
@@ -776,6 +777,11 @@
                     .GetAwaiter()
                     .GetResult();
 
+            if (SelectedSentence.Words == null || !SelectedSentence.Words.Any())
+            {
+                LoadWordsForSentence(SelectedSentence,SelectedDocument.FilePath, appConfig.Filepath).GetAwaiter().GetResult();
+            }
+
             var sentenceEditView =
                 new SentenceEditorView(
                     new SentenceEditorViewModel(eventAggregator, appConfig, DataStructure, SelectedSentence,
@@ -800,6 +806,22 @@
                         "Editing sentence with ID: {0}, document ID: {1}",
                         sentenceIdAttribute != null ? sentenceIdAttribute.Value : string.Empty,
                         documentIdAttribute != null ? documentIdAttribute.Value : string.Empty));
+        }
+
+        private async Task LoadWordsForSentence(SentenceWrapper selectedSentence, string documentFilePath, string configFilePath)
+        {
+           var sentence = await new DocumentMapperClient(new LightConllxDocumentMapper
+            {
+                AppConfigMapper = appConfigMapper,
+                EventAggregator = eventAggregator
+            }).LoadSentence(selectedSentence.Id.Value, documentFilePath, configFilePath);
+
+            if (sentence == null)
+            {
+                return;
+            }
+
+            SelectedSentence = new SentenceWrapper(sentence);
         }
 
         private bool EditSentenceCommandCanExecute(object arg)
@@ -1003,7 +1025,7 @@
 
             if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
             {
-                documentModel = await new DocumentMapperClient(new DocumentMapperWithReader
+                documentModel = await new DocumentMapperClient(new LightDocumentMapperWithReader
                 {
                     AppConfigMapper = appConfigMapper,
                     EventAggregator = eventAggregator
@@ -1011,7 +1033,7 @@
             }
             else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
             {
-                documentModel = await new DocumentMapperClient(new ConllxDocumentMapper
+                documentModel = await new DocumentMapperClient(new LightConllxDocumentMapper
                 {
                     AppConfigMapper = appConfigMapper,
                     EventAggregator = eventAggregator

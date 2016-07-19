@@ -9,7 +9,6 @@
     using Domain;
     using Events;
     using Graph;
-    using Graph.Algos;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
@@ -332,7 +331,7 @@
                     offset -= 25;
                 }
 
-               // offset -= 25;
+                // offset -= 25;
 
                 var nextVcPid = 1;
 

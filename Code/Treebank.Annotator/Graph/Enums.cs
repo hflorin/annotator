@@ -1,4 +1,4 @@
-﻿namespace Treebank.Annotator.Graph.Algos
+﻿namespace Treebank.Annotator.Graph
 {
     public enum GraphLayoutAlgorithmTypeEnum
     {

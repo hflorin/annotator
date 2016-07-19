@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
+    using Algos;
     using Configuration;
     using Domain;
     using Events;
@@ -13,6 +14,7 @@
 
     public class LightDocumentMapperWithReader : IDocumentMapper
     {
+        private Definition definition;
         private Document documentPrototype;
 
         private Sentence sentencePrototype;
@@ -23,7 +25,8 @@
 
         public IAppConfigMapper AppConfigMapper { get; set; }
 
-        public async Task<Document> Map(string filepath, string configFilepath)
+        public async Task<Document> Map(string filepath, string configFilepath, DataStructure dataStructure = null,
+            Definition definition = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
 
@@ -34,13 +37,24 @@
                     string.Format("Could not load configuration file from: {0}", configFilepath));
             }
 
-            var datastructure =
-                appConfig.DataStructures.FirstOrDefault(d => d.Format == ConfigurationStaticData.XmlFormat);
+            var datastructure = dataStructure ??
+                                appConfig.DataStructures.FirstOrDefault(
+                                    d => d.Format == ConfigurationStaticData.XmlFormat);
 
             if (datastructure == null)
             {
                 EventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish("Could not load XML file because the structure is not defined in the configuration file.");
+                return null;
+            }
+
+            this.definition = definition ?? appConfig.Definitions.FirstOrDefault();
+
+            if (this.definition == null)
+            {
+                EventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(
+                        "Could not load XML file because the tree definition is not defined in the configuration file.");
                 return null;
             }
 
@@ -80,6 +94,12 @@
             return document;
         }
 
+        public Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath, DataStructure dataStructure = null,
+            Definition definition = null)
+        {
+            return Task.FromResult(new Sentence());
+        }
+
         private static string GetEntityNameByElementName(DataStructure dataStructure, ConfigurationPair item)
         {
             return dataStructure.Elements.Single(e => e.Name.Equals(item.ElementName)).Entity;
@@ -91,7 +111,7 @@
 
             await ParseDocument(filepath, dataStructure, document);
 
-            await Task.Run(() => AddInternalAttributes(document));
+            //await Task.Run(() => AddDocumentInternalAttributes(document));
 
             return document;
         }
@@ -125,39 +145,50 @@
                     }
                 }
             }
+
+            ProcessPreviousSentence(document);
         }
 
-        private void AddInternalAttributes(Document document)
+        private void AddWordInternalAttributes(Word word)
+        {
+            var formAttribute = word.Attributes.SingleOrDefault(a => a.Name.Equals("form"));
+            var formValue = formAttribute != null ? formAttribute.Value : string.Empty;
+            word.Attributes.Add(
+                new Attribute
+                {
+                    Name = "content",
+                    DisplayName = "Content",
+                    Value = formValue,
+                    IsOptional = true,
+                    IsEditable = false
+                });
+        }
+
+        private void AddSentenceInternalAttributes(Sentence sentence)
+        {
+            var sentenceContent = string.Empty;
+            foreach (var word in sentence.Words)
+            {
+                AddWordInternalAttributes(word);
+                sentenceContent += word.GetAttributeByName("content") +" ";
+            }
+
+            sentence.Attributes.Add(
+                new Attribute
+                {
+                    Name = "content",
+                    DisplayName = "Content",
+                    Value = sentenceContent.TrimEnd(),
+                    IsOptional = true,
+                    IsEditable = false
+                });
+        }
+
+        private void AddDocumentInternalAttributes(Document document)
         {
             foreach (var sentence in document.Sentences)
             {
-                var sentenceContent = string.Empty;
-                foreach (var word in sentence.Words)
-                {
-                    var formAttribute = word.Attributes.SingleOrDefault(a => a.Name.Equals("form"));
-                    var formValue = formAttribute != null ? formAttribute.Value : string.Empty;
-
-                    sentenceContent += " " + formValue;
-                    word.Attributes.Add(
-                        new Attribute
-                        {
-                            Name = "content",
-                            DisplayName = "Content",
-                            Value = formValue,
-                            IsOptional = true,
-                            IsEditable = false
-                        });
-                }
-
-                sentence.Attributes.Add(
-                    new Attribute
-                    {
-                        Name = "content",
-                        DisplayName = "Content",
-                        Value = sentenceContent,
-                        IsOptional = true,
-                        IsEditable = false
-                    });
+                AddSentenceInternalAttributes(sentence);
             }
         }
 
@@ -216,12 +247,68 @@
 
         private void ParseSentence(Document document, ConfigurationPair item)
         {
+            ProcessPreviousSentence(document);
+
             var newSentence = ObjectCopier.Clone(sentencePrototype);
 
             AddAttributesToElement(item, newSentence);
             NotifyIfAnyNonOptionalAttributeIsMissing(document, sentencePrototype, newSentence);
 
             document.Sentences.Add(newSentence);
+        }
+
+        private void ProcessPreviousSentence(Document document)
+        {
+            var previousSentece = document.Sentences.LastOrDefault();
+
+            if ((previousSentece == null) || (previousSentece.Words.Count <= 1))
+            {
+                return;
+            }
+
+            AddSentenceInternalAttributes(previousSentece);
+
+            EventAggregator.GetEvent<StatusNotificationEvent>()
+                .Publish(string.Format("Loaded sentence: {0} {1}", previousSentece.GetAttributeByName("id"),
+                    previousSentece.GetAttributeByName("content")));
+
+            var validationResult = new CheckGraphResult();
+
+            previousSentece.IsTree =
+                GraphOperations.GetGraph(previousSentece, definition, EventAggregator).IsTree(validationResult);
+
+            ProcessGraphValidationResult(validationResult, previousSentece.GetAttributeByName("id"));
+
+            previousSentece.Words.Clear();
+        }
+
+        private void ProcessGraphValidationResult(CheckGraphResult validationResult, string sentenceId)
+        {
+            foreach (var disconnectedWordId in validationResult.DisconnectedWordIds)
+            {
+                EventAggregator.GetEvent<ValidationExceptionEvent>()
+                    .Publish(
+                        string.Format(
+                            "The word id: {0}, in sentence id: {1}, is not connected to another word.",
+                            disconnectedWordId,
+                            sentenceId));
+            }
+
+            foreach (var cycle in validationResult.Cycles)
+            {
+                EventAggregator.GetEvent<ValidationExceptionEvent>()
+                    .Publish(
+                        string.Format(
+                            "The sentence with id {0} has cycle: {1}",
+                            sentenceId,
+                            string.Join(",", cycle)));
+            }
+
+            if (validationResult.DisconnectedWordIds.Any() || validationResult.Cycles.Any())
+            {
+                EventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish("Please check warnings in the Output panel.");
+            }
         }
 
         private void ParseWord(Document document, ConfigurationPair item)

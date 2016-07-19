@@ -1,4 +1,4 @@
-﻿namespace Treebank.Annotator.Graph.Algos
+﻿namespace Treebank.Mappers.Algos
 {
     using System.Collections.Generic;
 

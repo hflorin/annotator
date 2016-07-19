@@ -9,10 +9,10 @@
     using Commands;
     using Domain;
     using Graph;
-    using Graph.Algos;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
     using Mappers;
+    using Mappers.Algos;
     using Mappers.Configuration;
     using Prism.Events;
     using Treebank.Events;
@@ -369,7 +369,7 @@
         {
             var validationResult = new CheckGraphResult();
             var isTree =
-                GraphOperations.GetGraph(Sentence, appConfig.Definitions.First(), EventAggregator)
+                GraphOperations.GetGraph(Sentence.Model, appConfig.Definitions.First(), EventAggregator)
                     .IsTree(validationResult);
 
             if (!isTree)

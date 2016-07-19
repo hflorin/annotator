@@ -23,7 +23,8 @@
 
         public IAppConfigMapper AppConfigMapper { get; set; }
 
-        public async Task<Document> Map(string filepath, string configFilepath)
+        public async Task<Document> Map(string filepath, string configFilepath, DataStructure dataStructure = null,
+            Definition definition = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
 
@@ -78,6 +79,12 @@
                 });
 
             return document;
+        }
+
+        public Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath, DataStructure dataStructure = null,
+            Definition definition = null)
+        {
+            return Task.FromResult(new Sentence());
         }
 
         private static string GetEntityNameByElementName(DataStructure dataStructure, ConfigurationPair item)

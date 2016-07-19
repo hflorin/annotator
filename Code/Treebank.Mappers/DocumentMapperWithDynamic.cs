@@ -20,7 +20,7 @@
 
         public IAppConfigMapper AppConfigMapper { get; set; }
 
-        public async Task<Document> Map(string filepath, string configFilepath)
+        public async Task<Document> Map(string filepath, string configFilepath, DataStructure dataStructure = null, Definition definition = null)
         {
             var documentContent = await ResourceLoader.LoadAsync(filepath).ConfigureAwait(false);
 
@@ -31,6 +31,12 @@
             document.FilePath = filepath;
 
             return document;
+        }
+
+        public Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath, DataStructure dataStructure = null,
+            Definition definition = null)
+        {
+            return Task.FromResult(new Sentence());
         }
 
         private Document CreateDocument(dynamic documentContent, IAppConfig appConfig)

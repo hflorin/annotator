@@ -136,10 +136,7 @@
     <Compile Include="Events\ChangeAttributesEditorViewModel.cs" />
     <Compile Include="Events\CheckIsTreeOnSentenceEvent.cs" />
     <Compile Include="Events\LoadAttributesForNextWordEvent.cs" />
-    <Compile Include="Graph\Algos\CheckGraphResult.cs" />
-    <Compile Include="Graph\Algos\Enums.cs" />
-    <Compile Include="Graph\Algos\GraphOperations.cs" />
-    <Compile Include="Graph\Algos\Graph.cs" />
+    <Compile Include="Graph\Enums.cs" />
     <Compile Include="Graph\GraphBuilder.cs" />
     <Compile Include="Graph\MotherObjects.cs" />
     <Compile Include="Graph\SentenceEditorManager.cs" />

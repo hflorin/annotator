@@ -7,7 +7,6 @@
     using System.Windows.Controls;
     using System.Windows.Input;
     using Graph;
-    using Graph.Algos;
     using GraphX.Controls;
     using GraphX.Controls.Models;
     using GraphX.PCL.Common.Enums;
