@@ -24,7 +24,7 @@
         public IAppConfigMapper AppConfigMapper { get; set; }
 
         public async Task<Document> Map(string filepath, string configFilepath, DataStructure dataStructure = null,
-            Definition definition = null)
+            Definition definitionParam = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
 
@@ -82,7 +82,7 @@
         }
 
         public Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath, DataStructure dataStructure = null,
-            Definition definition = null)
+            Definition definitionParam = null)
         {
             return Task.FromResult(new Sentence());
         }

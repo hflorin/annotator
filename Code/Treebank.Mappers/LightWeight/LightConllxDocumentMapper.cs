@@ -26,7 +26,7 @@
         public IAppConfigMapper AppConfigMapper { get; set; }
 
         public async Task<Document> Map(string filepath, string configFilepath, DataStructure dataStructure = null,
-            Definition definition = null)
+            Definition definitionParam = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
 
@@ -50,13 +50,13 @@
                         "Could not load CONLLX file because the structure is not defined in the configuration file.");
                 return null;
             }
-            this.definition = definition ?? appConfig.Definitions.FirstOrDefault();
+            definition = definitionParam ?? appConfig.Definitions.FirstOrDefault();
 
-            if (this.definition == null)
+            if (definition == null)
             {
                 EventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(
-                        "Could not load XML file because the tree definition is not defined in the configuration file.");
+                        "Could not load XML file because the tree definitionParam is not defined in the configuration file.");
                 return null;
             }
 
@@ -99,7 +99,7 @@
 
         public async Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath,
             DataStructure dataStructure = null,
-            Definition definition = null)
+            Definition definitionParam = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
 
@@ -123,13 +123,13 @@
                         "Could not load CONLLX file because the structure is not defined in the configuration file.");
                 return null;
             }
-            this.definition = definition ?? appConfig.Definitions.FirstOrDefault();
+            definition = definitionParam ?? appConfig.Definitions.FirstOrDefault();
 
-            if (this.definition == null)
+            if (definition == null)
             {
                 EventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(
-                        "Could not load XML file because the tree definition is not defined in the configuration file.");
+                        "Could not load XML file because the tree definitionParam is not defined in the configuration file.");
                 return null;
             }
 
@@ -175,6 +175,9 @@
                         }
                     }
                 }
+
+                ProcessPreviousSentence(sentence);
+
                 return sentence;
             }
         }
@@ -226,20 +229,30 @@
                 return;
             }
 
-            AddSentenceInternalAttributes(previousSentece);
+            ProcessPreviousSentence(previousSentece);
+
+            previousSentece.Words.Clear();
+        }
+
+        private void ProcessPreviousSentence(Sentence sentence)
+        {
+            if ((sentence == null) || (sentence.Words.Count <= 1))
+            {
+                return;
+            }
+
+            AddSentenceInternalAttributes(sentence);
 
             EventAggregator.GetEvent<StatusNotificationEvent>()
-                .Publish(string.Format("Loaded sentence: {0} {1}", previousSentece.GetAttributeByName("id"),
-                    previousSentece.GetAttributeByName("content")));
+                .Publish(string.Format("Loaded sentence: {0} {1}", sentence.GetAttributeByName("id"),
+                    sentence.GetAttributeByName("content")));
 
             var validationResult = new CheckGraphResult();
 
-            previousSentece.IsTree =
-                GraphOperations.GetGraph(previousSentece, definition, EventAggregator).IsTree(validationResult);
+            sentence.IsTree =
+                GraphOperations.GetGraph(sentence, definition, EventAggregator).IsTree(validationResult);
 
-            ProcessGraphValidationResult(validationResult, previousSentece.GetAttributeByName("id"));
-
-            previousSentece.Words.Clear();
+            ProcessGraphValidationResult(validationResult, sentence.GetAttributeByName("id"));
         }
 
         private void AddWordInternalAttributes(Word word)

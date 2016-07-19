@@ -26,7 +26,7 @@
         public IAppConfigMapper AppConfigMapper { get; set; }
 
         public async Task<Document> Map(string filepath, string configFilepath, DataStructure dataStructure = null,
-            Definition definition = null)
+            Definition definitionParam = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
 
@@ -48,13 +48,13 @@
                 return null;
             }
 
-            this.definition = definition ?? appConfig.Definitions.FirstOrDefault();
+            definition = definitionParam ?? appConfig.Definitions.FirstOrDefault();
 
-            if (this.definition == null)
+            if (definition == null)
             {
                 EventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(
-                        "Could not load XML file because the tree definition is not defined in the configuration file.");
+                        "Could not load XML file because the tree definitionParam is not defined in the configuration file.");
                 return null;
             }
 
@@ -96,7 +96,7 @@
 
         public async Task<Sentence> LoadSentence(string sentenceId, string filepath, string configFilepath,
             DataStructure dataStructure = null,
-            Definition definition = null)
+            Definition definitionParam = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
 
@@ -118,13 +118,13 @@
                         "Could not load CONLLX file because the structure is not defined in the configuration file.");
                 return null;
             }
-            this.definition = definition ?? appConfig.Definitions.FirstOrDefault();
+            definition = definitionParam ?? appConfig.Definitions.FirstOrDefault();
 
-            if (this.definition == null)
+            if (definition == null)
             {
                 EventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(
-                        "Could not load XML file because the tree definition is not defined in the configuration file.");
+                        "Could not load XML file because the tree definitionParam is not defined in the configuration file.");
                 return null;
             }
 
@@ -306,14 +306,6 @@
                     IsOptional = true,
                     IsEditable = false
                 });
-        }
-
-        private void AddDocumentInternalAttributes(Document document)
-        {
-            foreach (var sentence in document.Sentences)
-            {
-                AddSentenceInternalAttributes(sentence);
-            }
         }
 
         private void AddElementsToDocument(

@@ -185,14 +185,20 @@
         {
             get
             {
-                var fileFormat = Path.GetExtension(selectedDocument.FilePath).Substring(1).ToLowerInvariant();
+                var extension = Path.GetExtension(selectedDocument.FilePath);
+                if (extension != null)
+                {
+                    var fileFormat = extension.Substring(1).ToLowerInvariant();
 
-                var appconfig =
-                    appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
-                        .GetAwaiter()
-                        .GetResult();
+                    var appconfig =
+                        appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
+                            .GetAwaiter()
+                            .GetResult();
 
-                return appconfig.DataStructures.FirstOrDefault(d => fileFormat == d.Format);
+                    return appconfig.DataStructures.FirstOrDefault(d => fileFormat == d.Format);
+                }
+
+                return null;
             }
         }
 
@@ -262,16 +268,20 @@
         {
             PersisterClient persister = null;
 
-            var lowercaseExtension = Path.GetExtension(documentFilePath).Substring(1);
+            var extension = Path.GetExtension(documentFilePath);
+            if (extension != null)
+            {
+                var lowercaseExtension = extension.Substring(1);
 
-            if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
-            {
-                persister = new PersisterClient(new XmlPersister());
-            }
-            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
-                     lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
-            {
-                persister = new PersisterClient(new ConllxPersister());
+                if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
+                {
+                    persister = new PersisterClient(new XmlPersister());
+                }
+                else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
+                         lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
+                {
+                    persister = new PersisterClient(new ConllxPersister());
+                }
             }
 
             if (persister != null)
@@ -814,46 +824,50 @@
         private async Task LoadWordsForSentence(SentenceWrapper selectedSentence, string documentFilePath,
             string configFilePath)
         {
-            var lowercaseExtension = Path.GetExtension(documentFilePath).Substring(1);
-
-            DocumentMapperClient documentMapper = null;
-
-            if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
+            var extension = Path.GetExtension(documentFilePath);
+            if (extension != null)
             {
-                documentMapper = new DocumentMapperClient(new LightDocumentMapperWithReader
+                var lowercaseExtension = extension.Substring(1);
+
+                DocumentMapperClient documentMapper = null;
+
+                if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
                 {
-                    AppConfigMapper = appConfigMapper,
-                    EventAggregator = eventAggregator
-                });
-            }
-            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
-                     lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
-            {
-                documentMapper = new DocumentMapperClient(new LightConllxDocumentMapper
+                    documentMapper = new DocumentMapperClient(new LightDocumentMapperWithReader
+                    {
+                        AppConfigMapper = appConfigMapper,
+                        EventAggregator = eventAggregator
+                    });
+                }
+                else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
+                         lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
                 {
-                    AppConfigMapper = appConfigMapper,
-                    EventAggregator = eventAggregator
-                });
+                    documentMapper = new DocumentMapperClient(new LightConllxDocumentMapper
+                    {
+                        AppConfigMapper = appConfigMapper,
+                        EventAggregator = eventAggregator
+                    });
+                }
+
+                if (documentMapper == null)
+                {
+                    return;
+                }
+
+                var sentenceLoaded =
+                    await documentMapper.LoadSentence(selectedSentence.Id.Value, documentFilePath, configFilePath);
+
+                if (sentenceLoaded == null)
+                {
+                    return;
+                }
+
+                var selectedSentenceIndex = SelectedDocument.Sentences.IndexOf(SelectedSentence);
+
+                SelectedDocument.Sentences[selectedSentenceIndex] = new SentenceWrapper(sentenceLoaded);
+
+                SelectedSentence = SelectedDocument.Sentences[selectedSentenceIndex];
             }
-
-            if (documentMapper == null)
-            {
-                return;
-            }
-
-            var sentence =
-                await documentMapper.LoadSentence(selectedSentence.Id.Value, documentFilePath, configFilePath);
-
-            if (sentence == null)
-            {
-                return;
-            }
-
-            var  selectedSentenceIndex=SelectedDocument.Sentences.IndexOf(SelectedSentence);
-
-            SelectedDocument.Sentences[selectedSentenceIndex] = new SentenceWrapper(sentence);
-
-            SelectedSentence = SelectedDocument.Sentences[selectedSentenceIndex];
 
             SelectedDocument.AcceptChanges();
         }
@@ -1055,30 +1069,34 @@
         {
             Document documentModel = null;
 
-            var lowercaseExtension = Path.GetExtension(documentFilePath).Substring(1).ToLowerInvariant();
+            var extension = Path.GetExtension(documentFilePath);
+            if (extension != null)
+            {
+                var lowercaseExtension = extension.Substring(1).ToLowerInvariant();
 
-            if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
-            {
-                documentModel = await new DocumentMapperClient(new LightDocumentMapperWithReader
+                if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
                 {
-                    AppConfigMapper = appConfigMapper,
-                    EventAggregator = eventAggregator
-                }).Map(documentFilePath, appConfig.Filepath);
-            }
-            else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
-                     lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
-            {
-                documentModel = await new DocumentMapperClient(new LightConllxDocumentMapper
+                    documentModel = await new DocumentMapperClient(new LightDocumentMapperWithReader
+                    {
+                        AppConfigMapper = appConfigMapper,
+                        EventAggregator = eventAggregator
+                    }).Map(documentFilePath, appConfig.Filepath);
+                }
+                else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat) ||
+                         lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
                 {
-                    AppConfigMapper = appConfigMapper,
-                    EventAggregator = eventAggregator
-                }).Map(documentFilePath, appConfig.Filepath);
-            }
-            else
-            {
-                eventAggregator.GetEvent<StatusNotificationEvent>()
-                    .Publish(
-                        "Cannot load the file selected,because the format is not supported. Supported formats are XML and CONLLX.");
+                    documentModel = await new DocumentMapperClient(new LightConllxDocumentMapper
+                    {
+                        AppConfigMapper = appConfigMapper,
+                        EventAggregator = eventAggregator
+                    }).Map(documentFilePath, appConfig.Filepath);
+                }
+                else
+                {
+                    eventAggregator.GetEvent<StatusNotificationEvent>()
+                        .Publish(
+                            "Cannot load the file selected,because the format is not supported. Supported formats are XML and CONLLX.");
+                }
             }
 
             return documentModel;
