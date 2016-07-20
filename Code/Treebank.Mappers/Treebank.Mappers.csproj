@@ -53,9 +53,7 @@
     <Compile Include="Configuration\EdgeConfig.cs" />
     <Compile Include="Configuration\IAppConfig.cs" />
     <Compile Include="Configuration\VertexConfig.cs" />
-    <Compile Include="ConllxDocumentMapper.cs" />
     <Compile Include="DocumentMapperClient.cs" />
-    <Compile Include="DocumentMapperWithReader.cs" />
     <Compile Include="ElementFactory.cs" />
     <Compile Include="IAppConfigMapper.cs" />
     <Compile Include="IDocumentMapper.cs" />
