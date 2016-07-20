@@ -77,10 +77,6 @@
       <Project>{2D54BBE5-F2DF-4CA2-96E5-E33B1757D2AD}</Project>
       <Name>Treebank.Events</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Treebank.Loaders\Treebank.Loaders.csproj">
-      <Project>{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}</Project>
-      <Name>Treebank.Loaders</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

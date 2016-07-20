@@ -5,15 +5,14 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
-    using Configuration;
-    using Domain;
-    using Loaders;
+
     using Prism.Events;
+
+    using Treebank.Domain;
+    using Treebank.Mappers.Configuration;
 
     public class AppConfigMapper : IAppConfigMapper
     {
-        public IResourceLoader Loader { get; set; }
-
         public IEventAggregator EventAggregator { get; set; }
 
         public async Task<IAppConfig> Map(string filepath)
@@ -39,8 +38,8 @@
                 {
                     switch (reader.NodeType)
                     {
-                        case XmlNodeType.Element :
-                            var pair = new ConfigurationPair {ElementName = reader.Name};
+                        case XmlNodeType.Element:
+                            var pair = new ConfigurationPair { ElementName = reader.Name };
 
                             var entityAttributes = new Dictionary<string, string>();
 
@@ -67,7 +66,7 @@
                             }
 
                             break;
-                        case XmlNodeType.EndElement :
+                        case XmlNodeType.EndElement:
                             if (isParsingDataStructure)
                             {
                                 ParseDataStructure(queue, appConfig);
@@ -81,6 +80,7 @@
                     }
                 }
             }
+
             return appConfig;
         }
 
@@ -100,19 +100,19 @@
                     if (elementName.Equals(ConfigurationStaticData.DefinitionTagName))
                     {
                         appConfig.Definitions.Add(
-                            new Definition {Name = attributes[ConfigurationStaticData.NameStructureAttributeName]});
+                            new Definition { Name = attributes[ConfigurationStaticData.NameStructureAttributeName] });
                     }
                     else if (elementName.Equals(ConfigurationStaticData.VertexTagName))
                     {
                         var definition = appConfig.Definitions.Last();
 
                         var vertexConfig = new VertexConfig
-                        {
-                            Entity =
-                                attributes[ConfigurationStaticData.EntityAttributeName],
-                            LabelAttributeName =
-                                attributes[ConfigurationStaticData.LabelAttributeName]
-                        };
+                                               {
+                                                   Entity =
+                                                       attributes[ConfigurationStaticData.EntityAttributeName], 
+                                                   LabelAttributeName =
+                                                       attributes[ConfigurationStaticData.LabelAttributeName]
+                                               };
 
                         definition.Vertex = vertexConfig;
                     }
@@ -121,16 +121,16 @@
                         var definition = appConfig.Definitions.Last();
 
                         var edgeConfig = new EdgeConfig
-                        {
-                            Entity =
-                                attributes[ConfigurationStaticData.EntityAttributeName],
-                            LabelAttributeName =
-                                attributes[ConfigurationStaticData.LabelAttributeName],
-                            SourceVertexAttributeName =
-                                attributes[ConfigurationStaticData.SourceVertexAttributeName],
-                            TargetVertexAttributeName =
-                                attributes[ConfigurationStaticData.TargetVertexAttributeName]
-                        };
+                                             {
+                                                 Entity =
+                                                     attributes[ConfigurationStaticData.EntityAttributeName], 
+                                                 LabelAttributeName =
+                                                     attributes[ConfigurationStaticData.LabelAttributeName], 
+                                                 SourceVertexAttributeName =
+                                                     attributes[ConfigurationStaticData.SourceVertexAttributeName], 
+                                                 TargetVertexAttributeName =
+                                                     attributes[ConfigurationStaticData.TargetVertexAttributeName]
+                                             };
 
                         definition.Edge = edgeConfig;
                     }
@@ -238,6 +238,7 @@
                     }
                 }
             }
+
             queue.Clear();
         }
     }

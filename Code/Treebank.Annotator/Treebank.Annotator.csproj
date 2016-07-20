@@ -329,10 +329,6 @@
       <Project>{2D54BBE5-F2DF-4CA2-96E5-E33B1757D2AD}</Project>
       <Name>Treebank.Events</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Treebank.Loaders\Treebank.Loaders.csproj">
-      <Project>{0A14E08C-BBFB-4E62-86E2-6211F9B475F5}</Project>
-      <Name>Treebank.Loaders</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Treebank.Mappers\Treebank.Mappers.csproj">
       <Project>{D44F6763-2EE1-4C6D-8FFF-1F01759C7897}</Project>
       <Name>Treebank.Mappers</Name>
