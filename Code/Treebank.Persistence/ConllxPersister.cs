@@ -5,19 +5,39 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Domain;
-    using Mappers;
+    using System.Threading.Tasks;
+
+    using Prism.Events;
+
+    using Treebank.Domain;
+    using Treebank.Mappers;
+    using Treebank.Mappers.LightWeight;
 
     public class ConllxPersister : IPersister
     {
+        private IEventAggregator eventAggregator;
+
         private Word wordPrototype;
 
-        public void Save(Document document, string filepath)
+        public ConllxPersister(IEventAggregator eventAggregator)
+        {
+            if (eventAggregator == null)
+            {
+                throw new ArgumentNullException("eventAggregator");
+            }
+
+            this.eventAggregator = eventAggregator;
+        }
+
+        public async Task Save(Document document, string filepath)
         {
             if (string.IsNullOrWhiteSpace(filepath))
             {
                 return;
             }
+
+            var fileName = Path.GetFileName(filepath);
+            var newFilepath = filepath.Replace(fileName, "New" + fileName);
 
             var mapper = new AppConfigMapper();
 
@@ -30,7 +50,10 @@
 
             var appConfig = mapper.Map(configFilePath).GetAwaiter().GetResult();
             var dataStructure =
-                appConfig.DataStructures.FirstOrDefault(d => d.Format.Equals(ConfigurationStaticData.ConllxFormat) || d.Format.Equals(ConfigurationStaticData.ConllFormat));
+                appConfig.DataStructures.FirstOrDefault(
+                    d =>
+                    d.Format.Equals(ConfigurationStaticData.ConllxFormat)
+                    || d.Format.Equals(ConfigurationStaticData.ConllFormat));
 
             if (dataStructure == null)
             {
@@ -39,27 +62,60 @@
 
             wordPrototype = dataStructure.Elements.OfType<Word>().Single();
 
-            using (var writer = new StreamWriter(filepath))
+            var documentMapper =
+                new DocumentMapperClient(
+                    new LightConllxDocumentMapper { AppConfigMapper = mapper, EventAggregator = eventAggregator });
+
+            using (var writer = new StreamWriter(newFilepath))
             {
                 foreach (var sentence in document.Sentences)
                 {
-                    foreach (var word in sentence.Words)
+                    if (!sentence.Words.Any())
                     {
-                        var wordLine = GetWordLine(word);
-                        writer.WriteLine(wordLine);
-                    }
+                        var oldSentence =
+                            await
+                            documentMapper.LoadSentence(sentence.GetAttributeByName("id"), filepath, configFilePath);
 
-                    writer.WriteLine(string.Empty);
+                        WriteSentenceWords(oldSentence, writer);
+                    }
+                    else
+                    {
+                        WriteSentenceWords(sentence, writer);
+                    }
                 }
+
                 writer.Flush();
             }
+
+            if (File.Exists(filepath))
+            {
+                File.Delete(filepath);
+            }
+
+            File.Move(newFilepath, filepath);
+        }
+
+        private void WriteSentenceWords(Sentence sentence, StreamWriter writer)
+        {
+            if (sentence == null)
+            {
+                return;
+            }
+
+            foreach (var word in sentence.Words)
+            {
+                var wordLine = GetWordLine(word);
+                writer.WriteLine(wordLine);
+            }
+
+            writer.WriteLine(string.Empty);
         }
 
         private string GetWordLine(Word word)
         {
             var result = new StringBuilder();
 
-            var internalAttributes = new List<string> {"configuration", "content", "configurationFilePath"};
+            var internalAttributes = new List<string> { "configuration", "content", "configurationFilePath" };
 
             var sortedAttributes = wordPrototype.Attributes.ToList();
 
@@ -78,14 +134,13 @@
 
                 if ((attributeFromWord != null) && !string.IsNullOrEmpty(attributeFromWord.Value))
                 {
-                    var splits = attributeFromWord.Value.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                    var splits = attributeFromWord.Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (splits.Length > 1)
                     {
                         attributeValue = string.Join("_", splits);
                     }
                 }
-
 
                 result.AppendFormat("{0}\t", attributeFromWord != null ? attributeValue : "_");
             }

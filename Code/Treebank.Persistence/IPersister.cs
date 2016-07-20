@@ -1,9 +1,11 @@
 ﻿namespace Treebank.Persistence
 {
-    using Domain;
+    using System.Threading.Tasks;
+
+    using Treebank.Domain;
 
     public interface IPersister
     {
-        void Save(Document document, string filepath);
+        Task Save(Document document, string filepath);
     }
 }
