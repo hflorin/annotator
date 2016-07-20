@@ -94,10 +94,40 @@
             File.Move(newFilepath, filepath);
         }
 
+        private Dictionary<string, string> GetMappingForSentence(Sentence sentence)
+        {
+            var result = new Dictionary<string, string>();
+
+            var wordsList = sentence.Words.ToList();
+
+            foreach (var word in wordsList)
+            {
+                result.Add(word.GetAttributeByName("id"), (wordsList.IndexOf(word) + 1).ToString());
+            }
+
+            return result;
+        }
+
         private void WriteSentenceWord(Sentence sentence, XmlTextWriter xmlWriter)
         {
+            if (sentence == null)
+            {
+                return;
+            }
+
+            var wordIdMapping = GetMappingForSentence(sentence);
+
             foreach (var word in sentence.Words)
             {
+                string newWordId = "0";
+
+                if (wordIdMapping.ContainsKey(word.GetAttributeByName("id")))
+                {
+                    newWordId = wordIdMapping[word.GetAttributeByName("id")];
+                }
+
+                word.SetAttributeByName("id", newWordId);
+
                 xmlWriter.WriteStartElement(word.Name);
 
                 WriteAttributes(word.Attributes, xmlWriter);
