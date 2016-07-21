@@ -6,6 +6,6 @@
 
     public interface IPersister
     {
-        Task Save(Document document, string filepath);
+        Task Save(Document document, string filepathToSaveTo = "", bool overwrite = true);
     }
 }

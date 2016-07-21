@@ -17,9 +17,9 @@
             this.persister = persister;
         }
 
-        public void Save(Document document, string filepath)
+        public void Save(Document document, string filepath, bool overwrite)
         {
-            persister.Save(document, filepath);
+            persister.Save(document, filepath, overwrite);
         }
     }
 }

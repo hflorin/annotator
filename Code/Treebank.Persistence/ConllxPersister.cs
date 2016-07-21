@@ -6,16 +6,14 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-
+    using Domain;
+    using Mappers;
+    using Mappers.LightWeight;
     using Prism.Events;
-
-    using Treebank.Domain;
-    using Treebank.Mappers;
-    using Treebank.Mappers.LightWeight;
 
     public class ConllxPersister : IPersister
     {
-        private IEventAggregator eventAggregator;
+        private readonly IEventAggregator eventAggregator;
 
         private Word wordPrototype;
 
@@ -29,8 +27,10 @@
             this.eventAggregator = eventAggregator;
         }
 
-        public async Task Save(Document document, string filepath)
+        public async Task Save(Document document, string filepathToSaveTo = "", bool overwrite = true)
         {
+            var filepath = string.IsNullOrWhiteSpace(filepathToSaveTo) ? document.FilePath : filepathToSaveTo;
+
             if (string.IsNullOrWhiteSpace(filepath))
             {
                 return;
@@ -52,8 +52,8 @@
             var dataStructure =
                 appConfig.DataStructures.FirstOrDefault(
                     d =>
-                    d.Format.Equals(ConfigurationStaticData.ConllxFormat)
-                    || d.Format.Equals(ConfigurationStaticData.ConllFormat));
+                        d.Format.Equals(ConfigurationStaticData.ConllxFormat)
+                        || d.Format.Equals(ConfigurationStaticData.ConllFormat));
 
             if (dataStructure == null)
             {
@@ -64,7 +64,7 @@
 
             var documentMapper =
                 new DocumentMapperClient(
-                    new LightConllxDocumentMapper { AppConfigMapper = mapper, EventAggregator = eventAggregator });
+                    new LightConllxDocumentMapper {AppConfigMapper = mapper, EventAggregator = eventAggregator});
 
             using (var writer = new StreamWriter(newFilepath))
             {
@@ -74,7 +74,8 @@
                     {
                         var oldSentence =
                             await
-                            documentMapper.LoadSentence(sentence.GetAttributeByName("id"), filepath, configFilePath);
+                                documentMapper.LoadSentence(sentence.GetAttributeByName("id"), filepath,
+                                    configFilePath);
 
                         WriteSentenceWords(oldSentence, writer);
                     }
@@ -86,6 +87,7 @@
 
                 writer.Flush();
             }
+
 
             if (File.Exists(filepath))
             {
@@ -140,7 +142,7 @@
         {
             var result = new StringBuilder();
 
-            var internalAttributes = new List<string> { "configuration", "content", "configurationFilePath" };
+            var internalAttributes = new List<string> {"configuration", "content", "configurationFilePath"};
 
             var sortedAttributes = wordPrototype.Attributes.ToList();
 
@@ -159,7 +161,7 @@
 
                 if ((attributeFromWord != null) && !string.IsNullOrEmpty(attributeFromWord.Value))
                 {
-                    var splits = attributeFromWord.Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var splits = attributeFromWord.Value.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
                     if (splits.Length > 1)
                     {

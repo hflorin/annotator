@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Domain;
+    using Events;
     using Mappers.Configuration;
     using Prism.Events;
 
@@ -15,6 +16,13 @@
 
             foreach (var word in sentence.Words)
             {
+                var wordId = word.GetAttributeByName(definition.Edge.TargetVertexAttributeName);
+
+                if (wordToVertexMapping.ContainsKey(wordId))
+                {
+                    eventAggregator.GetEvent<ValidationExceptionEvent>().Publish(string.Format("Duplicate word id {0} in sentence {1}", sentence.GetAttributeByName("id"), wordId));
+                    continue;
+                }
                 wordToVertexMapping.Add(word.GetAttributeByName(definition.Edge.TargetVertexAttributeName), vertexId++);
             }
 

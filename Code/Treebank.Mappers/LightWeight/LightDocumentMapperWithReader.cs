@@ -5,15 +5,12 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
-
+    using Algos;
+    using Configuration;
+    using Domain;
+    using Events;
     using Prism.Events;
-
-    using Treebank.Domain;
-    using Treebank.Events;
-    using Treebank.Mappers.Algos;
-    using Treebank.Mappers.Configuration;
-
-    using Attribute = Treebank.Domain.Attribute;
+    using Attribute = Domain.Attribute;
 
     public class LightDocumentMapperWithReader : IDocumentMapper
     {
@@ -30,9 +27,9 @@
         public IAppConfigMapper AppConfigMapper { get; set; }
 
         public async Task<Document> Map(
-            string filepath, 
-            string configFilepath, 
-            DataStructure dataStructure = null, 
+            string filepath,
+            string configFilepath,
+            DataStructure dataStructure = null,
             Definition definitionParam = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
@@ -40,7 +37,7 @@
             if (appConfig == null)
             {
                 throw new ArgumentNullException(
-                    "configFilepath", 
+                    "configFilepath",
                     string.Format("Could not load configuration file from: {0}", configFilepath));
             }
 
@@ -69,7 +66,7 @@
             sentencePrototype = datastructure.Elements.OfType<Sentence>().Single();
             documentPrototype = datastructure.Elements.OfType<Document>().Single();
 
-            var document = await Task.FromResult(CreateDocument(filepath, datastructure));
+            var document = await CreateDocument(filepath, datastructure);
 
             document.FilePath = filepath;
 
@@ -77,35 +74,35 @@
 
             document.Attributes.Add(
                 new Attribute
-                    {
-                        AllowedValuesSet = filenameToPathMapping.Values, 
-                        Value = appConfig.Name, 
-                        Name = "configuration", 
-                        DisplayName = "Configuration", 
-                        Entity = "attribute", 
-                        IsEditable = true, 
-                        IsOptional = false
-                    });
+                {
+                    AllowedValuesSet = filenameToPathMapping.Values,
+                    Value = appConfig.Name,
+                    Name = "configuration",
+                    DisplayName = "Configuration",
+                    Entity = "attribute",
+                    IsEditable = true,
+                    IsOptional = false
+                });
 
             document.Attributes.Add(
                 new Attribute
-                    {
-                        Value = appConfig.Filepath, 
-                        Name = "configurationFilePath", 
-                        DisplayName = "Configuration file path", 
-                        Entity = "attribute", 
-                        IsEditable = false, 
-                        IsOptional = false
-                    });
+                {
+                    Value = appConfig.Filepath,
+                    Name = "configurationFilePath",
+                    DisplayName = "Configuration file path",
+                    Entity = "attribute",
+                    IsEditable = false,
+                    IsOptional = false
+                });
 
             return document;
         }
 
         public async Task<Sentence> LoadSentence(
-            string sentenceId, 
-            string filepath, 
-            string configFilepath, 
-            DataStructure dataStructure = null, 
+            string sentenceId,
+            string filepath,
+            string configFilepath,
+            DataStructure dataStructure = null,
             Definition definitionParam = null)
         {
             var appConfig = await AppConfigMapper.Map(configFilepath);
@@ -113,7 +110,7 @@
             if (appConfig == null)
             {
                 throw new ArgumentNullException(
-                    "configFilepath", 
+                    "configFilepath",
                     string.Format("Could not load configuration file from: {0}", configFilepath));
             }
 
@@ -148,7 +145,8 @@
 
         private static string GetEntityNameByElementName(DataStructure dataStructure, ConfigurationPair item)
         {
-            return dataStructure.Elements.Single(e => e.Name.Equals(item.ElementName)).Entity;
+            var element = dataStructure.Elements.FirstOrDefault(e => e.Name.Equals(item.ElementName));
+            return element!=null? element.Entity:string.Empty;
         }
 
         private Sentence CreateSentence(string filepath, string sentenceId, DataStructure dataStructure)
@@ -162,8 +160,8 @@
                 {
                     switch (reader.NodeType)
                     {
-                        case XmlNodeType.Element:
-                            var pair = new ConfigurationPair { ElementName = reader.Name };
+                        case XmlNodeType.Element :
+                            var pair = new ConfigurationPair {ElementName = reader.Name};
 
                             var entityAttributes = new Dictionary<string, string>();
 
@@ -175,7 +173,7 @@
                             pair.Attributes.Add(entityAttributes);
                             queue.Add(pair);
                             break;
-                        case XmlNodeType.EndElement:
+                        case XmlNodeType.EndElement :
                             sentence = CreateSentence(queue, dataStructure, sentenceId);
                             break;
                     }
@@ -193,8 +191,8 @@
         }
 
         private Sentence CreateSentence(
-            ICollection<ConfigurationPair> queue, 
-            DataStructure dataStructure, 
+            ICollection<ConfigurationPair> queue,
+            DataStructure dataStructure,
             string sentenceId)
         {
             if (!queue.Any())
@@ -241,28 +239,28 @@
             return sentence;
         }
 
-        private Document CreateDocument(string filepath, DataStructure dataStructure)
+        private async Task<Document> CreateDocument(string filepath, DataStructure dataStructure)
         {
             var document = ObjectCopier.Clone(documentPrototype);
 
-            ParseDocument(filepath, dataStructure, document);
+            await ParseDocument(filepath, dataStructure, document);
 
             // await Task.Run(() => AddDocumentInternalAttributes(document));
             return document;
         }
 
-        private void ParseDocument(string filepath, DataStructure dataStructure, Document document)
+        private async Task ParseDocument(string filepath, DataStructure dataStructure, Document document)
         {
             using (var reader = new XmlTextReader(filepath))
             {
                 var queue = new List<ConfigurationPair>();
 
-                while (reader.Read())
+                while (await Task.Run(() => reader.Read()))
                 {
                     switch (reader.NodeType)
                     {
-                        case XmlNodeType.Element:
-                            var pair = new ConfigurationPair { ElementName = reader.Name };
+                        case XmlNodeType.Element :
+                            var pair = new ConfigurationPair {ElementName = reader.Name};
 
                             var entityAttributes = new Dictionary<string, string>();
 
@@ -274,7 +272,7 @@
                             pair.Attributes.Add(entityAttributes);
                             queue.Add(pair);
                             break;
-                        case XmlNodeType.EndElement:
+                        case XmlNodeType.EndElement :
                             AddElementsToDocument(document, queue, dataStructure);
                             break;
                     }
@@ -290,13 +288,13 @@
             var formValue = formAttribute != null ? formAttribute.Value : string.Empty;
             word.Attributes.Add(
                 new Attribute
-                    {
-                        Name = "content", 
-                        DisplayName = "Content", 
-                        Value = formValue, 
-                        IsOptional = true, 
-                        IsEditable = false
-                    });
+                {
+                    Name = "content",
+                    DisplayName = "Content",
+                    Value = formValue,
+                    IsOptional = true,
+                    IsEditable = false
+                });
         }
 
         private void AddSentenceInternalAttributes(Sentence sentence)
@@ -310,18 +308,18 @@
 
             sentence.Attributes.Add(
                 new Attribute
-                    {
-                        Name = "content", 
-                        DisplayName = "Content", 
-                        Value = sentenceContent.TrimEnd(), 
-                        IsOptional = true, 
-                        IsEditable = false
-                    });
+                {
+                    Name = "content",
+                    DisplayName = "Content",
+                    Value = sentenceContent.TrimEnd(),
+                    IsOptional = true,
+                    IsEditable = false
+                });
         }
 
         private void AddElementsToDocument(
-            Document document, 
-            ICollection<ConfigurationPair> queue, 
+            Document document,
+            ICollection<ConfigurationPair> queue,
             DataStructure dataStructure)
         {
             if (document == null)
@@ -415,8 +413,8 @@
             EventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish(
                     string.Format(
-                        "Loaded sentence: {0} {1}", 
-                        sentence.GetAttributeByName("id"), 
+                        "Loaded sentence: {0} {1}",
+                        sentence.GetAttributeByName("id"),
                         sentence.GetAttributeByName("content")));
 
             var validationResult = new CheckGraphResult();
@@ -433,8 +431,8 @@
                 EventAggregator.GetEvent<ValidationExceptionEvent>()
                     .Publish(
                         string.Format(
-                            "The word id: {0}, in sentence id: {1}, is not connected to another word.", 
-                            disconnectedWordId, 
+                            "The word id: {0}, in sentence id: {1}, is not connected to another word.",
+                            disconnectedWordId,
                             sentenceId));
             }
 
@@ -443,12 +441,6 @@
                 EventAggregator.GetEvent<ValidationExceptionEvent>()
                     .Publish(
                         string.Format("The sentence with id {0} has cycle: {1}", sentenceId, string.Join(",", cycle)));
-            }
-
-            if (validationResult.DisconnectedWordIds.Any() || validationResult.Cycles.Any())
-            {
-                EventAggregator.GetEvent<StatusNotificationEvent>()
-                    .Publish("Please check warnings in the Output panel.");
             }
         }
 
@@ -488,27 +480,25 @@
                     {
                         elementToModify.Attributes.Add(
                             new Attribute
-                                {
-                                    Name = itemAttribute.Key, 
-                                    DisplayName = itemAttribute.Key, 
-                                    Value = itemAttribute.Value, 
-                                    IsOptional = true, 
-                                    IsEditable = true
-                                });
+                            {
+                                Name = itemAttribute.Key,
+                                DisplayName = itemAttribute.Key,
+                                Value = itemAttribute.Value,
+                                IsOptional = true,
+                                IsEditable = true
+                            });
                     }
                 }
             }
         }
 
         private void NotifyIfAnyNonOptionalAttributeIsMissing(
-            Document document, 
-            Element elementPrototype, 
+            Document document,
+            Element elementPrototype,
             Element newElement)
         {
             const string MissingNonOptionalAttributeErrorMessage =
                 "Value missing for: attribute {0}, word id {1}, sentence id: {2}, document id: {3}";
-
-            var exceptionsFound = false;
 
             foreach (var wordPrototypeAttribute in elementPrototype.Attributes)
             {
@@ -532,20 +522,13 @@
                         EventAggregator.GetEvent<ValidationExceptionEvent>()
                             .Publish(
                                 string.Format(
-                                    MissingNonOptionalAttributeErrorMessage, 
-                                    wordPrototypeAttribute.Name, 
-                                    newWordId, 
-                                    sentenceId, 
+                                    MissingNonOptionalAttributeErrorMessage,
+                                    wordPrototypeAttribute.Name,
+                                    newWordId,
+                                    sentenceId,
                                     documentId));
-                        exceptionsFound = true;
                     }
                 }
-            }
-
-            if (exceptionsFound)
-            {
-                EventAggregator.GetEvent<StatusNotificationEvent>()
-                    .Publish("Please check warnings in the Output panel.");
             }
         }
     }

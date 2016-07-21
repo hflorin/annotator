@@ -43,6 +43,11 @@
         {
             var sentenceGraph = new SentenceGraph();
 
+            sentence.Words.Sort(
+                    (l, r) =>
+                        int.Parse(l.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName))
+                            .CompareTo(int.Parse(r.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName))));
+
             foreach (var word in sentence.Words)
             {
                 sentenceGraph.AddVertex(new WordVertex(word, CurrentDefinition.Vertex.LabelAttributeName));
@@ -66,9 +71,13 @@
         }
 
         private SentenceGraph BuildSentenceGraph(SentenceWrapper sentence, SentenceWrapper rightSentence)
-
         {
             var sentenceGraph = new SentenceGraph();
+
+            sentence.Words.Sort(
+                    (l, r) =>
+                        int.Parse(l.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName))
+                            .CompareTo(int.Parse(r.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName))));
 
             foreach (var word in sentence.Words)
             {

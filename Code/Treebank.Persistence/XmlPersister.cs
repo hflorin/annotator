@@ -7,18 +7,15 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml;
-
+    using Domain;
+    using Mappers;
+    using Mappers.LightWeight;
     using Prism.Events;
-
-    using Treebank.Domain;
-    using Treebank.Mappers;
-    using Treebank.Mappers.LightWeight;
-
-    using Attribute = Treebank.Domain.Attribute;
+    using Attribute = Domain.Attribute;
 
     public class XmlPersister : IPersister
     {
-        private IEventAggregator eventAggregator;
+        private readonly IEventAggregator eventAggregator;
 
         public XmlPersister(IEventAggregator eventAggregator)
         {
@@ -30,8 +27,10 @@
             this.eventAggregator = eventAggregator;
         }
 
-        public async Task Save(Document document, string filepath)
+        public async Task Save(Document document, string filepathToSaveTo = "", bool overwrite = true)
         {
+            var filepath = string.IsNullOrWhiteSpace(filepathToSaveTo) ? document.FilePath : filepathToSaveTo;
+
             if (string.IsNullOrWhiteSpace(filepath))
             {
                 return;
@@ -48,10 +47,10 @@
             var documentMapper =
                 new DocumentMapperClient(
                     new LightDocumentMapperWithReader
-                        {
-                            AppConfigMapper = appConfigMapper, 
-                            EventAggregator = eventAggregator
-                        });
+                    {
+                        AppConfigMapper = appConfigMapper,
+                        EventAggregator = eventAggregator
+                    });
 
             using (var xmlWriter = new XmlTextWriter(newFilepath, Encoding.UTF8))
             {
@@ -75,7 +74,7 @@
                     {
                         var oldSentence =
                             await
-                            documentMapper.LoadSentence(sentence.GetAttributeByName("id"), filepath, configFilePath);
+                                documentMapper.LoadSentence(sentence.GetAttributeByName("id"), filepath, configFilePath);
                         WriteSentenceWord(oldSentence, xmlWriter);
                     }
 
@@ -119,7 +118,7 @@
 
             foreach (var word in sentence.Words)
             {
-                string newWordId = "0";
+                var newWordId = "0";
 
                 if (wordIdMapping.ContainsKey(word.GetAttributeByName("id")))
                 {
@@ -138,7 +137,7 @@
 
         private void WriteAttributes(ICollection<Attribute> attributes, XmlWriter writer)
         {
-            var internalAttributes = new List<string> { "configuration", "content", "configurationFilePath" };
+            var internalAttributes = new List<string> {"configuration", "content", "configurationFilePath"};
 
             foreach (var attribute in attributes)
             {

@@ -1,5 +1,6 @@
 ﻿namespace Treebank.Annotator.Wrapper.Base
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
@@ -152,6 +153,16 @@
             {
                 item.PropertyChanged -= ItemPropertyChanged;
             }
+        }
+
+        public void Sort(Comparison<T> comparison)
+        {
+            var items = this.ToList();
+            items.Sort(comparison);
+            ClearItems();
+            this.AddRange(items);
+            _originalItems = items;
+            OnPropertyChanged(new PropertyChangedEventArgs("IsChanged"));
         }
     }
 }
