@@ -258,7 +258,7 @@
             var extension = Path.GetExtension(documentFilePath);
             if (extension != null)
             {
-                var lowercaseExtension = extension.Substring(1);
+                var lowercaseExtension = extension.Substring(1).ToLowerInvariant();
 
                 if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
                 {
@@ -869,7 +869,7 @@
             var extension = Path.GetExtension(documentFilePath);
             if (extension != null)
             {
-                var lowercaseExtension = extension.Substring(1);
+                var lowercaseExtension = extension.Substring(1).ToLowerInvariant();
 
                 DocumentMapperClient documentMapper = null;
 
