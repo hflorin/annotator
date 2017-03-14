@@ -2,9 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
                     xmlns:graphx="http://schemas.panthernet.ru/graphx/"
-                    xmlns:graphX="clr-namespace:GraphX;assembly=GraphX.Controls"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:graphX1="clr-namespace:GraphX;assembly=GraphX.WPF.Controls"
+                    mc:Ignorable="d">
 
     <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
         <Setter Property="Background" Value="Transparent" />
@@ -139,7 +140,7 @@
         </Setter>
 
         <Style.Triggers>
-            <Trigger Property="graphX:GraphAreaBase.PositioningComplete" Value="False">
+            <Trigger Property="graphX1:GraphAreaBase.PositioningComplete" Value="False">
                 <Setter Property="Visibility" Value="Hidden" />
             </Trigger>
             <Trigger Property="graphx:HighlightBehaviour.Highlighted" Value="True">

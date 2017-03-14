@@ -9,6 +9,7 @@
     using Graph;
     using GraphX.Controls;
     using GraphX.Controls.Models;
+    using GraphX.PCL.Common;
     using GraphX.PCL.Common.Enums;
     using GraphX.PCL.Logic.Helpers;
     using Mappers.Configuration;

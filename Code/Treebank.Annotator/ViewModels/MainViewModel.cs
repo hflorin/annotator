@@ -14,7 +14,7 @@
     using Commands;
     using Domain;
     using Events;
-    using GraphX.PCL.Logic.Helpers;
+    using GraphX.PCL.Common;
     using Mappers;
     using Mappers.Algos;
     using Mappers.Configuration;
@@ -30,6 +30,7 @@
 
     public class MainViewModel : Observable
     {
+        #region Members
         private ISentenceEditorView activeSentenceEditorView;
 
         private IAppConfigMapper appConfigMapper;
@@ -53,32 +54,6 @@
         private ObservableCollection<ISentenceEditorView> sentenceEditViewModels;
 
         private IShowInfoMessage showInfoMessage;
-
-        public MainViewModel(
-            IEventAggregator eventAggregator,
-            ISaveDialogService saveDialogService,
-            IOpenFileDialogService openFileDialogService,
-            IAppConfigMapper appConfigMapper,
-            IShowInfoMessage showInfoMessage)
-        {
-            InitializeCommands();
-
-            InitializeServices(
-                eventAggregator,
-                saveDialogService,
-                openFileDialogService,
-                appConfigMapper,
-                showInfoMessage);
-
-            if (!EnsureConfigurationsAreAvailable())
-            {
-                return;
-            }
-
-            SubscribeToEvents();
-
-            InitializeMembers();
-        }
 
         public ObservableCollection<DocumentWrapper> Documents { get; set; }
 
@@ -200,6 +175,33 @@
 
                 return null;
             }
+        }
+        #endregion
+
+        public MainViewModel(
+            IEventAggregator eventAggregator,
+            ISaveDialogService saveDialogService,
+            IOpenFileDialogService openFileDialogService,
+            IAppConfigMapper appConfigMapper,
+            IShowInfoMessage showInfoMessage)
+        {
+            InitializeCommands();
+
+            InitializeServices(
+                eventAggregator,
+                saveDialogService,
+                openFileDialogService,
+                appConfigMapper,
+                showInfoMessage);
+
+            if (!EnsureConfigurationsAreAvailable())
+            {
+                return;
+            }
+
+            SubscribeToEvents();
+
+            InitializeMembers();
         }
 
         public void OnClosing(CancelEventArgs cancelEventArgs)
