@@ -73,6 +73,8 @@
 
             if (idAttribute != null)
             {
+                SaveAttributeCommandExecute(null);
+
                 eventAggregator.GetEvent<LoadAttributesForNextWordEvent>().Publish(new NextElementAttributesRequest
                 {
                     ViewId = ViewId,
@@ -98,6 +100,8 @@
 
             if (idAttribute != null)
             {
+                SaveAttributeCommandExecute(null);
+
                 eventAggregator.GetEvent<LoadAttributesForNextWordEvent>().Publish(new NextElementAttributesRequest
                 {
                     ViewId = ViewId,
@@ -119,6 +123,11 @@
 
         private void SaveAttributeCommandExecute(object obj)
         {
+            if (!Attributes.IsChanged)
+            {
+                return;
+            }
+
             var configurationAttribute = Attributes.FirstOrDefault(a => a.Name == "configuration");
             if (configurationAttribute != null)
             {

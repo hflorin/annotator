@@ -83,6 +83,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Prism.Wpf.6.2.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -158,6 +159,7 @@
     <Compile Include="ViewModels\CompareSentencesViewModel.cs" />
     <Compile Include="ViewModels\ElementAttributeEditorViewModel.cs" />
     <Compile Include="ViewModels\Observable.cs" />
+    <Compile Include="ViewModels\DoubleSentenceEditorViewModel.cs" />
     <Compile Include="ViewModels\SentenceEditorViewModel.cs" />
     <Compile Include="ViewModels\WordEditorViewModel.cs" />
     <Compile Include="ViewModels\WordReorderingViewModel.cs" />

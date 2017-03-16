@@ -11,14 +11,13 @@
     using GraphX.Controls.Models;
     using GraphX.PCL.Common;
     using GraphX.PCL.Common.Enums;
-    using GraphX.PCL.Logic.Helpers;
     using Mappers.Configuration;
     using Prism.Events;
     using Treebank.Events;
     using ViewModels;
     using Point = GraphX.Measure.Point;
 
-    public partial class CompareSentenceEditorView : UserControl, IDisposable, ISentenceEditorView
+    public partial class CompareSentenceEditorView : IDisposable, ISentenceEditorView
     {
         private readonly SentenceEditorManager editorManager;
 
@@ -29,7 +28,7 @@
         // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
         private Guid viewUniqueId = Guid.NewGuid();
 
-        public CompareSentenceEditorView(IEventAggregator eventAggregator, IAppConfig appConfig)
+        public CompareSentenceEditorView(IEventAggregator eventAggregator)
         {
             InitializeComponent();
             if (eventAggregator == null)
@@ -37,19 +36,13 @@
                 throw new ArgumentNullException("eventAggregator");
             }
 
-            if (appConfig == null)
-            {
-                throw new ArgumentNullException("appConfig");
-            }
-
             editorManager = new SentenceEditorManager(GgArea, GgZoomCtrl);
         }
 
         public CompareSentenceEditorView(
             SentenceEditorViewModel sentenceEditorViewModel,
-            IEventAggregator eventAggregator,
-            IAppConfig appConfig)
-            : this(eventAggregator, appConfig)
+            IEventAggregator eventAggregator)
+            : this(eventAggregator)
         {
             if (sentenceEditorViewModel == null)
             {
@@ -139,14 +132,14 @@
 
                 if (vertexControl != null)
                 {
-                    const int Offset = 100;
+                    const int offset = 100;
                     var pos = vertexControl.GetPosition();
                     GgZoomCtrl.ZoomToContent(
                         new Rect(
-                            pos.X - Offset,
-                            pos.Y - Offset,
-                            vertexControl.ActualWidth + Offset*2,
-                            vertexControl.ActualHeight + Offset*3));
+                            pos.X - offset,
+                            pos.Y - offset,
+                            vertexControl.ActualWidth + offset*2,
+                            vertexControl.ActualHeight + offset*3));
 
                     GgArea.VertexList.ForEach(pair => { HighlightBehaviour.SetHighlighted(pair.Value, false); });
 
@@ -274,7 +267,7 @@
                 var pair = sortedEdgeGaps[j];
                 var edgeControl = GgArea.EdgesList[pair.Key];
 
-                var isLeft = (edgeControl.Edge as OrderedWordEdge).IsLeft;
+                var isLeft = ((OrderedWordEdge) edgeControl.Edge).IsLeft;
 
                 if (isLeft)
                 {

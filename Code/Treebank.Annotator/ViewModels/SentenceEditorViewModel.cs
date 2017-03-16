@@ -37,8 +37,6 @@
         private StringWrapper leftStringWrapper;
 
         private SenteceGraphOperationMode operationMode = SenteceGraphOperationMode.Select;
-        private SentenceWrapper rightSentence;
-        private StringWrapper rightStringWrapper;
 
         private SentenceGxLogicCore sentenceLogicCore;
 
@@ -91,53 +89,6 @@
             sentenceLogicCore = new SentenceGxLogicCore {Graph = sentenceGraph};
         }
 
-        public SentenceEditorViewModel(
-            IEventAggregator eventAggregator,
-            IAppConfig appConfig,
-            SentenceWrapper leftSentence,
-            SentenceWrapper rightSentence,
-            IShowInfoMessage showMessage)
-        {
-            if (leftSentence == null)
-            {
-                throw new ArgumentNullException("leftSentence");
-            }
-
-            if (rightSentence == null)
-            {
-                throw new ArgumentNullException("rightSentence");
-            }
-
-            if (eventAggregator == null)
-            {
-                throw new ArgumentNullException("eventAggregator");
-            }
-
-            if (appConfig == null)
-            {
-                throw new ArgumentNullException("appConfig");
-            }
-
-            if (showMessage == null)
-            {
-                throw new ArgumentNullException("showMessage");
-            }
-
-            InitializeCommands();
-
-            EventAggregator = eventAggregator;
-            Sentence = leftSentence;
-            RightSentence = rightSentence;
-            graphBuilder = new GraphBuilder(appConfig, appConfig.Definitions.First());
-            this.appConfig = appConfig;
-            this.showMessage = showMessage;
-            GraphConfigurations = new ObservableCollection<Definition>(this.appConfig.Definitions);
-            SelectedGraphConfiguration = GraphConfigurations.First();
-
-            var sentenceGraph = new SentenceGraph();
-            sentenceLogicCore = new SentenceGxLogicCore {Graph = sentenceGraph};
-        }
-
         public DataStructure DataStructure
         {
             get { return dataStructure; }
@@ -161,17 +112,7 @@
         public ICommand GraphConfigurationChangedCommand { get; set; }
 
         public ICommand ToggleEditModeCommand { get; set; }
-
-        public StringWrapper RightSentenceInfo
-        {
-            get { return rightStringWrapper; }
-            set
-            {
-                rightStringWrapper = value;
-                OnPropertyChanged();
-            }
-        }
-
+        
         public StringWrapper LeftSentenceInfo
         {
             get { return leftStringWrapper; }
@@ -189,17 +130,6 @@
             set
             {
                 sentenceWrapper = value;
-                InvalidateCommands();
-                OnPropertyChanged();
-            }
-        }
-
-        public SentenceWrapper RightSentence
-        {
-            get { return rightSentence; }
-            set
-            {
-                rightSentence = value;
                 InvalidateCommands();
                 OnPropertyChanged();
             }
@@ -246,18 +176,12 @@
             PopulateWords(EventAggregator, sentenceWrapper);
         }
 
-        public void CreateSentenceGraph()
+        public virtual void CreateSentenceGraph()
         {
-            if (RightSentence == null)
+            if (Sentence != null)
             {
                 graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
                 var logicCore = graphBuilder.SetupGraphLogic(Sentence);
-                SentenceGraphLogicCore = logicCore;
-            }
-            else if (Sentence != null)
-            {
-                graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
-                var logicCore = graphBuilder.SetupGraphLogic(Sentence, RightSentence);
                 SentenceGraphLogicCore = logicCore;
             }
         }

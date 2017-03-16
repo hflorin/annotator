@@ -541,7 +541,7 @@
 
                 var sentenceEditView =
                     new CompareSentenceEditorView(
-                        new SentenceEditorViewModel(
+                        new DoubleSentenceEditorViewModel(
                             eventAggregator,
                             appConfig,
                             dataContext.LeftSelectedSentence,
@@ -561,8 +561,7 @@
                                         rightSentenceIdAttributeValue,
                                         rightDocumentIdAttributeValue))
                         },
-                        eventAggregator,
-                        appConfig);
+                        eventAggregator);
 
                 SentenceEditViews.Add(sentenceEditView);
                 ActiveSentenceEditorView = sentenceEditView;
