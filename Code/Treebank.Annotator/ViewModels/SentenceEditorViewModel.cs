@@ -26,7 +26,7 @@
         private readonly IAppConfig appConfig;
         private readonly DataStructure dataStructure;
 
-        private readonly GraphBuilder graphBuilder;
+        protected GraphBuilder GraphBuilder;
 
         private readonly IShowInfoMessage showMessage;
 
@@ -78,12 +78,11 @@
 
             EventAggregator = eventAggregator;
             Sentence = sentence;
-            graphBuilder = new GraphBuilder(appConfig, appConfig.Definitions.First());
             this.appConfig = appConfig;
             this.showMessage = showMessage;
             this.dataStructure = dataStructure;
             GraphConfigurations = new ObservableCollection<Definition>(this.appConfig.Definitions);
-            SelectedGraphConfiguration = GraphConfigurations.First();
+            SelectedGraphConfiguration = GraphConfigurations.FirstOrDefault();
 
             var sentenceGraph = new SentenceGraph();
             sentenceLogicCore = new SentenceGxLogicCore {Graph = sentenceGraph};
@@ -180,8 +179,12 @@
         {
             if (Sentence != null)
             {
-                graphBuilder.CurrentDefinition = SelectedGraphConfiguration;
-                var logicCore = graphBuilder.SetupGraphLogic(Sentence);
+                GraphBuilder = new GraphBuilder(appConfig, appConfig.Definitions.First())
+                {
+                    CurrentGraphDefinition = SelectedGraphConfiguration
+                };
+
+                var logicCore = GraphBuilder.SetupGraphLogic(Sentence);
                 SentenceGraphLogicCore = logicCore;
             }
         }

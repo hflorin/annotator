@@ -4,14 +4,10 @@
     using System.Collections.ObjectModel;
     using System.Windows.Input;
     using Commands;
-    using Prism.Events;
     using Wrapper;
-    using Wrapper.Base;
 
     public class CompareSentencesViewModel : Observable
     {
-        private readonly IEventAggregator eventAggregator;
-
         private DocumentWrapper leftSelectedDocument;
 
         private SentenceWrapper leftSelectedSentence;
@@ -19,20 +15,10 @@
         private DocumentWrapper rightSelectedDocument;
         private SentenceWrapper rightSelectedSentence;
 
-        public CompareSentencesViewModel(IEventAggregator eventAggregator,
-            ObservableCollection<DocumentWrapper> documentWrappers)
+        public CompareSentencesViewModel(ObservableCollection<DocumentWrapper> documentWrappers)
         {
-            if (eventAggregator == null)
-            {
-                throw new ArgumentNullException("eventAggregator");
-            }
-
             if (documentWrappers == null)
-            {
                 throw new ArgumentNullException("documentWrappers");
-            }
-
-            this.eventAggregator = eventAggregator;
             Documents = documentWrappers;
 
             OkButtonCommand = new DelegateCommand(OkButtonCommandExecute, OkButtonCommandCanExecute);
@@ -97,7 +83,7 @@
 
         private bool OkButtonCommandCanExecute(object arg)
         {
-            return (LeftSelectedSentence != null) && (RightSelectedSentence != null);
+            return LeftSelectedSentence != null && RightSelectedSentence != null;
         }
     }
 }

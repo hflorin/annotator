@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConllxPersister.cs" />
+    <Compile Include="ISentenceLoader.cs" />
     <Compile Include="PersisterClient.cs" />
+    <Compile Include="SentenceLoader.cs" />
     <Compile Include="XmlPersister.cs" />
     <Compile Include="IPersister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,12 +1,11 @@
 ﻿namespace Treebank.Annotator.AutofacModules
 {
     using Autofac;
-
     using Prism.Events;
-
-    using Treebank.Annotator.View.Services;
-    using Treebank.Annotator.ViewModels;
-    using Treebank.Mappers;
+    using View.Services;
+    using ViewModels;
+    using Mappers;
+    using Persistence;
 
     public class AnnotatorModule : Module
     {
@@ -16,6 +15,7 @@
             builder.RegisterType<SaveDialogService>().As<ISaveDialogService>();
             builder.RegisterType<OpenFileDialogService>().As<IOpenFileDialogService>();
             builder.RegisterType<ShowMessageBoxInfo>().As<IShowInfoMessage>();
+            builder.RegisterType<SentenceLoader>().As<ISentenceLoader>();
             builder.RegisterType<AppConfigMapper>().As<IAppConfigMapper>().PropertiesAutowired();
             builder.RegisterType<SentenceEditorViewModel>().AsSelf();
             builder.RegisterType<AddWordViewModel>().AsSelf();

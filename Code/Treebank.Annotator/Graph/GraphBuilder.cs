@@ -1,6 +1,8 @@
 ﻿namespace Treebank.Annotator.Graph
 {
     using System.Linq;
+    using System.Threading.Tasks;
+    using Mappers;
     using Mappers.Configuration;
     using Wrapper;
 
@@ -12,20 +14,20 @@
             {
                 if ((appConfig != null) && appConfig.Definitions.Any())
                 {
-                    CurrentDefinition = appConfig.Definitions.First();
+                    CurrentGraphDefinition = appConfig.Definitions.First();
                 }
                 else
                 {
-                    CurrentDefinition = MotherObjects.DefaultDefinition;
+                    CurrentGraphDefinition = MotherObjects.DefaultDefinition;
                 }
             }
             else
             {
-                CurrentDefinition = definition;
+                CurrentGraphDefinition = definition;
             }
         }
 
-        public Definition CurrentDefinition { get; set; }
+        public Definition CurrentGraphDefinition { get; set; }
 
         public SentenceGxLogicCore SetupGraphLogic(SentenceWrapper sentence)
         {
@@ -45,12 +47,12 @@
 
             sentence.Words.Sort(
                     (l, r) =>
-                        int.Parse(l.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName))
-                            .CompareTo(int.Parse(r.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName))));
+                        int.Parse(l.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName))
+                            .CompareTo(int.Parse(r.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName))));
 
             foreach (var word in sentence.Words)
             {
-                sentenceGraph.AddVertex(new WordVertex(word, CurrentDefinition.Vertex.LabelAttributeName));
+                sentenceGraph.AddVertex(new WordVertex(word, CurrentGraphDefinition.Vertex.LabelAttributeName));
             }
 
             AddEdges(sentence, sentenceGraph);
@@ -58,9 +60,9 @@
             return sentenceGraph;
         }
 
-        public SentenceGxLogicCore SetupGraphLogic(SentenceWrapper sentence, SentenceWrapper rightSentence)
+        public async Task<SentenceGxLogicCore> SetupGraphLogic(SentenceWrapper sentence, SentenceWrapper rightSentence, IAppConfigMapper appConfigMapper, string leftSentenceConfigFilePath, string rightSentenceConfigFilePath)
         {
-            var sentenceGraph = BuildSentenceGraph(sentence, rightSentence);
+            var sentenceGraph = await BuildSentenceGraph(sentence, rightSentence, appConfigMapper, leftSentenceConfigFilePath, rightSentenceConfigFilePath);
 
             return new SentenceGxLogicCore
             {
@@ -70,21 +72,52 @@
             };
         }
 
-        private SentenceGraph BuildSentenceGraph(SentenceWrapper sentence, SentenceWrapper rightSentence)
+        private async Task<SentenceGraph> BuildSentenceGraph(SentenceWrapper sentence, SentenceWrapper rightSentence, IAppConfigMapper appConfigMapper, string leftSentenceConfigFilePath, string rightSentenceConfigFilePath)
         {
+            if (sentence.Words.Count != rightSentence.Words.Count)
+            {
+                return new SentenceGraph();
+            }
+
+            var leftAppConfig = await appConfigMapper.Map(leftSentenceConfigFilePath);
+            IAppConfig rightAppConfig;
+
+            if (leftSentenceConfigFilePath.Equals(rightSentenceConfigFilePath))
+            {
+                rightAppConfig = leftAppConfig;
+            }
+            else
+            {
+                rightAppConfig = await appConfigMapper.Map(rightSentenceConfigFilePath);
+            }
+
+            if (leftAppConfig == null || rightAppConfig == null)
+            {
+                return new SentenceGraph();
+            }
+
             var sentenceGraph = new SentenceGraph();
+
+            CurrentGraphDefinition = leftAppConfig.Definitions.FirstOrDefault();
+
+            if (CurrentGraphDefinition == null)
+            {
+                return new SentenceGraph();
+            }
 
             sentence.Words.Sort(
                     (l, r) =>
-                        int.Parse(l.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName))
-                            .CompareTo(int.Parse(r.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName))));
+                        int.Parse(l.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName))
+                            .CompareTo(int.Parse(r.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName))));
 
             foreach (var word in sentence.Words)
             {
-                sentenceGraph.AddVertex(new WordVertex(word, CurrentDefinition.Vertex.LabelAttributeName));
+                sentenceGraph.AddVertex(new WordVertex(word, CurrentGraphDefinition.Vertex.LabelAttributeName));
             }
-
+            
             AddComparableEdges(sentence, sentenceGraph, true, false);
+
+            CurrentGraphDefinition = rightAppConfig.Definitions.FirstOrDefault();
             AddComparableEdges(rightSentence, sentenceGraph, false, true);
 
             return sentenceGraph;
@@ -96,27 +129,27 @@
             var vertices = sentenceGraph.Vertices.ToList();
             foreach (var word in sentence.Words)
             {
-                from = word.GetAttributeByName(CurrentDefinition.Edge.SourceVertexAttributeName);
+                from = word.GetAttributeByName(CurrentGraphDefinition.Edge.SourceVertexAttributeName);
 
                 if (from == "0")
                 {
                     continue;
                 }
 
-                to = word.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName);
+                to = word.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName);
 
                 var toWordVertex =
                     vertices.FirstOrDefault(
-                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName).Equals(to));
+                        v => v.WordWrapper.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName).Equals(to));
                 var fromWordVertex =
                     vertices.FirstOrDefault(
-                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName).Equals(from));
+                        v => v.WordWrapper.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName).Equals(from));
                 if ((toWordVertex != null) && (fromWordVertex != null))
                 {
                     sentenceGraph.AddEdge(
                         new OrderedWordEdge(fromWordVertex, toWordVertex)
                         {
-                            Text = word.GetAttributeByName(CurrentDefinition.Edge.LabelAttributeName),
+                            Text = word.GetAttributeByName(CurrentGraphDefinition.Edge.LabelAttributeName),
                             SourceConnectionPointId = 1,
                             TargetConnectionPointId = 1,
                             IsLeft = isLeft,
@@ -132,27 +165,27 @@
             var vertices = sentenceGraph.Vertices.ToList();
             foreach (var word in sentence.Words)
             {
-                from = word.GetAttributeByName(CurrentDefinition.Edge.SourceVertexAttributeName);
+                from = word.GetAttributeByName(CurrentGraphDefinition.Edge.SourceVertexAttributeName);
 
                 if (from == "0")
                 {
                     continue;
                 }
 
-                to = word.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName);
+                to = word.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName);
 
                 var toWordVertex =
                     vertices.FirstOrDefault(
-                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName).Equals(to));
+                        v => v.WordWrapper.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName).Equals(to));
                 var fromWordVertex =
                     vertices.FirstOrDefault(
-                        v => v.WordWrapper.GetAttributeByName(CurrentDefinition.Edge.TargetVertexAttributeName).Equals(from));
+                        v => v.WordWrapper.GetAttributeByName(CurrentGraphDefinition.Edge.TargetVertexAttributeName).Equals(from));
                 if ((toWordVertex != null) && (fromWordVertex != null))
                 {
                     sentenceGraph.AddEdge(
                         new WordEdge(fromWordVertex, toWordVertex)
                         {
-                            Text = word.GetAttributeByName(CurrentDefinition.Edge.LabelAttributeName),
+                            Text = word.GetAttributeByName(CurrentGraphDefinition.Edge.LabelAttributeName),
                             SourceConnectionPointId = 1,
                             TargetConnectionPointId = 1
                         });
