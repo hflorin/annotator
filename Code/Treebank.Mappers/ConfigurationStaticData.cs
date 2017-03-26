@@ -16,6 +16,8 @@
         public static readonly string AttributesTagName = "attributes";
         public static readonly string AttributeTagName = "attribute";
         public static readonly string AllowedValueSetTagName = "allowedValueSet";
+        public static readonly string ExceptForValuesOfSetTagName = "exceptForValuesOf";
+        public static readonly string ElementNameAttributeName = "elementName";
 
         #endregion
 

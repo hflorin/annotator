@@ -490,6 +490,29 @@
                     }
                 }
             }
+
+            foreach (var attribute in elementToModify.Attributes)
+            {
+                if (!attribute.ExceptedValuesOfSet.Any())
+                {
+                    continue;
+                }
+
+                foreach (var exceptValuesOf in attribute.ExceptedValuesOfSet)
+                {
+                    var attributeDependency = elementToModify.Attributes.FirstOrDefault(a => a.Name.Equals(exceptValuesOf.AttributeName, StringComparison.InvariantCulture));
+
+                    if (attributeDependency == null)
+                    {
+                        return;
+                    }
+
+                    if (exceptValuesOf.Values.Contains(attributeDependency.Value))
+                    {
+                        attribute.IsEditable = false;
+                    }
+                }
+            }
         }
 
         private void NotifyIfAnyNonOptionalAttributeIsMissing(

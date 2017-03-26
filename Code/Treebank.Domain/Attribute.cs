@@ -9,6 +9,7 @@
         public Attribute()
         {
             AllowedValuesSet = new List<string>();
+            ExceptedValuesOfSet = new List<ExceptValuesOf>();
         }
 
         public string Entity { get; set; }
@@ -26,5 +27,7 @@
         public string Value { get; set; }
 
         public ICollection<string> AllowedValuesSet { get; set; }
+
+        public ICollection<ExceptValuesOf> ExceptedValuesOfSet { get; set; }
     }
 }

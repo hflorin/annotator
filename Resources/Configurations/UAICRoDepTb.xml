@@ -28,7 +28,9 @@
             <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
                        position="6" />
             <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
-                       isOptional="false" position="7" />
+                       isOptional="false" position="7" >
+              <exceptForValuesOf elementName="head" v0="0"/>
+            </attribute>
             <attribute entity="attribute" name="deps" displayName="DEPS" isEditable="true"
                        isOptional="true" position="8" />
             <attribute entity="attribute" name="misc" displayName="MISC" isEditable="true"
@@ -65,7 +67,9 @@
             <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
                        position="6" />
             <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
-                       isOptional="false" position="7" />
+                       isOptional="false" position="7" >
+              <exceptForValuesOf elementName="head" v0="0"/>
+            </attribute>
             <attribute entity="attribute" name="deps" displayName="DEPS" isEditable="true"
                        isOptional="true" position="8" />
             <attribute entity="attribute" name="misc" displayName="MISC" isEditable="true"
@@ -112,6 +116,7 @@
                              value28="narativ." value29="neg." value30="part." value31="prep." value32="punct."
                              value33="refl." value34="sbj." value35="subord." value36="superl." value37="c.c.rel." value38="c.c.exc." value39="c.c.instr."
                              value40="c.c.cond." value41="c.c.cumul." value42="c.c.opoz" value43="voc." value44="interj." value45="textual"/>
+            <exceptForValuesOf elementName="head" v0="0"/>
           </attribute>
         </attributes>
       </element>

@@ -41,6 +41,7 @@
                              value28="narativ." value29="neg." value30="part." value31="prep." value32="punct."
                              value33="refl." value34="sbj." value35="subord." value36="superl." value37="c.c.rel" value38="c.c.exc." value39="c.c.instr."
                              value40="c.c.cond." value41="c.c.cumul." value42="c.c.opoz" value43="voc." value44="interj." value45="textual"/>
+            <exceptForValuesOf elementName="head-id" v0="0"/>
           </attribute>
         </attributes>
       </element>

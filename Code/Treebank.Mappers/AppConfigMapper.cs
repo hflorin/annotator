@@ -188,6 +188,38 @@
                             }
                         }
                     }
+                    else if (elementName.Equals(ConfigurationStaticData.ExceptForValuesOfSetTagName))
+                    {
+                        if (dataStructure.Elements.Any())
+                        {
+                            var element = dataStructure.Elements.Last();
+                            if (element.Attributes.Any())
+                            {
+                                var lastAttribute = element.Attributes.Last();
+
+                                if (!attributes.ContainsKey(ConfigurationStaticData.ElementNameAttributeName))
+                                {
+                                    throw new System.MissingFieldException("Provide the name of one of the attribute elements in the except values for element.");
+                                }
+
+                                var result = new ExceptValuesOf
+                                {
+                                    AttributeName = attributes[ConfigurationStaticData.ElementNameAttributeName],
+                                    Values = new List<string>()
+                                };
+
+                                foreach (var pair in attributes)
+                                {
+                                    if (!pair.Key.Equals(ConfigurationStaticData.ElementNameAttributeName))
+                                    {
+                                        result.Values.Add(pair.Value);
+                                    }
+                                }
+
+                                lastAttribute.ExceptedValuesOfSet.Add(result);
+                            }
+                        }
+                    }
                     else if (attributes.ContainsKey(ConfigurationStaticData.EntityAttributeName))
                     {
                         var entity = EntityFactory.GetEntity(attributes[ConfigurationStaticData.EntityAttributeName]);

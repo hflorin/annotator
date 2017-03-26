@@ -59,6 +59,22 @@ namespace Treebank.Annotator.Wrapper
             get { return GetIsChanged("IsOptional"); }
         }
 
+		public System.Int32 Position
+        {
+            get { return GetValue<System.Int32>(); }
+            set { SetValue(value); }
+        }
+
+        public System.Int32 PositionOriginalValue
+        {
+            get { return GetOriginalValue<System.Int32>("Position"); }
+        }
+
+        public bool PositionIsChanged
+        {
+            get { return GetIsChanged("Position"); }
+        }
+
 		public System.String Name
         {
             get { return GetValue<System.String>(); }
@@ -109,6 +125,8 @@ namespace Treebank.Annotator.Wrapper
 
 		public ChangeTrackingCollection<StringWrapper> AllowedValuesSet { get; set; }
 
+		public ChangeTrackingCollection<ExceptValuesOfWrapper> ExceptedValuesOfSet { get; set; }
+
 		protected override void InitializeCollectionProperties(Domain.Attribute model)
 		{
 			if(model == null)
@@ -124,6 +142,19 @@ namespace Treebank.Annotator.Wrapper
 			}
 			AllowedValuesSet = new ChangeTrackingCollection<StringWrapper>(model.AllowedValuesSet.Select(e => new StringWrapper(e)));
 			RegisterCollection(AllowedValuesSet, model.AllowedValuesSet);
+			if(model == null)
+			{
+				throw new ArgumentException("Domain.Attribute model instance cannot be null.");
+			}
+
+			base.InitializeCollectionProperties(model);
+
+			if(model.ExceptedValuesOfSet == null)
+			{
+				throw new ArgumentException("ExceptedValuesOfSet cannot be null.");
+			}
+			ExceptedValuesOfSet = new ChangeTrackingCollection<ExceptValuesOfWrapper>(model.ExceptedValuesOfSet.Select(e => new ExceptValuesOfWrapper(e)));
+			RegisterCollection(ExceptedValuesOfSet, model.ExceptedValuesOfSet);
 		}
 	}
 }

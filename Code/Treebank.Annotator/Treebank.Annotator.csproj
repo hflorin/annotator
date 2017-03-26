@@ -214,6 +214,7 @@
     <Compile Include="Wrapper\Generated\AttributeWrapper.g.cs" />
     <Compile Include="Wrapper\Generated\DocumentWrapper.g.cs" />
     <Compile Include="Wrapper\Generated\ElementWrapper.g.cs" />
+    <Compile Include="Wrapper\Generated\ExceptValuesOfWrapper.g.cs" />
     <Compile Include="Wrapper\Generated\GenerateModelWrapper.cs">
       <DependentUpon>GenerateModelWrapper.tt</DependentUpon>
       <SubType>Code</SubType>
