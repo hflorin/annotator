@@ -109,7 +109,7 @@
                 var lowercaseExtension = extension.Substring(1).ToLowerInvariant();
 
                 if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
-                    persister = new PersisterClient(new XmlPersister(eventAggregator));
+                    persister = new PersisterClient(new DomXmlPersister(eventAggregator));
                 else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat)
                          || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
                     persister = new PersisterClient(new ConllxPersister(eventAggregator));

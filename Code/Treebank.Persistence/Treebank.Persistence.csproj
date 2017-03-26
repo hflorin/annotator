@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConllxPersister.cs" />
+    <Compile Include="DomXmlPersister.cs" />
     <Compile Include="ISentenceLoader.cs" />
     <Compile Include="PersisterClient.cs" />
     <Compile Include="SentenceLoader.cs" />
