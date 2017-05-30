@@ -10,38 +10,39 @@
 
     public class DomXmlPersister : IPersister
     {
-        private static List<string> internalAttributes = new List<string> { "configuration", "content", "configurationFilePath" };
+        private static readonly List<string> AttributesThatMustNotBeSaved = new List<string>
+        {
+            "configuration",
+            "content",
+            "configurationFilePath"
+        };
 
         public async Task Save(Document document, string filepathToSaveTo = "", bool overwrite = true)
         {
             try
             {
+                var filepath = string.IsNullOrWhiteSpace(filepathToSaveTo) ? document.FilePath : filepathToSaveTo;
 
-            var filepath = string.IsNullOrWhiteSpace(filepathToSaveTo) ? document.FilePath : filepathToSaveTo;
+                if (string.IsNullOrWhiteSpace(filepath))
+                    return;
 
-            if (string.IsNullOrWhiteSpace(filepath))
-            {
-                return;
-            }
+                var fileName = Path.GetFileName(filepath);
+                var newFilepath = filepath.Replace(fileName, "New" + fileName);
 
-            var fileName = Path.GetFileName(filepath);
-            var newFilepath = filepath.Replace(fileName, "New" + fileName);
+                var loadXmlDocumentTask = Task.Run(() => LoadXmlDocument(document));
+                var doc = await loadXmlDocumentTask;
 
-            var loadXmlDocumentTask = Task.Run(() => LoadXmlDocument(document));
-            var doc = await loadXmlDocumentTask;
+                var processSentencesTask = Task.Run(() => ProcessSentences(document, doc));
+                await processSentencesTask;
 
-            var processSentencesTask = Task.Run(() => ProcessSentences(document, doc));
-            await processSentencesTask;
-
-            var persistDocumentToFiletask = Task.Run(() => PersistDocumentToFile(doc, newFilepath, filepath));
-            await persistDocumentToFiletask;
+                var persistDocumentToFiletask = Task.Run(() => PersistDocumentToFile(doc, newFilepath, filepath));
+                await persistDocumentToFiletask;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-
         }
 
         private static async Task<XmlDocument> LoadXmlDocument(Document document)
@@ -56,18 +57,13 @@
         private static async Task ProcessSentences(Document document, XmlDocument doc)
         {
             foreach (var sentence in document.Sentences)
-            {
                 if (IsNewSentence(sentence, doc))
-                {
                     AddNewSentenceToDocument(sentence, doc);
-                }
                 else if (IsModifiedSentence(sentence))
-                {
                     SaveModifiedSentenceToDocument(sentence, doc);
-                }
-            }
 
-            var deleteRemovedSentencesTask = Task.Run(() => DeleteSentencesFromDocumentIfRemovedInCurrentSession(doc, document));
+            var deleteRemovedSentencesTask =
+                Task.Run(() => DeleteSentencesFromDocumentIfRemovedInCurrentSession(doc, document));
             await deleteRemovedSentencesTask;
         }
 
@@ -78,17 +74,13 @@
 
             foreach (var attribute in sentence.Attributes)
             {
-                if (internalAttributes.Contains(attribute.Name))
-                {
+                if (AttributesThatMustNotBeSaved.Contains(attribute.Name))
                     continue;
-                }
 
                 var newAttr = sentenceXmlNode.OwnerDocument?.CreateAttribute(attribute.Name);
 
                 if (newAttr == null)
-                {
                     continue;
-                }
 
                 newAttr.Value = attribute.Value;
                 sentenceXmlNode.Attributes.SetNamedItem(newAttr);
@@ -99,6 +91,9 @@
                 var wordXmlElement = doc.CreateElement("word");
                 foreach (var attribute in word.Attributes)
                 {
+                    if (AttributesThatMustNotBeSaved.Contains(attribute.Name))
+                        continue;
+
                     wordXmlElement.SetAttribute(attribute.Name, attribute.Value);
                 }
 
@@ -124,23 +119,17 @@
                 doc.SelectSingleNode($"/treebank/sentence[@id='{sentence.GetAttributeByName("id")}']");
 
             if (sentenceXmlNode == null)
-            {
                 return;
-            }
 
             sentenceXmlNode.RemoveAll();
 
             foreach (var attribute in sentence.Attributes)
             {
                 if (sentenceXmlNode.OwnerDocument == null)
-                {
                     continue;
-                }
 
-                if (internalAttributes.Contains(attribute.Name))
-                {
+                if (AttributesThatMustNotBeSaved.Contains(attribute.Name))
                     continue;
-                }
 
                 var newAttr = sentenceXmlNode.OwnerDocument.CreateAttribute(attribute.Name);
                 newAttr.Value = attribute.Value;
@@ -152,6 +141,9 @@
                 var wordXmlElement = doc.CreateElement("word");
                 foreach (var attribute in word.Attributes)
                 {
+                    if (AttributesThatMustNotBeSaved.Contains(attribute.Name))
+                        continue;
+
                     wordXmlElement.SetAttribute(attribute.Name, attribute.Value);
                 }
 
@@ -163,23 +155,17 @@
         {
             var persistedSentencesIds = doc.SelectNodes("/treebank/sentence[@id]/@id");
             if (persistedSentencesIds == null)
-            {
                 return;
-            }
 
             foreach (XmlNode persistedSentenceId in persistedSentencesIds)
             {
                 if (document.Sentences.Any(s => s.GetAttributeByName("id").Equals(persistedSentenceId.Value)))
-                {
                     continue;
-                }
 
                 var nodeToRemove = doc.SelectSingleNode($"/treebank/sentence[@id='{persistedSentenceId.Value}']");
 
                 if (nodeToRemove != null)
-                {
                     doc.RemoveChild(nodeToRemove);
-                }
             }
         }
 
@@ -188,9 +174,7 @@
             doc.Save(newFilepath);
 
             if (File.Exists(filepath))
-            {
                 File.Delete(filepath);
-            }
 
             File.Move(newFilepath, filepath);
         }
