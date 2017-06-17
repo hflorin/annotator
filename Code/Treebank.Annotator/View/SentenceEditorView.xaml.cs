@@ -18,6 +18,7 @@
     using Domain;
     using Treebank.Events;
     using Mappers.Configuration;
+    using Services;
     using Point = GraphX.Measure.Point;
 
     public partial class SentenceEditorView : IDisposable, ISentenceEditorView
@@ -25,6 +26,7 @@
         private readonly SentenceEditorManager editorManager;
 
         private readonly IEventAggregator eventAggregator;
+        private readonly IShowInfoMessage showInfoMessageService;
 
         private readonly SentenceEditorViewModel viewModel;
 
@@ -37,18 +39,22 @@
         // uniquly identifies the view for Prism events to avoid unwanted calls to subscribers
         private Guid viewUniqueId = Guid.NewGuid();
 
-        public SentenceEditorView(IEventAggregator eventAggregator)
+        public SentenceEditorView(IEventAggregator eventAggregator, IShowInfoMessage showInfoMessageService)
         {
             InitializeComponent();
             if (eventAggregator == null)
                 throw new ArgumentNullException("eventAggregator");
 
+            if (showInfoMessageService == null)
+                throw new ArgumentNullException("showInfoMessageService");
+
             editorManager = new SentenceEditorManager(GgArea, GgZoomCtrl);
             this.eventAggregator = eventAggregator;
+            this.showInfoMessageService = showInfoMessageService;
         }
 
-        public SentenceEditorView(SentenceEditorViewModel sentenceEditorViewModel, IEventAggregator eventAggregator)
-            : this(eventAggregator)
+        public SentenceEditorView(SentenceEditorViewModel sentenceEditorViewModel, IEventAggregator eventAggregator, IShowInfoMessage showInfoMessageService)
+            : this(eventAggregator, showInfoMessageService)
         {
             if (sentenceEditorViewModel == null)
                 throw new ArgumentNullException("sentenceEditorViewModel");
@@ -432,7 +438,7 @@
         private void GgAreaEdgeSelected(object sender, EdgeSelectedEventArgs args)
         {
             if (args.MouseArgs.LeftButton == MouseButtonState.Pressed
-                && operationMode == SenteceGraphOperationMode.Delete)
+                && operationMode == SenteceGraphOperationMode.DeleteEdge)
             {
                 var edge = args.EdgeControl.Edge as WordEdge;
                 if (edge != null)
@@ -473,14 +479,30 @@
 
         private void OnSetSentenceEditMode(SetSenteceGraphOperationModeRequest setSenteceGraphOperationModeRequest)
         {
-            if (butDelete.IsChecked == true
-                && setSenteceGraphOperationModeRequest.Mode == SenteceGraphOperationMode.Delete)
+            if (butDeleteEdge.IsChecked == true
+                && setSenteceGraphOperationModeRequest.Mode == SenteceGraphOperationMode.DeleteEdge)
             {
                 butEdit.IsChecked = false;
                 butSelect.IsChecked = false;
+                butDeleteVertex.IsChecked = false;
                 GgZoomCtrl.Cursor = Cursors.Help;
-                viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Delete;
-                operationMode = SenteceGraphOperationMode.Delete;
+                viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.DeleteEdge;
+                operationMode = SenteceGraphOperationMode.DeleteEdge;
+                ClearEditMode();
+                ClearSelectMode();
+                GgArea.SetVerticesDrag(false);
+                return;
+            }
+
+            if (butDeleteVertex.IsChecked == true
+                && setSenteceGraphOperationModeRequest.Mode == SenteceGraphOperationMode.DeleteVertex)
+            {
+                butEdit.IsChecked = false;
+                butSelect.IsChecked = false;
+                butDeleteEdge.IsChecked = false;
+                GgZoomCtrl.Cursor = Cursors.Help;
+                viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.DeleteVertex;
+                operationMode = SenteceGraphOperationMode.DeleteVertex;
                 ClearEditMode();
                 ClearSelectMode();
                 GgArea.SetVerticesDrag(false);
@@ -490,7 +512,8 @@
             if (butEdit.IsChecked == true
                 && setSenteceGraphOperationModeRequest.Mode == SenteceGraphOperationMode.Edit)
             {
-                butDelete.IsChecked = false;
+                butDeleteEdge.IsChecked = false;
+                butDeleteVertex.IsChecked = false;
                 butSelect.IsChecked = false;
                 GgZoomCtrl.Cursor = Cursors.Pen;
                 viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Edit;
@@ -504,17 +527,31 @@
                 && setSenteceGraphOperationModeRequest.Mode == SenteceGraphOperationMode.Select)
             {
                 butEdit.IsChecked = false;
-                butDelete.IsChecked = false;
+                butDeleteEdge.IsChecked = false;
+                butDeleteVertex.IsChecked = false;
                 GgZoomCtrl.Cursor = Cursors.Hand;
                 viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Select;
                 operationMode = SenteceGraphOperationMode.Select;
                 ClearEditMode();
                 GgArea.SetVerticesDrag(true, true);
+                return;
             }
-            else
-            {
-                GgArea.SetVerticesDrag(false);
-            }
+
+            ResetEditButtons();
+        }
+
+        private void ResetEditButtons()
+        {
+            butDeleteVertex.IsChecked = false;
+            butDeleteEdge.IsChecked = false;
+            butEdit.IsChecked = false;
+            butSelect.IsChecked = false;
+            viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.None;
+            operationMode = SenteceGraphOperationMode.None;
+            GgZoomCtrl.Cursor = Cursors.Arrow;
+            ClearEditMode();
+            ClearSelectMode();
+            GgArea.SetVerticesDrag(false);
         }
 
         private void ClearSelectMode(bool soft = false)
@@ -567,7 +604,7 @@
                 case SenteceGraphOperationMode.Edit:
                     CreateEdgeControl(args.VertexControl);
                     break;
-                case SenteceGraphOperationMode.Delete:
+                case SenteceGraphOperationMode.DeleteVertex:
                     SafeRemoveVertex(args.VertexControl);
                     break;
                 case SenteceGraphOperationMode.Select:
@@ -646,6 +683,13 @@
             var wordToRemove = vc.Vertex as WordVertex;
 
             if (wordToRemove == null) return;
+
+            if (showInfoMessageService.ShowInfoMessage(
+                    string.Format("Are you sure you want to delete the word: {0}, id: {1}?", wordToRemove.VertexLabel, wordToRemove.ID),
+                    MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                return;
+            }
 
             GgArea.RemoveVertexAndEdges(wordToRemove);
             viewModel.Sentence.Words.Remove(wordToRemove.WordWrapper);

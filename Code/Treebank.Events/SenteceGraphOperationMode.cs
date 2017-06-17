@@ -2,8 +2,10 @@
 {
     public enum SenteceGraphOperationMode
     {
-        Select = 0,
+        None = 0,
+        Select,
         Edit,
-        Delete
+        DeleteEdge,
+        DeleteVertex
     }
 }

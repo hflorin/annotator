@@ -58,15 +58,26 @@
                 <ToggleButton Name="butSelect" Content="Drag" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events1:SenteceGraphOperationMode.Select}"
                               ToolTip="Reposition vertices by dragging them"
-                              x:FieldModifier="private" Width="70" />
+                              x:FieldModifier="private" Width="70"
+                              Style="{StaticResource ToggleButtonStyle1}"/>
                 <ToggleButton Name="butEdit" Content="Create edge" Command="{Binding ToggleEditModeCommand}"
                               CommandParameter="{x:Static events1:SenteceGraphOperationMode.Edit}"
                               ToolTip="Click on a vertex, then click on another to create an edge between the two"
-                              x:FieldModifier="private" Width="70" />
-                <ToggleButton Name="butDelete" Content="Delete" Command="{Binding ToggleEditModeCommand}"
-                              CommandParameter="{x:Static events:SenteceGraphOperationMode.Delete}"
-                              x:FieldModifier="private" Width="70"
-                              ToolTip="Click on vertex/edge to delete it" />
+                              x:FieldModifier="private" Width="70" 
+                              Style="{StaticResource ToggleButtonStyle1}"/>
+                <StackPanel Orientation="Horizontal">
+                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                </StackPanel>
+                <ToggleButton Name="butDeleteEdge" Content="Delete Edge" Command="{Binding ToggleEditModeCommand}"
+                              CommandParameter="{x:Static events:SenteceGraphOperationMode.DeleteEdge}"
+                              x:FieldModifier="private" Width="80"
+                              ToolTip="Click on an edge to delete it" 
+                              Style="{StaticResource ToggleButtonStyle1}"/>
+                <ToggleButton Name="butDeleteVertex" Content="Delete Vertex" Command="{Binding ToggleEditModeCommand}"
+                              CommandParameter="{x:Static events:SenteceGraphOperationMode.DeleteVertex}"
+                              x:FieldModifier="private" Width="80"
+                              ToolTip="Click on a vertex to delete it" 
+                              Style="{StaticResource ToggleButtonStyle1}"/>
             </WrapPanel>
         </ScrollViewer>
         <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch">

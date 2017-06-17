@@ -644,7 +644,7 @@
                         DataStructure,
                         SelectedSentence,
                         showInfoMessage),
-                    eventAggregator);
+                    eventAggregator, showInfoMessage);
 
             SentenceEditViews.Add(sentenceEditView);
             ActiveSentenceEditorView = sentenceEditView;
