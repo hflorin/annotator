@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="InstallerProject" Language="1033" Version="1.0.0.0" Manufacturer="" UpgradeCode="70d6ad65-55d9-4e68-aaba-0f7cdc617657">
+	<Product Id="70d6ad65-55d9-4e68-aaba-0f7cdc617658" Name="TreebankAnnotatorInstaller" Language="1033" Version="1.0.0.0" Manufacturer="Hociung Florin" UpgradeCode="70d6ad65-55d9-4e68-aaba-0f7cdc617657">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate />
 
-		<Feature Id="ProductFeature" Title="InstallerProject" Level="1">
-			<ComponentGroupRef Id="ProductComponents" />
+		<Feature Id="ProductFeature" Title="Treebank Annotator Installer" Level="1">
+			<ComponentGroupRef Id="TreebankAnnotatorComponents" />
 		</Feature>
 	</Product>
 
@@ -20,11 +20,14 @@
 	</Fragment>
 
 	<Fragment>
-		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+		<ComponentGroup Id="TreebankAnnotatorComponents" Directory="INSTALLFOLDER">
 			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
-			<!-- <Component Id="ProductComponent"> -->
-				<!-- TODO: Insert files, registry keys, and other resources here. -->
-			<!-- </Component> -->
-		</ComponentGroup>
+			 <Component Id="ProductComponent"> 
+         <File Source="$(var.Treebank.Annotator.ProjectDir)\bin\Release\*.*" />
+			 </Component>
+      <Component Id="Configuration">
+        <File Source="C:\Users\flori\Source\Repos\annotator\Resources\Configurations\*.*" />
+      </Component>
+    </ComponentGroup>
 	</Fragment>
 </Wix>

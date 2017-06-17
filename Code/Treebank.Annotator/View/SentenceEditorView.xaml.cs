@@ -546,7 +546,7 @@
             butDeleteEdge.IsChecked = false;
             butEdit.IsChecked = false;
             butSelect.IsChecked = false;
-            viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.None;
+            viewModel.SenteceGraphOperationMode = SenteceGraphOperationMode.Select;
             operationMode = SenteceGraphOperationMode.None;
             GgZoomCtrl.Cursor = Cursors.Arrow;
             ClearEditMode();
@@ -848,7 +848,7 @@
             viewModel.SetLayoutAlgorithm(viewModel.SentenceGraphLogicCore);
             GgArea.LogicCore = viewModel.SentenceGraphLogicCore;
             DisplayGraph();
-            ZoomToFill();
+           // ZoomToFill();
         }
     }
 }
