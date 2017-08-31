@@ -66,6 +66,7 @@
 
             GgArea.ShowAllEdgesArrows();
             GgArea.ShowAllEdgesLabels();
+            ZoomControl.SetViewFinderVisibility(GgZoomCtrl, Visibility.Collapsed);
             GgZoomCtrl.MouseLeftButtonUp += GgZoomCtrlMouseLeftButtonUp;
             GgArea.VertexSelected += GgAreaVertexSelected;
             GgArea.EdgeSelected += GgAreaEdgeSelected;
@@ -192,14 +193,14 @@
 
                 if (vertexControl != null)
                 {
-                    const int offset = 100;
+                    const int offset = 400;
                     var pos = vertexControl.GetPosition();
                     GgZoomCtrl.ZoomToContent(
                         new Rect(
                             pos.X - offset,
                             pos.Y - offset,
                             vertexControl.ActualWidth + offset * 2,
-                            vertexControl.ActualHeight + offset * 3));
+                            vertexControl.ActualHeight + offset * 1.5));
 
                     GgArea.VertexList.ForEach(pair => { HighlightBehaviour.SetHighlighted(pair.Value, false); });
 

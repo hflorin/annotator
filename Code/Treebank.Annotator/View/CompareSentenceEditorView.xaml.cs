@@ -57,6 +57,7 @@
             GgArea.ShowAllEdgesArrows();
             GgArea.ShowAllEdgesLabels();
             GgZoomCtrl.MouseLeftButtonUp += GgZoomCtrlMouseLeftButtonUp;
+            ZoomControl.SetViewFinderVisibility(GgZoomCtrl, Visibility.Collapsed);
             GgArea.GenerateGraphFinished += GgAreaGenerateGraphFinished;
             GgArea.EdgeLabelFactory = new DefaultEdgelabelFactory();
 

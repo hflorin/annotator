@@ -112,7 +112,7 @@
         <graphx:ZoomControl x:Name="GgZoomCtrl">
             <graph:SentenceGraphArea
                 LogicCore="{Binding SentenceGraphLogicCore, UpdateSourceTrigger=PropertyChanged}"
-                x:Name="GgArea">
+                x:Name="GgArea"  >
                 <graph:SentenceGraphArea.GraphLogicCoreData>
                     <Binding Path="SentenceGraphLogicCore" UpdateSourceTrigger="PropertyChanged" />
                 </graph:SentenceGraphArea.GraphLogicCoreData>
