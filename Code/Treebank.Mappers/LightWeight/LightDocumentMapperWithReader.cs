@@ -43,7 +43,7 @@
 
             var datastructure = dataStructure
                                 ?? appConfig.DataStructures.FirstOrDefault(
-                                    d => d.Format == ConfigurationStaticData.XmlFormat);
+                                    d => d.Format.Equals(ConfigurationStaticData.XmlFormat,StringComparison.InvariantCultureIgnoreCase));
 
             if (datastructure == null)
             {
@@ -115,7 +115,7 @@
             }
 
             var datastructure =
-                appConfig.DataStructures.FirstOrDefault(d => d.Format == ConfigurationStaticData.XmlFormat);
+                appConfig.DataStructures.FirstOrDefault(d => d.Format.Equals(ConfigurationStaticData.XmlFormat, StringComparison.InvariantCultureIgnoreCase));
 
             if (datastructure == null)
             {

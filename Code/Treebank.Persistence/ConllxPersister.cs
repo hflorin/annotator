@@ -52,8 +52,9 @@
             var dataStructure =
                 appConfig.DataStructures.FirstOrDefault(
                     d =>
-                        d.Format.Equals(ConfigurationStaticData.ConllxFormat)
-                        || d.Format.Equals(ConfigurationStaticData.ConllFormat));
+                        d.Format.Equals(ConfigurationStaticData.ConllxFormat, StringComparison.InvariantCultureIgnoreCase)
+                        || d.Format.Equals(ConfigurationStaticData.ConllFormat, StringComparison.InvariantCultureIgnoreCase)
+                        || d.Format.Equals(ConfigurationStaticData.ConlluFormat, StringComparison.InvariantCultureIgnoreCase));
 
             if (dataStructure == null)
             {
@@ -116,6 +117,11 @@
             if (sentence == null)
             {
                 return;
+            }
+
+            foreach (var metadata in sentence.Metadata)
+            {
+                writer.WriteLine(metadata);
             }
 
             var wordIdMapping = GetMappingForSentence(sentence);

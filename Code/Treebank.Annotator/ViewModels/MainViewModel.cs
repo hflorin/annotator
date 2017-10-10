@@ -833,7 +833,8 @@
                     return;
                 }
 
-                var documentFilePath = openFileDialogService.GetFileLocation(FileFilters.XmlAndConllxFilesOnlyFilter);
+                var documentFilePath =
+                    openFileDialogService.GetFileLocation(FileFilters.XmlAndConllxAndConlluFilesOnlyFilter);
 
                 eventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(string.Format("Loading document: {0}. Please wait...", documentFilePath));
@@ -868,9 +869,10 @@
             var extension = Path.GetExtension(documentFilePath);
             if (extension != null)
             {
-                var lowercaseExtension = extension.Substring(1).ToLowerInvariant();
+                var lowercaseExtension = extension.Substring(1);
 
-                if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
+                if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat,
+                    StringComparison.InvariantCultureIgnoreCase))
                     documentModel =
                         await
                             new DocumentMapperClient(
@@ -881,8 +883,14 @@
                                 }).Map(
                                 documentFilePath,
                                 appConfig.Filepath);
-                else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat)
-                         || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
+                else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat,
+                             StringComparison.InvariantCultureIgnoreCase)
+                         ||
+                         lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat,
+                             StringComparison.InvariantCultureIgnoreCase)
+                         ||
+                         lowercaseExtension.Equals(ConfigurationStaticData.ConlluFormat,
+                             StringComparison.InvariantCultureIgnoreCase))
                     documentModel =
                         await
                             new DocumentMapperClient(
@@ -950,7 +958,8 @@
         {
             eventAggregator.GetEvent<StatusNotificationEvent>().Publish("Saving document");
 
-            var documentFilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlAndConllxFilesOnlyFilter);
+            var documentFilePath =
+                saveDialogService.GetSaveFileLocation(FileFilters.XmlAndConllxAndConlluFilesOnlyFilter);
 
             if (!string.IsNullOrWhiteSpace(documentFilePath))
             {
@@ -1101,14 +1110,23 @@
                 var extension = Path.GetExtension(selectedDocument.FilePath);
                 if (extension != null)
                 {
-                    var fileFormat = extension.Substring(1).ToLowerInvariant();
+                    var fileFormat = extension.Substring(1);
 
                     var appconfig =
                         appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
                             .GetAwaiter()
                             .GetResult();
 
-                    return appconfig.DataStructures.FirstOrDefault(d => fileFormat == d.Format);
+                    var dataStructure =
+                        appconfig.DataStructures.FirstOrDefault(
+                            d => fileFormat.Equals(d.Format, StringComparison.InvariantCultureIgnoreCase)) ??
+                        appconfig.DataStructures.FirstOrDefault(
+                            d =>
+                                d.Format.Equals(ConfigurationStaticData.ConllxFormat, StringComparison.InvariantCultureIgnoreCase) ||
+                                d.Format.Equals(ConfigurationStaticData.ConllFormat, StringComparison.InvariantCultureIgnoreCase) ||
+                                d.Format.Equals(ConfigurationStaticData.ConlluFormat, StringComparison.InvariantCultureIgnoreCase));
+
+                    return dataStructure;
                 }
 
                 return null;

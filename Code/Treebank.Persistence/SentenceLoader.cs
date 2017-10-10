@@ -7,6 +7,8 @@ using Treebank.Domain;
 
 namespace Treebank.Persistence
 {
+    using System;
+
     public class SentenceLoader : ISentenceLoader
     {
         private readonly IAppConfigMapper appConfigMapper;
@@ -23,11 +25,11 @@ namespace Treebank.Persistence
             var extension = Path.GetExtension(documentFilePath);
             if (extension != null)
             {
-                var lowercaseExtension = extension.Substring(1).ToLowerInvariant();
+                var lowercaseExtension = extension.Substring(1);
 
                 DocumentMapperClient documentMapper = null;
 
-                if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
+                if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat, StringComparison.InvariantCultureIgnoreCase))
                     documentMapper =
                         new DocumentMapperClient(
                             new LightDocumentMapperWithReader
@@ -35,8 +37,9 @@ namespace Treebank.Persistence
                                 AppConfigMapper = appConfigMapper,
                                 EventAggregator = eventAggregator
                             });
-                else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat)
-                         || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
+                else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat, StringComparison.InvariantCultureIgnoreCase)
+                         || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat, StringComparison.InvariantCultureIgnoreCase)
+                         || lowercaseExtension.Equals(ConfigurationStaticData.ConlluFormat, StringComparison.InvariantCultureIgnoreCase))
                     documentMapper =
                         new DocumentMapperClient(
                             new LightConllxDocumentMapper

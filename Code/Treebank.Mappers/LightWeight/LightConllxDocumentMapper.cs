@@ -40,8 +40,9 @@
             var datastructure =
                 appConfig.DataStructures.FirstOrDefault(
                     d =>
-                        (d.Format == ConfigurationStaticData.ConllxFormat) ||
-                        (d.Format == ConfigurationStaticData.ConllFormat));
+                        d.Format.Equals(ConfigurationStaticData.ConllxFormat, StringComparison.InvariantCultureIgnoreCase) ||
+                        d.Format.Equals(ConfigurationStaticData.ConllFormat, StringComparison.InvariantCultureIgnoreCase) ||
+                        d.Format.Equals(ConfigurationStaticData.ConlluFormat, StringComparison.InvariantCultureIgnoreCase));
 
             if (datastructure == null)
             {
@@ -113,8 +114,9 @@
             var datastructure =
                 appConfig.DataStructures.FirstOrDefault(
                     d =>
-                        (d.Format == ConfigurationStaticData.ConllxFormat) ||
-                        (d.Format == ConfigurationStaticData.ConllFormat));
+                        d.Format.Equals(ConfigurationStaticData.ConllxFormat, StringComparison.InvariantCultureIgnoreCase) ||
+                        d.Format.Equals(ConfigurationStaticData.ConllFormat, StringComparison.InvariantCultureIgnoreCase) ||
+                        d.Format.Equals(ConfigurationStaticData.ConlluFormat, StringComparison.InvariantCultureIgnoreCase));
 
             if (datastructure == null)
             {
@@ -158,15 +160,21 @@
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
+                        if (currentSentenceId > sentenceIdNumber)
+                        {
+                            break;
+                        }
+
+                        if (sentenceIdNumber <= currentSentenceId && line.StartsWith("#", StringComparison.Ordinal))
+                        {
+                            sentence.Metadata.Add(line);
+                            continue;
+                        }
+
                         if (string.IsNullOrWhiteSpace(line))
                         {
                             currentSentenceId++;
                             continue;
-                        }
-
-                        if (currentSentenceId > sentenceIdNumber)
-                        {
-                            break;
                         }
 
                         if (currentSentenceId == sentenceIdNumber)
@@ -321,16 +329,26 @@
 
         private void AddSentenceToDocument(Document document, string line)
         {
-            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#", StringComparison.Ordinal))
+            var lastSentence = document.Sentences.LastOrDefault();
+
+            if (lastSentence == null)
             {
                 return;
             }
 
-            var lastSentence = document.Sentences.LastOrDefault();
-            if (lastSentence != null)
+            if (string.IsNullOrWhiteSpace(line))
             {
-                AddWordsToSentence(lastSentence, line);
+                return;
             }
+
+            if (line.StartsWith("#", StringComparison.Ordinal))
+            {
+                lastSentence.Metadata.Add(line);
+                return;
+            }
+
+            AddWordsToSentence(lastSentence, line);
+            
         }
 
         private void AddWordsToSentence(Sentence sentence, string line)
