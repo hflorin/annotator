@@ -91,6 +91,16 @@
             }
         }
 
+        public void UpdateContent()
+        {
+            var newContent = string.Empty;
+            foreach (var word in Model.Words)
+            {
+                newContent += word.GetAttributeByName("form") + " ";
+            }
+            Model.SetAttributeByName("content", newContent.TrimEnd());
+        }
+
         public bool IsTree
         {
             get { return isTree; }

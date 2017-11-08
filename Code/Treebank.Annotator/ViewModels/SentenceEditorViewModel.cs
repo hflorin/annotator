@@ -354,6 +354,7 @@
                 var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(Sentence));
                 if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
                 {
+                    Sentence.UpdateContent();
                     EventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Publish(ViewId);
                     EventAggregator.GetEvent<ZoomToFillEvent>().Publish(ViewId);
                 }

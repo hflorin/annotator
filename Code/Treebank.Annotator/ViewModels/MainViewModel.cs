@@ -111,7 +111,8 @@
                 if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
                     persister = new PersisterClient(new DomXmlPersister());
                 else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat)
-                         || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat))
+                         || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat)
+                         || lowercaseExtension.Equals(ConfigurationStaticData.ConlluFormat))
                     persister = new PersisterClient(new ConllxPersister(eventAggregator));
             }
 

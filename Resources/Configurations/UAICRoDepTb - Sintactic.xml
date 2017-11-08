@@ -24,7 +24,7 @@
             <attribute entity="attribute" name="xpostag" displayName="X Part of speech tag" isEditable="true"
                        isOptional="false" position="4" />
             <attribute entity="attribute" name="feats" displayName="FEATS" isEditable="true"
-                       isOptional="true" position="5" />                       
+                       isOptional="true" position="5" />
             <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
                        position="6" />
             <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
@@ -39,7 +39,46 @@
         </element>
       </elements>
     </dataStructure>
-  <dataStructure format="XML">
+    <dataStructure format="conllx">
+      <elements>
+        <element entity="document" name="treebank" displayName="Treebank" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="true" isOptional="false" />
+          </attributes>
+        </element>
+        <element entity="sentence" name="sentence" displayName="Sentence" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="true" />
+          </attributes>
+        </element>
+        <element entity="word" name="word" displayName="Word" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="false" position="0" />
+            <attribute entity="attribute" name="form" displayName="Form" isEditable="true" isOptional="false"
+                       position="1" />
+            <attribute entity="attribute" name="lemma" displayName="Lemma" isEditable="true" isOptional="false"
+                       position="2" />
+            <attribute entity="attribute" name="upostag" displayName="U Part of speech tag" isEditable="true"
+                       isOptional="false" position="3" />
+            <attribute entity="attribute" name="xpostag" displayName="X Part of speech tag" isEditable="true"
+                       isOptional="false" position="4" />
+            <attribute entity="attribute" name="feats" displayName="FEATS" isEditable="true"
+                       isOptional="true" position="5" />
+            <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
+                       position="6" />
+            <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
+                       isOptional="false" position="7" >
+              <exceptForValuesOf elementName="head" v0="0"/>
+            </attribute>
+            <attribute entity="attribute" name="deps" displayName="DEPS" isEditable="true"
+                       isOptional="true" position="8" />
+            <attribute entity="attribute" name="misc" displayName="MISC" isEditable="true"
+                       isOptional="true" position="9" />
+          </attributes>
+        </element>
+      </elements>
+    </dataStructure>
+  <dataStructure format="xml">
     <elements>
       <element entity="document" name="treebank" displayName="Treebank" isOptional="false">
         <attributes>
@@ -52,7 +91,6 @@
           <attribute entity="attribute" name="parser" displayName="Parser" isEditable="true" isOptional="true" />
           <attribute entity="attribute" name="user" displayName="User" isEditable="true" isOptional="true" />
           <attribute entity="attribute" name="date" displayName="Date added" isEditable="false" isOptional="true" />
-		  <attribute entity="attribute" name="citation-part" displayName="citation part" isEditable="true" isOptional="true" />
         </attributes>
       </element>
       <element entity="word" name="word" displayName="Word" isOptional="false">
@@ -66,19 +104,20 @@
                    </attribute>
           <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
                      type="" />
-          <attribute entity="attribute" name="chunk" displayName="Chunk" isEditable="false" isOptional="false" />
+          <attribute entity="attribute" name="chunk" displayName="Chunk" isEditable="true" isOptional="true" />
           <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
                      isOptional="false">
-            <allowedValueSet value1="acl" value2="advcl" value3="advcl:tcl" value4="advmod" value5="advmod:tmod"
-                             value6="amod" value7="appos" value8="aux"
-                             value9="aux:pass" value10="case" value11="cc" value12="cc:preconj" value13="ccomp"
-                             value14="ccomp:pmod" value15="clf" value16="compound" value17="conj"
-                             value18="cop" value19="csubj" value20="csubj:pass" value21="dep"
-                             value23="det" value24="discourse" value25="dislocated" value26="expl" value27="expl:pv"
-                             value28="expl:impers" value29="expl:pass" value30="expl:poss" value31="fixed" value32="flat"
-                             value33="goeswith" value34="iobj" value35="list" value36="mark" value37="nmod" value38="nmod:agent" value39="nmod:pmod"
-                             value40="nmod:tmod" value41="nsubj" value42="nsubj:pass" value43="nummod" value44="obj" value45="obl" value46="orphan" value47="parataxis" value48="punct" value49="reparandum" value50="root" value52="vocative" value53="xcomp"/>
-            </attribute>
+            <allowedValueSet value1="a.adj." value2="a.adv." value3="a.pron." value4="a.subst" value5="a.subst."
+                             value6="a.vb." value7="ap." value8="aux."
+                             value9="c.ag." value10="c.c.conc." value11="c.c.cons." value12="c.c.cz." value13="c.c.l."
+                             value14="c.c.m." value15="c.c.scop." value16="c.c.soc." value17="c.c.t."
+                             value18="c.d." value19="c.i." value20="c.prep." value21="comp."
+                             value23="coord." value24="det." value25="el.pred." value26="incid." value27="n.pred."
+                             value28="narativ." value29="neg." value30="part." value31="prep." value32="punct."
+                             value33="refl." value34="sbj." value35="subord." value36="superl." value37="c.c.rel." value38="c.c.exc." value39="c.c.instr."
+                             value40="c.c.cond." value41="c.c.cumul." value42="c.c.opoz" value43="voc." value44="interj." value45="textual"/>
+            <exceptForValuesOf elementName="head" v0="0"/>
+          </attribute>
         </attributes>
       </element>
     </elements>

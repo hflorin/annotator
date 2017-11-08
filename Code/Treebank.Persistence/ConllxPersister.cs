@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Domain;
     using Mappers;
@@ -13,6 +14,7 @@
 
     public class ConllxPersister : IPersister
     {
+       private static Regex textMetadataRegex = new Regex(@"^(# text =)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly IEventAggregator eventAggregator;
 
         private Word wordPrototype;
@@ -121,6 +123,14 @@
 
             foreach (var metadata in sentence.Metadata)
             {
+                if (textMetadataRegex.IsMatch(metadata))
+                {
+                    if (!string.IsNullOrEmpty(sentence.GetAttributeByName("content")))
+                    {
+                        writer.WriteLine("# text = " + sentence.GetAttributeByName("content"));
+                        continue;
+                    }
+                }
                 writer.WriteLine(metadata);
             }
 
@@ -165,7 +175,7 @@
 
                 var attributeValue = attributeFromWord != null ? attributeFromWord.Value : string.Empty;
 
-                if ((attributeFromWord != null) && !string.IsNullOrEmpty(attributeFromWord.Value))
+                if (!string.IsNullOrEmpty(attributeFromWord?.Value))
                 {
                     var splits = attributeFromWord.Value.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
 
@@ -175,7 +185,7 @@
                     }
                 }
 
-                result.AppendFormat("{0}\t", attributeFromWord != null ? attributeValue : "_");
+                result.AppendFormat("{0}\t", attributeValue ?? "_");
             }
 
             return result.ToString().TrimEnd('\t');

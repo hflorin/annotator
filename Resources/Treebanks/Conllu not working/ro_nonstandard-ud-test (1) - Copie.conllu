@@ -1,0 +1,13 @@
+# newdoc id = New Testament 1648-1-916
+# sent_id = test-1
+# text = DE LA MATTEIU test SFÎNTA EVANGHELIE .
+# ro_nonstandard-ud-test_First_release
+# citation-part=MATT.title
+1	_	DE	de	ADP	Spsa	AdpType=Prep|Case=Acc	3	case	_	ref=MATT.title
+2	_	LA	la	ADP	Spsa	AdpType=Prep|Case=Acc	1	fixed	_	ref=MATT.title
+3	_	MATTEIU	MATEI	PROPN	Npmsrn	Case=Acc,Nom|Definite=Ind|Gender=Masc|Number=Sing	6	nmod	_	ref=MATT.title
+4	adasd	test	test	ADJ	Afp	Degree=Pos	7	acl	_	_
+5	_	SFÎNTA	sfânt	ADJ	Afpfsry	Case=Acc,Nom|Definite=Def|Degree=Pos|Gender=Fem	6	amod	_	ref=MATT.title
+6	_	EVANGHELIE	evanghelie	NOUN	Ncfsrn	Case=Acc,Nom|Definite=Ind|Gender=Fem|Number=Sing	0	root	_	ref=MATT.title|SpaceAfter=No
+7	_	.	.	PUNCT	PERIOD	_	6	punct	_	ref=MATT.title
+
