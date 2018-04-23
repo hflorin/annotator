@@ -1,0 +1,146 @@
+<configuration id="Config1">
+  <dataStructures>
+    <dataStructure format="conll">
+      <elements>
+        <element entity="document" name="treebank" displayName="Treebank" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="true" isOptional="false" />
+          </attributes>
+        </element>
+        <element entity="sentence" name="sentence" displayName="Sentence" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="true" />
+          </attributes>
+        </element>
+        <element entity="word" name="word" displayName="Word" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="false" position="0" />
+            <attribute entity="attribute" name="form" displayName="Form" isEditable="true" isOptional="false"
+                       position="1" />
+            <attribute entity="attribute" name="lemma" displayName="Lemma" isEditable="true" isOptional="false"
+                       position="2" />
+            <attribute entity="attribute" name="upostag" displayName="U Part of speech tag" isEditable="true"
+                       isOptional="false" position="3" />
+            <attribute entity="attribute" name="xpostag" displayName="X Part of speech tag" isEditable="true"
+                       isOptional="false" position="4" />
+            <attribute entity="attribute" name="feats" displayName="FEATS" isEditable="true"
+                       isOptional="true" position="5" />
+            <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
+                       position="6" />
+            <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
+                       isOptional="false" position="7" >
+              <exceptForValuesOf elementName="head" v0="0"/>
+            </attribute>
+            <attribute entity="attribute" name="deps" displayName="DEPS" isEditable="true"
+                       isOptional="true" position="8" />
+            <attribute entity="attribute" name="misc" displayName="MISC" isEditable="true"
+                       isOptional="true" position="9" />
+          </attributes>
+        </element>
+      </elements>
+    </dataStructure>
+    <dataStructure format="conllx">
+      <elements>
+        <element entity="document" name="treebank" displayName="Treebank" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="true" isOptional="false" />
+          </attributes>
+        </element>
+        <element entity="sentence" name="sentence" displayName="Sentence" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="true" />
+          </attributes>
+        </element>
+        <element entity="word" name="word" displayName="Word" isOptional="false">
+          <attributes>
+            <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="false" position="0" />
+            <attribute entity="attribute" name="form" displayName="Form" isEditable="true" isOptional="false"
+                       position="1" />
+            <attribute entity="attribute" name="lemma" displayName="Lemma" isEditable="true" isOptional="false"
+                       position="2" />
+            <attribute entity="attribute" name="upostag" displayName="U Part of speech tag" isEditable="true"
+                       isOptional="false" position="3" />
+            <attribute entity="attribute" name="xpostag" displayName="X Part of speech tag" isEditable="true"
+                       isOptional="false" position="4" />
+            <attribute entity="attribute" name="feats" displayName="FEATS" isEditable="true"
+                       isOptional="true" position="5" />
+            <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
+                       position="6" />
+            <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
+                       isOptional="false" position="7" >
+              <exceptForValuesOf elementName="head" v0="0"/>
+            </attribute>
+            <attribute entity="attribute" name="deps" displayName="DEPS" isEditable="true"
+                       isOptional="true" position="8" />
+            <attribute entity="attribute" name="misc" displayName="MISC" isEditable="true"
+                       isOptional="true" position="9" />
+          </attributes>
+        </element>
+      </elements>
+    </dataStructure>
+  <dataStructure format="xml">
+    <elements>
+      <element entity="document" name="treebank" displayName="Treebank" isOptional="false">
+        <attributes>
+          <attribute entity="attribute" name="id" displayName="Id" isEditable="true" isOptional="false" />
+        </attributes>
+      </element>
+      <element entity="sentence" name="sentence" displayName="Sentence" isOptional="false">
+        <attributes>
+          <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="false" />
+          <attribute entity="attribute" name="parser" displayName="Parser" isEditable="true" isOptional="true" />
+          <attribute entity="attribute" name="user" displayName="User" isEditable="true" isOptional="true" />
+          <attribute entity="attribute" name="date" displayName="Date added" isEditable="false" isOptional="true" />
+        </attributes>
+      </element>
+      <element entity="word" name="word" displayName="Word" isOptional="false">
+        <attributes>
+          <attribute entity="attribute" name="id" displayName="Id" isEditable="false" isOptional="false" />
+          <attribute entity="attribute" name="form" displayName="Form" isEditable="true" isOptional="false" />
+          <attribute entity="attribute" name="lemma" displayName="Lemma" isEditable="true" isOptional="false" />
+          <attribute entity="attribute" name="postag" displayName="Part of speech tag" isEditable="true"
+                     isOptional="false" >
+                     <allowedValueSet v0="Afp" v1="Afpf--n" v2="Afpfp-n" v3="Afpfpon" v4="Afpfpoy" v5="Afpfprn" v6="Afpfpry" v7="Afpfpvy" v8="Afpfson" v9="Afpfsoy" v10="Afpfsrn" v11="Afpfsry" v12="Afpfsvn" v13="Afpfsvy" v14="Afpm--y" v15="Afpmp-n" v16="Afpmpoy" v17="Afpmprn" v18="Afpmpry" v19="Afpmpvy" v20="Afpms-n" v21="Afpmsoy" v22="Afpmsrn" v23="Afpmsry" v24="Afpmsvn" v25="Afpmsvy" v26="Afp-p-n" v27="Afp-poy" v28="AMPER" v29="BSLASH" v30="CAP" v31="Cccsp" v32="Cccsz" v33="Ccssp" v34="Ccssz" v35="COLON" v36="COMMA" v37="Cscsp" v38="Csssp" v39="DASH" v40="DBLQ" v41="Dd3fpo" v42="Dd3fpr" v43="Dd3fpr---e" v44="Dd3fpr---o" v45="Dd3fso" v46="Dd3fso---e" v47="Dd3fso---o" v48="Dd3fsr" v49="Dd3fsr---e" v50="Dd3fsr---o" v51="Dd3mpo" v52="Dd3mpr" v53="Dd3mpr---e" v54="Dd3mpr---o" v55="Dd3mso" v56="Dd3mso---e" v57="Dd3mso---o" v58="Dd3msr" v59="Dd3msr---e" v60="Dd3msr---o" v61="Dd3-po---e" v62="Dd3-po---o" v63="Dh1fp" v64="Dh1fso" v65="Dh1fsr" v66="Dh1mp" v67="Dh1ms" v68="Dh2fp" v69="Dh2fso" v70="Dh2fsr" v71="Dh2mp" v72="Dh2ms" v73="Dh3fp" v74="Dh3fso" v75="Dh3fsr" v76="Dh3mp" v77="Dh3ms" v78="Di3fp" v79="Di3fpr" v80="Di3fso" v81="Di3fsr" v82="Di3mp" v83="Di3mpr" v84="Di3mso" v85="Di3msr" v86="Di3-po" v87="Di3--r" v88="Di3-sr" v89="DOLLAR" v90="Ds1fp-p" v91="Ds1fp-s" v92="Ds1fsop" v93="Ds1fsos" v94="Ds1fsrp" v95="Ds1fsrs" v96="Ds1mp-p" v97="Ds1mp-s" v98="Ds1ms-p" v99="Ds1ms-s" v100="Ds2fp-p" v101="Ds2fp-s" v102="Ds2fsop" v103="Ds2fsos" v104="Ds2fsrp" v105="Ds2fsrs" v106="Ds2mp-p" v107="Ds2mp-s" v108="Ds2ms-p" v109="Ds2ms-s" v110="Ds3fp-s" v111="Ds3fsos" v112="Ds3fsrs" v113="Ds3mp-s" v114="Ds3ms-s" v115="Dw3fpr" v116="Dw3fso" v117="Dw3fsr" v118="Dw3mpr" v119="Dw3mso" v120="Dw3msr" v121="Dw3-po" v122="Dw3--r" v123="Dz3fso" v124="Dz3fsr" v125="Dz3mpr" v126="Dz3mso" v127="Dz3msr" v128="Dz3-po" v129="EQUAL" v130="EXCL" v131="EXCLHELLIP" v132="GT" v133="HELLIP" v134="I" v135="LCURL" v136="LPAR" v137="LSQR" v138="LT" v139="M" v140="Mcfp-l" v141="Mcfpol" v142="Mcfprln" v143="Mcfprly" v144="Mcfsoln" v145="Mcfsoly" v146="Mcfsrln" v147="Mcfsrly" v148="Mcmp-l" v149="Mcms-ln" v150="Mcmsoly" v151="Mcmsrl" v152="Mcmsrly" v153="Mc-p-l" v154="Mffpoly" v155="Mffprln" v156="Mffprly" v157="Mffsoln" v158="Mffsoly" v159="Mffsrln" v160="Mffsrly" v161="Mfmpoly" v162="Mfmprln" v163="Mfmprly" v164="Mfmsoly" v165="Mfmsrln" v166="Mfmsrly" v167="Mlfpo" v168="Mlfpr" v169="Mlmpo" v170="Mlmpr" v171="Ml-po" v172="Mmfpr-n" v173="Mmfsr-n" v174="Mmfsr-y" v175="Mmmpo-y" v176="Mmmpr-n" v177="Mmmpr-y" v178="Mmmso-y" v179="Mmmsr-n" v180="Mmmsr-y" v181="Mofpoly" v182="Mofprln" v183="Mofprly" v184="Mofs-ly" v185="Mofsoln" v186="Mofsoly" v187="Mofsrln" v188="Mofsrly" v189="Mo---l" v190="Mo---ln" v191="Momp-ln" v192="Mompoly" v193="Momprly" v194="Moms-l" v195="Moms-ln" v196="Momsoly" v197="Momsrly" v198="Mo-s-r" v199="Ncfpoy" v200="Ncfprn" v201="Ncfpry"  v202="Ncfpvy" v203="Ncfson" v204="Ncfsoy" v205="Ncfsrn" v206="Ncfsry" v207="Ncfsvn" v208="Ncfsvy" v209="Ncmpoy" v210="Ncmprn" v211="Ncmpry" v212="Ncmpvy" v213="Ncmson" v214="Ncmsoy" v215="Ncmsrn" v216="Ncmsry" v217="Ncmsvn" v218="Ncmsvy" v219="Np" v220="Npfpoy" v221="Npfprn" v222="Npfpry" v223="Npfson" v224="Npfsoy" v225="Npfsrn" v226="Npfsry" v227="Npfsvn" v228="Npfsvy" v229="Npmpoy" v230="Npmprn" v231="Npmpry" v232="Npmsoy" v233="Npmsrn" v234="Npmsry" v235="Npmsvn" v236="Npmsvy" v237="OR" v238="Pd3fpo" v239="Pd3fpr" v240="Pd3fso" v241="Pd3fsr" v242="Pd3mpo" v243="Pd3mpr" v244="Pd3mso" v245="Pd3msr" v246="Pd3-po" v247="PERCENT" v248="PERIOD" v249="Ph1fp" v250="Ph1fso" v251="Ph1fsr" v252="Ph1mp" v253="Ph1ms" v254="Ph2fp" v255="Ph2fso" v256="Ph2fsr" v257="Ph2mp" v258="Ph2ms" v259="Ph3fp" v260="Ph3fso" v261="Ph3fsr" v262="Ph3mp" v263="Ph3mpo" v264="Ph3mpr" v265="Ph3ms" v266="Ph3mso" v267="Ph3msr" v268="Ph3--r" v269="Pi3" v270="Pi3fpo" v271="Pi3fpr" v272="Pi3fso" v273="Pi3fsr" v274="Pi3fsry" v275="Pi3mpo" v276="Pi3mpr" v277="Pi3mpry" v278="Pi3mso" v279="Pi3msr" v280="Pi3msry" v281="Pi3-po" v282="Pi3--r" v283="Pi3-so" v284="Pi3-sr" v285="PLUS" v286="Pp1-pa--------s" v287="Pp1-pa--------w" v288="Pp1-pd--------s" v289="Pp1-pd--------w" v290="Pp1-pr" v291="Pp1-sa--------s" v292="Pp1-sa--------w" v293="Pp1-sd--------s" v294="Pp1-sd--------w" v295="Pp1-sr" v296="Pp2-pa--------s" v297="Pp2-pa--------w" v298="Pp2-pd--------s" v299="Pp2-pd--------w" v300="Pp2-po" v301="Pp2-pr" v302="Pp2-sa--------s" v303="Pp2-sa--------w" v304="Pp2-sd--------s" v305="Pp2-sd--------w" v306="Pp2-so" v307="Pp2-sr" v308="Pp3fpa--------s" v309="Pp3fpa--------w" v310="Pp3fpo" v311="Pp3fpoy" v312="Pp3fpr" v313="Pp3fpry" v314="Pp3fsa--------s" v315="Pp3fsa--------w" v316="Pp3fsd--------s" v317="Pp3fso" v318="Pp3fsoy" v319="Pp3fsr" v320="Pp3fsry" v321="Pp3mpa--------s" v322="Pp3mpa--------w" v323="Pp3mpo" v324="Pp3mpoy" v325="Pp3mpr" v326="Pp3mpry" v327="Pp3msa--------s" v328="Pp3msa--------w" v329="Pp3msd--------s" v330="Pp3mso" v331="Pp3msoy" v332="Pp3msr" v333="Pp3msry" v334="Pp3-pd--------s" v335="Pp3-pd--------w" v336="Pp3-po" v337="Pp3-pr" v338="Pp3-sd--------w" v339="Pp3-so" v340="Pp3-sr" v341="Ps1fp-p" v342="Ps1fp-s" v343="Ps1fsop" v344="Ps1fsos" v345="Ps1fsrp" v346="Ps1fsrs" v347="Ps1mp-p" v348="Ps1mp-s" v349="Ps1ms-p" v350="Ps1ms-s" v351="Ps2fp-p" v352="Ps2fp-s" v353="Ps2fsop" v354="Ps2fsos" v355="Ps2fsrp" v356="Ps2fsrs" v357="Ps2mp-p" v358="Ps2mp-s" v359="Ps2ms-p" v360="Ps2ms-s" v361="Ps3fp-s" v362="Ps3fsos" v363="Ps3fsrs" v364="Ps3mp-s" v365="Ps3ms-s" v366="Pw3fpr" v367="Pw3fso" v368="Pw3fsr" v369="Pw3fsry" v370="Pw3mpr" v371="Pw3mpry" v372="Pw3mso" v373="Pw3msr" v374="Pw3msry" v375="Pw3-po" v376="Pw3-pr" v377="Pw3-pry" v378="Pw3--r" v379="Pw3-so" v380="Px3--a--------s" v381="Px3--a--------w" v382="Px3--d--------s" v383="Px3--d--------w" v384="Pz3fpr" v385="Pz3fso" v386="Pz3fsr" v387="Pz3mpr" v388="Pz3mso" v389="Pz3msoy" v390="Pz3msr" v391="Pz3msry" v392="Pz3-po" v393="Pz3-so" v394="Pz3-sr" v395="Qf" v396="Qn" v397="Qs" v398="QUEST" v399="QUOT" v400="Qz" v401="RCURL" v402="Rg" v403="RPAR" v404="RSQR" v405="Rw" v406="SCOLON" v407="SLASH" v408="Spca" v409="Spcg" v410="Spsa" v411="Spsd" v412="Spsg" v413="STAR" v414="Tdfpr" v415="Tdfso" v416="Tdfsr" v417="Tdmpr" v418="Tdmso" v419="Tdmsr" v420="Td-po" v421="Tffpo" v422="Tffpr" v423="Tffso" v424="Tffsr" v425="Tfmpo" v426="Tfmpr" v427="Tfmso" v428="Tfmsr" v429="Tf-po" v430="Tf-pr" v431="Tf-so" v432="Tifso" v433="Tifsr" v434="TILDA" v435="Timso" v436="Timsr" v437="Ti-po" v438="Ti-pr" v439="Tsfpr" v440="Tsfso" v441="Tsfsr" v442="Tsmpr" v443="Tsmso"  v444="Tsmsr" v445="Ts-po" v446="Vag-----p" v447="Vag-----z" v448="Vaii1" v449="Vaii1p" v450="Vaii1s" v451="Vaii2p" v452="Vaii2s" v453="Vaii3p" v454="Vaii3s" v455="Vail1p" v456="Vail1s" v457="Vail2p" v458="Vail2s" v459="Vail3p" v460="Vail3s" v461="Vaip1p" v462="Vaip1s" v463="Vaip2p" v464="Vaip2s" v465="Vaip3" v466="Vaip3p" v467="Vaip3s" v468="Vais1p" v469="Vais1s" v470="Vais2p" v471="Vais2s" v472="Vais3p" v473="Vais3s" v474="Vam-2p" v475="Vam-2p---l" v476="Vam-2s-p" v477="Vam-2s-z" v478="Van" v479="Van------l" v480="Vap" v481="Vasp1p" v482="Vasp1s" v483="Vasp2p" v484="Vasp2s" v485="Vasp3" v486="Vasp3s" v487="Vmg-----p" v488="Vmg-----z" v489="Vmii1" v490="Vmii1p" v491="Vmii1s" v492="Vmii2p" v493="Vmii2s" v494="Vmii3p" v495="Vmii3s" v496="Vmil1p" v497="Vmil1s" v498="Vmil2p" v499="Vmil2s" v500="Vmil3p" v501="Vmil3s" v502="Vmip1p" v503="Vmip1s" v504="Vmip2p" v505="Vmip2s" v506="Vmip3" v507="Vmip3p" v508="Vmip3s" v509="Vmis1p" v510="Vmis1s" v511="Vmis2p" v512="Vmis2s" v513="Vmis3p" v514="Vmis3s" v515="Vmm-2p" v516="Vmm-2p---l" v517="Vmm-2s--p" v518="Vmm-2s--z" v519="Vmn" v520="Vmn------l" v521="Vmp" v522="Vmp--pf-p" v523="Vmp--pf-z" v524="Vmp--pm-p" v525="Vmp--pm-z" v526="Vmp--sf-p--o" v527="Vmp--sf-p--r" v528="Vmp--sf-z--o" v529="Vmp--sf-z--r" v530="Vmp--sm-p" v531="Vmp--sm-z" v532="Vmsp1p" v533="Vmsp1s" v534="Vmsp2p" v535="Vmsp2s" v536="Vmsp3" v537="Vmsp3s" v538="X" v539="Y" />
+                   </attribute>
+          <attribute entity="attribute" name="head" displayName="Head word id" isEditable="false" isOptional="false"
+                     type="" />
+          <attribute entity="attribute" name="chunk" displayName="Chunk" isEditable="true" isOptional="true" />
+          <attribute entity="attribute" name="deprel" displayName="Dependency relation" isEditable="true"
+                     isOptional="false">
+            <allowedValueSet v0="ABIL" v1="ACT" v2="ADDR" v3="AFF" v4="ALRT" 
+                             v5="APP" v6="ASSOC" v7="BEN" v8="BLAM" v9="CAUS" v10="CNADVS"
+                             v11="CNCNCL" v12="CNCONJ" v13="CNCOP" v14="CNCS"
+                             v15="CNDISJ" v16="CNSBRD" v17="COMP"
+                             v18="COND" v19="CSQ" v20="CTNT" v21="CTNU"
+                             v22="CUMUL" v23="DEF" v24="DFND" v25="DFNS" v26="DISL"
+                             v27="DX" v28="DYN" v29="ELAB" v30="EMT"
+                             v31="END" v32="EQVH" v33="EQVHP" v34="EQVHZ" v35="EQVL" v36="EXCL"
+                             v37="EXCP" v38="EXP" v39="EXPR"
+                             v40="EXPL:APP" v41="EXPL:BEN" v42="EXPL:DFND"
+                             v43="EXPL:EXP" v44="EXPL:EXPR"
+                             v45="EXPL:OBJ" v46="EXPL:PAT" v47="EXPL:RCPT" v49="FTR" v50="GNR" v51="GREET" v52="IDENT" v53="IMIT"
+                             v54="IMPER" v55="IMPRS" v56="INCID" v57="INSTR"
+                             v58="INTNS" v59="INTROG" v60="ITER" v61="LOC" v62="MOD"
+                             v63="NOAPP" v64="OBJ" v65="OPPOS" v66="OPTV"
+                             v67="ORD" v68="PARS" v69="PASS" v70="PAST" v71="PAT"
+                             v72="PERF" v73="PERFR" v74="POLIT" v75="POTN" v76="PRV" v77="PURP"
+                             v78="QEXIST" v79="QLF" v80="QNECES"
+                             v81="QNEG" v82="QNT" v83="QPOSIB" v84="QUNIV"
+                             v85="QUOT" v86="RCPR" v87="RCPT" v88="REFR" v89="RESTR"
+                             v90="RSLT" v91="RSMP" v92="SUPER" v93="TEMP"  v94="UNCTN" v95="UNDEF"/>
+            <exceptForValuesOf elementName="head" v0="0"/>
+          </attribute>
+        </attributes>
+      </element>
+    </elements>
+  </dataStructure>
+</dataStructures>
+  <treeStructure>
+    <definitions>
+      <definition name="Dependency relation">
+        <vertex entity="word" labelAttributeName="form" />
+        <edge entity="word" labelAttributeName="deprel" sourceVertexAttributeName="head" targetVertexAttributeName="id" />
+      </definition>
+    </definitions>
+  </treeStructure>
+</configuration>
