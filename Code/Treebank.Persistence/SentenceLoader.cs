@@ -8,6 +8,7 @@ using Treebank.Domain;
 namespace Treebank.Persistence
 {
     using System;
+    using Mappers.Serialization;
 
     public class SentenceLoader : ISentenceLoader
     {
@@ -32,7 +33,7 @@ namespace Treebank.Persistence
                 if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat, StringComparison.InvariantCultureIgnoreCase))
                     documentMapper =
                         new DocumentMapperClient(
-                            new LightDocumentMapperWithReader
+                            new SerializationDocumentMapper
                             {
                                 AppConfigMapper = appConfigMapper,
                                 EventAggregator = eventAggregator

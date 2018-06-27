@@ -19,6 +19,7 @@
     using Mappers.Algos;
     using Mappers.Configuration;
     using Mappers.LightWeight;
+    using Mappers.Serialization;
     using Persistence;
     using Prism.Events;
     using Treebank.Events;
@@ -109,7 +110,7 @@
                 var lowercaseExtension = extension.Substring(1).ToLowerInvariant();
 
                 if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
-                    persister = new PersisterClient(new DomXmlPersister());
+                    persister = new PersisterClient(new SerializationPersister());
                 else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat)
                          || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat)
                          || lowercaseExtension.Equals(ConfigurationStaticData.ConlluFormat))
@@ -877,7 +878,7 @@
                     documentModel =
                         await
                             new DocumentMapperClient(
-                                new LightDocumentMapperWithReader
+                                new SerializationDocumentMapper
                                 {
                                     AppConfigMapper = appConfigMapper,
                                     EventAggregator = eventAggregator
@@ -966,7 +967,7 @@
             {
                 if (SelectedDocument != null)
                 {
-                    SelectedDocument.Model.FilePath = documentFilePath;
+                    //SelectedDocument.Model.FilePath = documentFilePath;
                     Save(SelectedDocument.Model, documentFilePath, false);
                 }
 

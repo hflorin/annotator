@@ -8,8 +8,8 @@
 
     using Prism.Events;
 
-    using Treebank.Domain;
-    using Treebank.Mappers.Configuration;
+    using Domain;
+    using Configuration;
 
     public class AppConfigMapper : IAppConfigMapper
     {
@@ -22,10 +22,11 @@
 
         private static IAppConfig CreateAppConfig(string filepath)
         {
-            var appConfig = new AppConfig();
-
-            appConfig.Filepath = filepath;
-            appConfig.Name = Path.GetFileName(filepath);
+            var appConfig = new AppConfig
+            {
+                Filepath = filepath,
+                Name = Path.GetFileName(filepath)
+            };
 
             using (var reader = new XmlTextReader(filepath))
             {
