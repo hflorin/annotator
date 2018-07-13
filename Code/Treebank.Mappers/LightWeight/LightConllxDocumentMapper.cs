@@ -141,6 +141,8 @@
 
             var sentence = await Task.FromResult(CreateSentence(filepath, sentenceId));
 
+            sentence.HasBeenLoaded = true;
+
             return sentence;
         }
 

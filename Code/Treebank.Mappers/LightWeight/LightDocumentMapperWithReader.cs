@@ -140,6 +140,8 @@
 
             var sentence = await Task.FromResult(CreateSentence(filepath, sentenceId, datastructure));
 
+            sentence.HasBeenLoaded = true;
+
             return sentence;
         }
 

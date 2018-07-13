@@ -48,6 +48,8 @@
                 <MenuItem x:Name="Compare" Header="_Compare sentences"
                           Command="{Binding CompareSentencesCommand}"
                           ToolTip="Compare two sentences" />
+                <MenuItem x:Name="MergeSentences" Header="_Merge sentences" Command="{Binding MergeSentencesCommand}"
+                          ToolTip="Use this option to merge two sentences" />
             </MenuItem>
         </Menu>
 

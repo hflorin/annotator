@@ -1,8 +1,6 @@
 ﻿namespace Treebank.Mappers.Serialization
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Xml;
@@ -232,6 +230,8 @@
 
                 sentence.Words.Add(word);
             }
+
+            sentence.HasBeenLoaded = true;
 
             return sentence;
         }

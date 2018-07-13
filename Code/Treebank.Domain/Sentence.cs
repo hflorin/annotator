@@ -14,6 +14,8 @@
 
         public bool IsTree { get; set; }
 
+        public bool HasBeenLoaded { get; set; }
+
         public ICollection<Word> Words { get; set; }
 
         public ICollection<string> Metadata { get; set; }

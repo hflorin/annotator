@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Treebank.Annotator.View"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="CompareSentencesWindow" Height="500" Width="600" d:DataContext="{d:DesignData CompareSentencesViewModel}">
+        Title="Select Sentences" Height="500" Width="600" d:DataContext="{d:DesignData CompareSentencesViewModel}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" /><!--documents label-->
@@ -54,7 +54,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button Name="OKButton" Content="Compare" Click="OKButton_OnClick" IsDefault="True"
+        <Button Name="OKButton" Content="Select" Click="OKButton_OnClick" IsDefault="True"
                 Command="{Binding OkButtonCommand}" Grid.Row="4" Grid.Column="0" />
         <Button Name="CancelButton" Content="Cancel" IsCancel="True" Grid.Row="4" Grid.Column="1" />
     </Grid>

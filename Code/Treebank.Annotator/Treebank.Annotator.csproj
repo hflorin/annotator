@@ -135,6 +135,7 @@
     <Compile Include="Events\ChangeAttributesEditorViewModel.cs" />
     <Compile Include="Events\CheckIsTreeOnSentenceEvent.cs" />
     <Compile Include="Events\LoadAttributesForNextWordEvent.cs" />
+    <Compile Include="Events\UpdateSentenceEvent.cs" />
     <Compile Include="Graph\Enums.cs" />
     <Compile Include="Graph\GraphBuilder.cs" />
     <Compile Include="Graph\MotherObjects.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="ViewModels\AddEdgeViewModel.cs" />
     <Compile Include="ViewModels\AddWordViewModel.cs" />
     <Compile Include="ViewModels\CompareSentencesViewModel.cs" />
+    <Compile Include="ViewModels\MergeSentencesEditorViewModel.cs" />
     <Compile Include="ViewModels\ElementAttributeEditorViewModel.cs" />
     <Compile Include="ViewModels\Observable.cs" />
     <Compile Include="ViewModels\DoubleSentenceEditorViewModel.cs" />

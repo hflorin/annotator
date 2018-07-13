@@ -42,6 +42,7 @@
     <Compile Include="Document.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="ExceptValuesOf.cs" />
+    <Compile Include="Extensions\SentenceExtensions.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="Sentence.cs" />
     <Compile Include="Word.cs" />

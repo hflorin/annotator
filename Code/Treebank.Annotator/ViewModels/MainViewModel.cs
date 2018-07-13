@@ -174,6 +174,62 @@
             eventAggregator.GetEvent<ChangeAttributesEditorViewModel>().Subscribe(OnAttributesChanged);
             eventAggregator.GetEvent<CheckIsTreeOnSentenceEvent>().Subscribe(OnCheckIsTreeOnSentence);
             eventAggregator.GetEvent<UpdateAllViewsForSentenceByViewId>().Subscribe(OnUpdateAllViewsForSentenceByViewId);
+            eventAggregator.GetEvent<UpdateSentenceEvent>().Subscribe(OnUpdateSentence);
+            eventAggregator.GetEvent<RefreshSentenceIdsEvent>().Subscribe(OnRefreshSentenceIdsEvent);
+        }
+
+        private void OnRefreshSentenceIdsEvent(bool doRefresh)
+        {
+            if (!doRefresh)
+            {
+                return;
+            }
+
+            if (SelectedDocument == null)
+            {
+                return;
+            }
+
+            var minId = int.MaxValue;
+            foreach (var currentSentence in SelectedDocument.Sentences)
+            {
+                int id;
+                if (int.TryParse(currentSentence.Id.Value, out id))
+                {
+                    if (id < minId)
+                    {
+                        minId = id;
+                    }
+                }
+            }
+
+            foreach (var currentSentence in SelectedDocument.Sentences)
+            {
+                currentSentence.Id.Value = minId.ToString();
+                minId++;
+            }
+        }
+
+        private void OnUpdateSentence(UpdateSentenceEventData input)
+        {
+            var document =
+                Documents.FirstOrDefault(
+                    d => d.IdValue.Equals(input.DocumentId, StringComparison.InvariantCultureIgnoreCase));
+
+            if (document != null)
+            {
+                var sentenceToUpdate =
+                    document.Sentences.FirstOrDefault(
+                        s => s.Id.Value.Equals(input.Sentence.Id.Value, StringComparison.InvariantCultureIgnoreCase));
+
+                var indexToUpdate = document.Sentences.IndexOf(sentenceToUpdate);
+
+                if (sentenceToUpdate != null)
+                {
+                    document.Sentences.RemoveAt(indexToUpdate);
+                    document.Sentences.Insert(indexToUpdate, input.Sentence);
+                }
+            }
         }
 
         private void OnUpdateAllViewsForSentenceByViewId(Guid viewId)
@@ -308,6 +364,112 @@
             CompareSentencesCommand = new DelegateCommand(
                 CompareSentencesCommandExecute,
                 CompareSentencesCommandCanExecute);
+            MergeSentencesCommand = new DelegateCommand(MergeSenteneceCommandExecute, MergeSentencesCommandCanExecute);
+        }
+
+        private void MergeSenteneceCommandExecute(object obj)
+        {
+            //1. retrieve the ids of the sentences that must be merged
+            var compareSentencesWindow =
+                new CompareSentencesWindow(new CompareSentencesViewModel(Documents));
+
+            if (!compareSentencesWindow.ShowDialog().GetValueOrDefault())
+                return;
+            //2. do the merge
+            var dataContext = compareSentencesWindow.DataContext as CompareSentencesViewModel;
+            if (dataContext != null)
+            {
+                if (dataContext.LeftSelectedDocument == null || dataContext.RightSelectedDocument == null
+                    || SentenceEditViews == null)
+                    return;
+
+                var leftSentenceIdAttribute =
+                    dataContext.LeftSelectedSentence.Model.GetAttributeByName("id");
+                var leftDocumentIdAttribute =
+                    dataContext.LeftSelectedDocument.Model.GetAttributeByName("id");
+
+                var rightSentenceIdAttribute =
+                    dataContext.RightSelectedSentence.Model.GetAttributeByName("id");
+                var rightDocumentIdAttribute =
+                    dataContext.RightSelectedDocument.Model.GetAttributeByName("id");
+
+                var leftSentenceConfigFilePath =
+                    dataContext.LeftSelectedDocument.Model.GetAttributeByName("configurationFilePath");
+                var rightSentenceConfigFilePath =
+                    dataContext.RightSelectedDocument.Model.GetAttributeByName("configurationFilePath");
+
+                var appConfig =
+                    appConfigMapper.Map(
+                            dataContext.LeftSelectedDocument.Model.GetAttributeByName("configurationFilePath"))
+                        .GetAwaiter()
+                        .GetResult();
+
+                var dataStructure = GetDataStructure(dataContext.LeftSelectedDocument);
+
+                var sentenceEditView =
+                    new SentenceEditorView(
+                        new MergeSentencesEditorViewModel(
+                            eventAggregator,
+                            appConfigMapper,
+                            dataContext.LeftSelectedSentence,
+                            dataContext.RightSelectedSentence,
+                            dataContext.LeftSelectedDocument.FilePath,
+                            dataContext.LeftSelectedDocument.IdValue,
+                            dataContext.RightSelectedDocument.FilePath,
+                            leftSentenceConfigFilePath,
+                            rightSentenceConfigFilePath,
+                            showInfoMessage,
+                            sentenceLoader, appConfig, dataStructure)
+                        {
+                            LeftSentenceInfo =
+                                new StringWrapper(
+                                    string.Format(
+                                        "Sentence id {0}, Document Id {1}",
+                                        leftSentenceIdAttribute,
+                                        leftDocumentIdAttribute)),
+                            RightSentenceInfo =
+                                new StringWrapper(
+                                    string.Format(
+                                        "Sentence id {0}, Document Id {1}",
+                                        rightSentenceIdAttribute,
+                                        rightDocumentIdAttribute))
+                        },
+                        eventAggregator, showInfoMessage);
+
+                SentenceEditViews.Add(sentenceEditView);
+                ActiveSentenceEditorView = sentenceEditView;
+
+                eventAggregator.GetEvent<StatusNotificationEvent>()
+                    .Publish(
+                        string.Format(
+                            "Merged sentences: {0} (document {1}) and {2} (document {3}) ",
+                            leftSentenceIdAttribute,
+                            leftDocumentIdAttribute,
+                            rightSentenceIdAttribute,
+                            rightDocumentIdAttribute));
+
+                if (dataContext.RightSelectedDocument != null && dataContext.RightSelectedSentence != null)
+                {
+                    var sentenceToRemoveIndex =
+                        dataContext.RightSelectedDocument.Sentences.IndexOf(dataContext.RightSelectedSentence);
+
+                    SelectedSentence =
+                        dataContext.RightSelectedDocument.Sentences.Except(new List<SentenceWrapper>
+                        {
+                            dataContext.RightSelectedSentence
+                        }).FirstOrDefault();
+                    dataContext.RightSelectedDocument.Sentences.RemoveAt(sentenceToRemoveIndex);
+                }
+
+                eventAggregator.GetEvent<RefreshSentenceIdsEvent>().Publish(true);
+            }
+
+            InvalidateCommands();
+        }
+
+        private bool MergeSentencesCommandCanExecute(object arg)
+        {
+            return Documents.Any();
         }
 
         private void CompareSentencesCommandExecute(object obj)
@@ -326,28 +488,14 @@
                     return;
 
                 var leftSentenceIdAttribute =
-                    dataContext.LeftSelectedSentence.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+                    dataContext.LeftSelectedSentence.Model.GetAttributeByName("id");
                 var leftDocumentIdAttribute =
-                    dataContext.LeftSelectedDocument.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+                    dataContext.LeftSelectedDocument.Model.GetAttributeByName("id");
 
                 var rightSentenceIdAttribute =
-                    dataContext.RightSelectedSentence.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
+                    dataContext.RightSelectedSentence.Model.GetAttributeByName("id");
                 var rightDocumentIdAttribute =
-                    dataContext.RightSelectedDocument.Attributes.FirstOrDefault(a => a.Name.Equals("id"));
-
-                var leftSentenceIdAttributeValue = leftSentenceIdAttribute == null
-                    ? string.Empty
-                    : leftSentenceIdAttribute.Value;
-                var leftDocumentIdAttributeValue = leftDocumentIdAttribute == null
-                    ? string.Empty
-                    : leftDocumentIdAttribute.Value;
-
-                var rightSentenceIdAttributeValue = rightSentenceIdAttribute == null
-                    ? string.Empty
-                    : rightSentenceIdAttribute.Value;
-                var rightDocumentIdAttributeValue = rightDocumentIdAttribute == null
-                    ? string.Empty
-                    : rightDocumentIdAttribute.Value;
+                    dataContext.RightSelectedDocument.Model.GetAttributeByName("id");
 
                 var leftSentenceConfigFilePath =
                     dataContext.LeftSelectedDocument.Model.GetAttributeByName("configurationFilePath");
@@ -372,14 +520,14 @@
                                 new StringWrapper(
                                     string.Format(
                                         "Sentence id {0}, Document Id {1}",
-                                        leftSentenceIdAttributeValue,
-                                        leftDocumentIdAttributeValue)),
+                                        leftSentenceIdAttribute,
+                                        leftDocumentIdAttribute)),
                             RightSentenceInfo =
                                 new StringWrapper(
                                     string.Format(
                                         "Sentence id {0}, Document Id {1}",
-                                        rightSentenceIdAttributeValue,
-                                        rightDocumentIdAttributeValue))
+                                        rightSentenceIdAttribute,
+                                        rightDocumentIdAttribute))
                         },
                         eventAggregator);
 
@@ -390,10 +538,10 @@
                     .Publish(
                         string.Format(
                             "Comparing sentences: {0} (document {1}) and {2} (document {3}) ",
-                            leftSentenceIdAttributeValue,
-                            leftDocumentIdAttributeValue,
-                            rightSentenceIdAttributeValue,
-                            rightDocumentIdAttributeValue));
+                            leftSentenceIdAttribute,
+                            leftDocumentIdAttribute,
+                            rightSentenceIdAttribute,
+                            rightDocumentIdAttribute));
             }
 
             InvalidateCommands();
@@ -547,6 +695,8 @@
 
                         SelectedDocument.Sentences.Add(newSentence);
                         SelectedSentence = newSentence;
+                        EditSentenceCommand.Execute(null);
+                        eventAggregator.GetEvent<RefreshSentenceIdsEvent>().Publish(true);
                     }
                 }
             }
@@ -966,10 +1116,7 @@
             if (!string.IsNullOrWhiteSpace(documentFilePath))
             {
                 if (SelectedDocument != null)
-                {
-                    //SelectedDocument.Model.FilePath = documentFilePath;
                     Save(SelectedDocument.Model, documentFilePath, false);
-                }
 
                 eventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(string.Format("Document saved: {0}", documentFilePath));
@@ -1083,6 +1230,8 @@
 
         public ICommand SelectedSentenceChangedCommand { get; set; }
 
+        public ICommand MergeSentencesCommand { get; set; }
+
         public ISentenceEditorView ActiveSentenceEditorView
         {
             get { return activeSentenceEditorView; }
@@ -1107,32 +1256,36 @@
 
         public DataStructure DataStructure
         {
-            get
+            get { return GetDataStructure(selectedDocument); }
+        }
+
+        private DataStructure GetDataStructure(DocumentWrapper document)
+        {
+            var extension = Path.GetExtension(document.FilePath);
+            if (extension != null)
             {
-                var extension = Path.GetExtension(selectedDocument.FilePath);
-                if (extension != null)
-                {
-                    var fileFormat = extension.Substring(1);
+                var fileFormat = extension.Substring(1);
 
-                    var appconfig =
-                        appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
-                            .GetAwaiter()
-                            .GetResult();
+                var appconfig =
+                    appConfigMapper.Map(document.Model.GetAttributeByName("configurationFilePath"))
+                        .GetAwaiter()
+                        .GetResult();
 
-                    var dataStructure =
-                        appconfig.DataStructures.FirstOrDefault(
-                            d => fileFormat.Equals(d.Format, StringComparison.InvariantCultureIgnoreCase)) ??
-                        appconfig.DataStructures.FirstOrDefault(
-                            d =>
-                                d.Format.Equals(ConfigurationStaticData.ConllxFormat, StringComparison.InvariantCultureIgnoreCase) ||
-                                d.Format.Equals(ConfigurationStaticData.ConllFormat, StringComparison.InvariantCultureIgnoreCase) ||
-                                d.Format.Equals(ConfigurationStaticData.ConlluFormat, StringComparison.InvariantCultureIgnoreCase));
+                var dataStructure =
+                    appconfig.DataStructures.FirstOrDefault(
+                        d => fileFormat.Equals(d.Format, StringComparison.InvariantCultureIgnoreCase)) ??
+                    appconfig.DataStructures.FirstOrDefault(
+                        d =>
+                            d.Format.Equals(ConfigurationStaticData.ConllxFormat,
+                                StringComparison.InvariantCultureIgnoreCase) ||
+                            d.Format.Equals(ConfigurationStaticData.ConllFormat,
+                                StringComparison.InvariantCultureIgnoreCase) ||
+                            d.Format.Equals(ConfigurationStaticData.ConlluFormat,
+                                StringComparison.InvariantCultureIgnoreCase));
 
-                    return dataStructure;
-                }
-
-                return null;
+                return dataStructure;
             }
+            return null;
         }
 
         #endregion

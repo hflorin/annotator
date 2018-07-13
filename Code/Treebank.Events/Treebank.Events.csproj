@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="CloseApplicationEvent.cs" />
     <Compile Include="GenerateGraphEvent.cs" />
+    <Compile Include="RefreshSentenceIdsEvent.cs" />
     <Compile Include="UpdateAllViewsForSentenceByViewId.cs" />
     <Compile Include="ValidationExceptionEvent.cs" />
     <Compile Include="SenteceGraphOperationMode.cs" />
