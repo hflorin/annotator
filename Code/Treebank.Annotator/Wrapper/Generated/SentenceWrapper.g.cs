@@ -3,7 +3,6 @@ namespace Treebank.Annotator.Wrapper
 	using System;
 	using System.Linq;
 	using Base;
-	using Treebank.Domain;
 
 	public partial class SentenceWrapper : ElementWrapper<Domain.Sentence>
 	{

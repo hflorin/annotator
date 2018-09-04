@@ -205,7 +205,7 @@
 
             foreach (var currentSentence in SelectedDocument.Sentences)
             {
-                currentSentence.Id.Value = minId.ToString();
+                currentSentence.NewId.Value = minId.ToString();
                 minId++;
             }
         }

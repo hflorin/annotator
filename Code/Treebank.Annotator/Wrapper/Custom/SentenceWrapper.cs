@@ -19,6 +19,30 @@
             }
         }
 
+        public AttributeWrapper NewId
+        {
+            get
+            {
+                if (!Attributes.Any(a => a.Name.Equals("newid")))
+                {
+                    Attributes.Add(new AttributeWrapper(new Attribute {Name = "newid"}));
+                }
+                return Attributes.FirstOrDefault(a => a.Name.Equals("newid"));
+            }
+
+            set
+            {
+                if (!Attributes.Any(a => a.Name.Equals("newid")))
+                {
+                    Attributes.Add(new AttributeWrapper(new Attribute { Name = "newid" }));
+                }
+
+                var oldId = Attributes.FirstOrDefault(a => a.Name.Equals("newid"));
+                Attributes.Remove(oldId);
+                Attributes.Add(value);
+            }
+        }
+
         public AttributeWrapper Content
         {
             get

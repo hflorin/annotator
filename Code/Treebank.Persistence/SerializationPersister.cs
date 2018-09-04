@@ -93,7 +93,7 @@
         {
             if (outputSentence == null || sentence == null) return;
 
-            outputSentence.Id = sentence.GetAttributeByName("id");
+            outputSentence.Id = sentence.GetAttributeByName("newid") ?? sentence.GetAttributeByName("id");
             outputSentence.CitationPart = sentence.GetAttributeByName("citation-part");
             outputSentence.Date = sentence.GetAttributeByName("date");
             outputSentence.Parser = sentence.GetAttributeByName("parser");
@@ -178,7 +178,7 @@
         {
             return new Mappers.Serialization.Models.Sentence
             {
-                Id = sentence.GetAttributeByName("id"),
+                Id = sentence.GetAttributeByName("newid") ?? sentence.GetAttributeByName("id"),
                 CitationPart = sentence.GetAttributeByName("citation-part"),
                 Date = sentence.GetAttributeByName("date"),
                 Parser = sentence.GetAttributeByName("parser"),

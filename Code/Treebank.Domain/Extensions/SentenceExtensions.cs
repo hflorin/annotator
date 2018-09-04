@@ -12,7 +12,7 @@
                 return left;
             }
 
-            int lastWordInLeftSentenceId = GetLastWordId(left);
+            var lastWordInLeftSentenceId = GetLastWordId(left);
 
             foreach (var rightWord in right.Words)
             {
@@ -40,8 +40,7 @@
 
         private static int GetLastWordId(Sentence input)
         {
-            int id;
-            if (!int.TryParse(input.Words.Last().GetAttributeByName("id"), out id))
+            if (!int.TryParse(input.Words.Last().GetAttributeByName("id"), out int id))
             {
                 id = input.Words.Count;
             }
