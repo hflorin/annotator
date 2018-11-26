@@ -31,6 +31,7 @@ namespace Treebank.Persistence
                 DocumentMapperClient documentMapper = null;
 
                 if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat, StringComparison.InvariantCultureIgnoreCase))
+                {
                     documentMapper =
                         new DocumentMapperClient(
                             new SerializationDocumentMapper
@@ -38,9 +39,11 @@ namespace Treebank.Persistence
                                 AppConfigMapper = appConfigMapper,
                                 EventAggregator = eventAggregator
                             });
+                }
                 else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat, StringComparison.InvariantCultureIgnoreCase)
                          || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat, StringComparison.InvariantCultureIgnoreCase)
                          || lowercaseExtension.Equals(ConfigurationStaticData.ConlluFormat, StringComparison.InvariantCultureIgnoreCase))
+                {
                     documentMapper =
                         new DocumentMapperClient(
                             new LightConllxDocumentMapper
@@ -48,9 +51,12 @@ namespace Treebank.Persistence
                                 AppConfigMapper = appConfigMapper,
                                 EventAggregator = eventAggregator
                             });
+                }
 
                 if (documentMapper == null)
+                {
                     return new Sentence();
+                }
 
                 return await documentMapper.LoadSentence(sentenceId, documentFilePath, configFilePath);
             }

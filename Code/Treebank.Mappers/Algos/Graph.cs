@@ -77,7 +77,9 @@
                         for (var i = 0; i < visited.Length; i++)
                         {
                             if (visited[i])
+                            {
                                 cycle.Add(wordToVertexMapping.Single(p => p.Value == i).Key);
+                            }
                         }
 
                         cycle.Add(wordToVertexMapping.Single(p => p.Value == v).Key);

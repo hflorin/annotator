@@ -50,7 +50,9 @@
                 sentenceLoader);
 
             if (!EnsureConfigurationsAreAvailable())
+            {
                 return;
+            }
 
             SubscribeToEvents();
 
@@ -63,17 +65,23 @@
                 Documents.Where(p => p.IsChanged || string.IsNullOrWhiteSpace(p.FilePath)).Select(p => p).ToList();
 
             if (modifiedDocs.Any())
+            {
                 if (
                     showInfoMessage.ShowInfoMessage(
                         "Unsaved changes will be lost upon closing the application.\r\nDo you want to save the changes?",
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
                     foreach (var doc in modifiedDocs)
                     {
                         if (string.IsNullOrEmpty(doc.FilePath))
+                        {
                             doc.FilePath = saveDialogService.GetSaveFileLocation(FileFilters.XmlFilesOnlyFilter);
+                        }
 
                         Save(doc.Model);
                     }
+                }
+            }
         }
 
         public void Save(Document document)
@@ -95,6 +103,8 @@
                 return;
             }
 
+            SelectedDocument.AcceptChanges();
+
             eventAggregator.GetEvent<StatusNotificationEvent>()
                 .Publish("Could not save file because there was no filepath set.");
         }
@@ -110,19 +120,27 @@
                 var lowercaseExtension = extension.Substring(1).ToLowerInvariant();
 
                 if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat))
+                {
                     persister = new PersisterClient(new SerializationPersister());
+                }
                 else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat)
                          || lowercaseExtension.Equals(ConfigurationStaticData.ConllFormat)
                          || lowercaseExtension.Equals(ConfigurationStaticData.ConlluFormat))
+                {
                     persister = new PersisterClient(new ConllxPersister(eventAggregator));
+                }
             }
 
             if (persister != null)
+            {
                 persister.Save(document, documentFilePath, overwrite);
+            }
             else
+            {
                 eventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(
                         "Cannot save the document selected,because the format is not supported. Supported formats are XML and CONLLX.");
+            }
         }
 
         private bool EnsureConfigurationsAreAvailable()
@@ -132,7 +150,9 @@
             var filesCount = 0;
 
             if (!string.IsNullOrWhiteSpace(configFilesDirectoryPath) && Directory.Exists(configFilesDirectoryPath))
+            {
                 filesCount = Directory.GetFiles(configFilesDirectoryPath, "*.xml").Length;
+            }
 
             while (string.IsNullOrWhiteSpace(configFilesDirectoryPath) || !Directory.Exists(configFilesDirectoryPath)
                    || filesCount == 0)
@@ -151,7 +171,9 @@
                 }
 
                 if (!string.IsNullOrWhiteSpace(configFilesDirectoryPath))
+                {
                     filesCount = Directory.GetFiles(configFilesDirectoryPath, "*.xml").Length;
+                }
             }
 
             SetPathInAppSettings(configFilesDirectoryPath);
@@ -235,7 +257,9 @@
         private void OnUpdateAllViewsForSentenceByViewId(Guid viewId)
         {
             if (sentenceEditViewModels == null || !sentenceEditViewModels.Any())
+            {
                 return;
+            }
 
             var sentenceViewToUpdate =
                 sentenceEditViewModels.FirstOrDefault(sev => sev is SentenceEditorView && sev.ViewId == viewId) as
@@ -251,15 +275,19 @@
                             && ((SentenceEditorView) sev).ViewModel.Sentence.Id.Value == sentenceId).ToList();
 
                 if (sentenceEditViewsToUpdate.Any())
+                {
                     sentenceEditViewsToUpdate.ForEach(
                         v => eventAggregator.GetEvent<GenerateGraphEvent>().Publish(v.ViewId));
+                }
             }
         }
 
         private void OnCheckIsTreeOnSentence(SentenceWrapper sentenceWrapper)
         {
             if (sentenceWrapper == null)
+            {
                 return;
+            }
 
             var validationResult = new CheckGraphResult();
 
@@ -276,24 +304,30 @@
             if (!sentenceWrapper.IsTree)
             {
                 foreach (var disconnectedWordId in validationResult.DisconnectedWordIds)
+                {
                     eventAggregator.GetEvent<ValidationExceptionEvent>()
                         .Publish(
                             string.Format(
                                 "The word id: {0}, in sentence id: {1}, is not connected to another word.",
                                 disconnectedWordId,
                                 sentenceWrapper.Id.Value));
+                }
 
                 foreach (var cycle in validationResult.Cycles)
+                {
                     eventAggregator.GetEvent<ValidationExceptionEvent>()
                         .Publish(
                             string.Format(
                                 "The sentence with id {0} has cycle: {1}",
                                 sentence.Id.Value,
                                 string.Join(",", cycle)));
+                }
 
                 if (validationResult.DisconnectedWordIds.Any() || validationResult.Cycles.Any())
+                {
                     eventAggregator.GetEvent<StatusNotificationEvent>()
                         .Publish("Please check warnings in the Output panel.");
+                }
             }
         }
 
@@ -321,22 +355,34 @@
             ISentenceLoader sentenceLoaderParam)
         {
             if (eventAggregatorArg == null)
+            {
                 throw new ArgumentNullException("eventAggregatorArg");
+            }
 
             if (saveDialogServiceArg == null)
+            {
                 throw new ArgumentNullException("saveDialogServiceArg");
+            }
 
             if (openFileDialogServiceArg == null)
+            {
                 throw new ArgumentNullException("openFileDialogServiceArg");
+            }
 
             if (configMapper == null)
+            {
                 throw new ArgumentNullException("configMapper");
+            }
 
             if (showMessage == null)
+            {
                 throw new ArgumentNullException("showMessage");
+            }
 
             if (sentenceLoaderParam == null)
+            {
                 throw new ArgumentNullException("sentenceLoaderParam");
+            }
 
             showInfoMessage = showMessage;
             saveDialogService = saveDialogServiceArg;
@@ -369,19 +415,24 @@
 
         private void MergeSenteneceCommandExecute(object obj)
         {
+            System.Diagnostics.Debugger.Launch();
             //1. retrieve the ids of the sentences that must be merged
             var compareSentencesWindow =
                 new CompareSentencesWindow(new CompareSentencesViewModel(Documents));
 
             if (!compareSentencesWindow.ShowDialog().GetValueOrDefault())
+            {
                 return;
+            }
             //2. do the merge
             var dataContext = compareSentencesWindow.DataContext as CompareSentencesViewModel;
             if (dataContext != null)
             {
                 if (dataContext.LeftSelectedDocument == null || dataContext.RightSelectedDocument == null
                     || SentenceEditViews == null)
+                {
                     return;
+                }
 
                 var leftSentenceIdAttribute =
                     dataContext.LeftSelectedSentence.Model.GetAttributeByName("id");
@@ -461,6 +512,8 @@
                     dataContext.RightSelectedDocument.Sentences.RemoveAt(sentenceToRemoveIndex);
                 }
 
+                SelectedDocument = dataContext.LeftSelectedDocument;
+
                 eventAggregator.GetEvent<RefreshSentenceIdsEvent>().Publish(true);
             }
 
@@ -478,14 +531,18 @@
                 new CompareSentencesWindow(new CompareSentencesViewModel(Documents));
 
             if (!compareSentencesWindow.ShowDialog().GetValueOrDefault())
+            {
                 return;
+            }
 
             var dataContext = compareSentencesWindow.DataContext as CompareSentencesViewModel;
             if (dataContext != null)
             {
                 if (dataContext.LeftSelectedDocument == null || dataContext.RightSelectedDocument == null
                     || SentenceEditViews == null)
+                {
                     return;
+                }
 
                 var leftSentenceIdAttribute =
                     dataContext.LeftSelectedSentence.Model.GetAttributeByName("id");
@@ -555,6 +612,7 @@
         private void BindAttributesCommandExecute(object obj)
         {
             if (SelectedDocument != null)
+            {
                 eventAggregator.GetEvent<ChangeAttributesEditorViewModel>()
                     .Publish(
                         new ElementAttributeEditorViewModel(eventAggregator, Guid.Empty)
@@ -563,6 +621,7 @@
                                 SelectedDocument
                                     .Attributes
                         });
+            }
         }
 
         private bool BindAttributesCommandCanExecute(object arg)
@@ -578,7 +637,9 @@
         private void DeleteSentenceCommandExecute(object obj)
         {
             if (SelectedDocument == null || SelectedSentence == null)
+            {
                 return;
+            }
 
             if (SelectedDocument.Sentences.Count <= 1)
             {
@@ -678,7 +739,9 @@
                                         a => a.Name == configuration.Vertex.LabelAttributeName);
 
                                 if (attribute != null)
+                                {
                                     attribute.Value = wordContent;
+                                }
                             }
 
                             var newWordWrapper = new WordWrapper(newWord);
@@ -710,7 +773,9 @@
         private void EditWordOrderCommandExecute(object obj)
         {
             if (SelectedSentence == null)
+            {
                 return;
+            }
 
             var wordReorderingWindow = new WordReorderingWindow(new WordReorderingViewModel(SelectedSentence));
             if (wordReorderingWindow.ShowDialog().GetValueOrDefault())
@@ -728,7 +793,9 @@
         private void SelectedSentenceChangedCommandExecute(object obj)
         {
             if (SelectedSentence == null || SentenceEditViews == null)
+            {
                 return;
+            }
 
             if (SentenceEditViews.Any())
             {
@@ -776,7 +843,9 @@
         private void EditSentenceCommandExecute(object obj)
         {
             if (SelectedSentence == null || SentenceEditViews == null)
+            {
                 return;
+            }
 
             var appConfig =
                 appConfigMapper.Map(SelectedDocument.Model.GetAttributeByName("configurationFilePath"))
@@ -784,9 +853,11 @@
                     .GetResult();
 
             if (SelectedSentence.Words == null || !SelectedSentence.Words.Any())
+            {
                 LoadWordsForSentence(SelectedSentence, SelectedDocument.FilePath, appConfig.Filepath)
                     .GetAwaiter()
                     .GetResult();
+            }
 
             var sentenceEditView =
                 new SentenceEditorView(
@@ -827,7 +898,9 @@
                 await sentenceLoader.LoadSentenceWords(selectedSentence.Id.Value, documentFilePath, configFilePath);
 
             if (sentenceLoaded == null)
+            {
                 return;
+            }
 
             var selectedSentenceIndex = SelectedDocument.Sentences.IndexOf(SelectedSentence);
 
@@ -841,7 +914,9 @@
         private bool EditSentenceCommandCanExecute(object arg)
         {
             if (SelectedSentence != null)
+            {
                 return true;
+            }
 
             return false;
         }
@@ -869,30 +944,40 @@
         private void CloseCommandExecute(object obj)
         {
             if (SelectedDocument == null || documentsWrappers == null)
+            {
                 return;
+            }
 
             if (selectedDocument.IsChanged)
+            {
                 if (
                     showInfoMessage.ShowInfoMessage(
                         "Unsaved changes will be lost upon closing the document.\r\nDo you want to save the changes?",
                         MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     if (string.IsNullOrEmpty(selectedDocument.FilePath))
+                    {
                         selectedDocument.FilePath = saveDialogService.GetSaveFileLocation(
                             FileFilters.XmlFilesOnlyFilter);
+                    }
 
                     Save(selectedDocument.Model);
                 }
+            }
 
             var closedDocumentFilepath = SelectedDocument.Model.FilePath;
 
             if (closedDocumentFilepath != null)
+            {
                 documentsWrappers.Remove(closedDocumentFilepath);
+            }
 
             SelectedDocument = null;
 
             if (documentsWrappers.Any())
+            {
                 SelectedDocument = documentsWrappers.First().Value;
+            }
 
             RefreshDocumentsExplorerList();
             InvalidateCommands();
@@ -950,11 +1035,15 @@
                     });
 
                 if (Documents == null)
+                {
                     Documents =
                         new ChangeTrackingCollection<DocumentWrapper>(
                             new List<DocumentWrapper> {new DocumentWrapper(document)});
+                }
                 else
+                {
                     Documents.Add(new DocumentWrapper(document));
+                }
 
                 InvalidateCommands();
 
@@ -992,14 +1081,18 @@
                     .Publish(string.Format("Loading document: {0}. Please wait...", documentFilePath));
 
                 if (string.IsNullOrWhiteSpace(documentFilePath))
+                {
                     return;
+                }
 
                 DocumentLoadExceptions.Clear();
 
                 var documentModel = await MapDocumentModel(documentFilePath, appConfig);
 
                 if (documentModel == null)
+                {
                     return;
+                }
 
                 var documentWrapper = new DocumentWrapper(documentModel);
 
@@ -1025,6 +1118,7 @@
 
                 if (lowercaseExtension.Equals(ConfigurationStaticData.XmlFormat,
                     StringComparison.InvariantCultureIgnoreCase))
+                {
                     documentModel =
                         await
                             new DocumentMapperClient(
@@ -1035,6 +1129,7 @@
                                 }).Map(
                                 documentFilePath,
                                 appConfig.Filepath);
+                }
                 else if (lowercaseExtension.Equals(ConfigurationStaticData.ConllxFormat,
                              StringComparison.InvariantCultureIgnoreCase)
                          ||
@@ -1043,6 +1138,7 @@
                          ||
                          lowercaseExtension.Equals(ConfigurationStaticData.ConlluFormat,
                              StringComparison.InvariantCultureIgnoreCase))
+                {
                     documentModel =
                         await
                             new DocumentMapperClient(
@@ -1053,10 +1149,13 @@
                                 }).Map(
                                 documentFilePath,
                                 appConfig.Filepath);
+                }
                 else
+                {
                     eventAggregator.GetEvent<StatusNotificationEvent>()
                         .Publish(
                             "Cannot load the file selected,because the format is not supported. Supported formats are XML and CONLLX.");
+                }
             }
 
             return documentModel;
@@ -1065,12 +1164,16 @@
         private void SetPathInAppSettings(string configFilesDirectoryPath)
         {
             if (string.IsNullOrWhiteSpace(configFilesDirectoryPath))
+            {
                 return;
+            }
 
             var appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             if (appPath == null)
+            {
                 return;
+            }
 
             var configFile = Path.Combine(appPath, Assembly.GetExecutingAssembly().GetName().Name + ".exe.config");
             var configFileMap = new ExeConfigurationFileMap {ExeConfigFilename = configFile};
@@ -1083,12 +1186,16 @@
         private void RefreshDocumentsExplorerList()
         {
             if (Documents == null)
+            {
                 return;
+            }
 
             Documents.Clear();
 
             foreach (var documentWrapper in documentsWrappers)
+            {
                 Documents.Add(documentWrapper.Value);
+            }
         }
 
         private void SaveCommandExecute(object obj)
@@ -1116,7 +1223,9 @@
             if (!string.IsNullOrWhiteSpace(documentFilePath))
             {
                 if (SelectedDocument != null)
+                {
                     Save(SelectedDocument.Model, documentFilePath, false);
+                }
 
                 eventAggregator.GetEvent<StatusNotificationEvent>()
                     .Publish(string.Format("Document saved: {0}", documentFilePath));

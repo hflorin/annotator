@@ -18,21 +18,27 @@
             var filepath = string.IsNullOrWhiteSpace(filepathToSaveTo) ? document.FilePath : filepathToSaveTo;
 
             if (string.IsNullOrWhiteSpace(filepath))
+            {
                 return;
+            }
 
             var fileName = Path.GetFileName(filepath);
             var newFilepath = filepath.Replace(fileName, "New" + fileName);
 
             var treebank = LoadTreebank(document.FilePath);
 
+            DeleteSentencesFromDocumentIfRemovedInCurrentSession(document, treebank);
+
             foreach (var sentence in document.Sentences)
             {
                 if (IsNewSentence(sentence, treebank))
+                {
                     AddNewSentenceToTreebank(sentence, treebank);
-                else if (IsModifiedSentence(sentence))
+                }
+                else
+                {
                     SaveModifiedSentenceToTreebank(sentence, treebank);
-
-                DeleteSentencesFromDocumentIfRemovedInCurrentSession(document, treebank);
+                }
             }
 
             var ser = new XmlSerializer(typeof(Treebank));
@@ -42,7 +48,9 @@
             }
 
             if (File.Exists(filepath))
+            {
                 File.Delete(filepath);
+            }
 
             File.Move(newFilepath, filepath);
             document.FilePath = filepath;
@@ -76,22 +84,31 @@
                 CopySentenceAttributes(sentence, outputSentence);
 
                 if (sentence.Words.Count > 0)
+                {
+                    DeleteWordsFromSentenceIfRemovedInCurrentSession(sentence, outputSentence);
+
                     foreach (var sentenceWord in sentence.Words)
                     {
                         if (IsNewWord(sentenceWord, outputSentence))
+                        {
                             AddNewWord(sentenceWord, outputSentence);
+                        }
                         else
+                        {
                             SaveModifiedWord(sentenceWord, outputSentence);
-
-                        DeleteWordsFromSentenceIfRemovedInCurrentSession(sentence, outputSentence);
+                        }
                     }
+                }
             }
         }
 
         private static void CopySentenceAttributes(Sentence sentence,
             Mappers.Serialization.Models.Sentence outputSentence)
         {
-            if (outputSentence == null || sentence == null) return;
+            if (outputSentence == null || sentence == null)
+            {
+                return;
+            }
 
             outputSentence.Id = sentence.GetAttributeByName("newid") ?? sentence.GetAttributeByName("id");
             outputSentence.CitationPart = sentence.GetAttributeByName("citation-part");
@@ -127,12 +144,17 @@
                             StringComparison.InvariantCultureIgnoreCase));
 
             if (outputWord != null)
+            {
                 CopyWordAttributes(sentenceWord, outputWord);
+            }
         }
 
         private static void CopyWordAttributes(Word sentenceWord, Mappers.Serialization.Models.Word outputWord)
         {
-            if (sentenceWord == null || outputWord == null) return;
+            if (sentenceWord == null || outputWord == null)
+            {
+                return;
+            }
 
             outputWord.Id = sentenceWord.GetAttributeByName("id");
             outputWord.Chunk = sentenceWord.GetAttributeByName("chunk");
@@ -185,11 +207,6 @@
                 User = sentence.GetAttributeByName("user"),
                 Words = sentence.Words.Select(MapOutputWord).ToList()
             };
-        }
-
-        private static bool IsModifiedSentence(Sentence sentence)
-        {
-            return sentence.Words != null && sentence.Words.Count > 0;
         }
 
         private static bool IsNewSentence(Sentence sentence, Treebank treebank)

@@ -18,7 +18,10 @@
         public CompareSentencesViewModel(ObservableCollection<DocumentWrapper> documentWrappers)
         {
             if (documentWrappers == null)
+            {
                 throw new ArgumentNullException("documentWrappers");
+            }
+
             Documents = documentWrappers;
 
             OkButtonCommand = new DelegateCommand(OkButtonCommandExecute, OkButtonCommandCanExecute);

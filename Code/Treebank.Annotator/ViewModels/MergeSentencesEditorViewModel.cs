@@ -160,7 +160,9 @@
                 await sentenceLoader.LoadSentenceWords(Sentence.Id.Value, leftSentenceDocumentFilePath, leftSentenceConfigFilePath);
 
                 if (sentenceLoaded == null)
+                {
                     return;
+                }
 
                 Sentence = new SentenceWrapper(sentenceLoaded);
             }
@@ -171,7 +173,9 @@
                 await sentenceLoader.LoadSentenceWords(RightSentence.Id.Value, rightSentenceDocumentFilePath, rightSentenceConfigFilePath);
 
                 if (sentenceLoaded == null)
+                {
                     return;
+                }
 
                 RightSentence = new SentenceWrapper(sentenceLoaded);
             }

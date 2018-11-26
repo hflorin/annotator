@@ -188,7 +188,9 @@
             var addAttributeWindow = new AddAttributeWindow(new AddAttributeViewModel());
 
             if (!addAttributeWindow.ShowDialog().GetValueOrDefault())
+            {
                 return;
+            }
 
             var dataContext = addAttributeWindow.DataContext as AddAttributeViewModel;
             if (dataContext != null)
