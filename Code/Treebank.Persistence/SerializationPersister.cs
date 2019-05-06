@@ -109,8 +109,9 @@
             {
                 return;
             }
-
-            outputSentence.Id = sentence.GetAttributeByName("newid") ?? sentence.GetAttributeByName("id");
+            var sentenceId = string.IsNullOrWhiteSpace(sentence.GetAttributeByName("newid")) ? 
+                sentence.GetAttributeByName("id") : sentence.GetAttributeByName("newid");
+            outputSentence.Id = sentenceId;
             outputSentence.CitationPart = sentence.GetAttributeByName("citation-part");
             outputSentence.Date = sentence.GetAttributeByName("date");
             outputSentence.Parser = sentence.GetAttributeByName("parser");
@@ -198,9 +199,12 @@
 
         private static Mappers.Serialization.Models.Sentence MapOutputSentence(Sentence sentence)
         {
+            var sentenceId = string.IsNullOrWhiteSpace(sentence.GetAttributeByName("newid")) ?
+                sentence.GetAttributeByName("id") : sentence.GetAttributeByName("newid");
+
             return new Mappers.Serialization.Models.Sentence
             {
-                Id = sentence.GetAttributeByName("newid") ?? sentence.GetAttributeByName("id"),
+                Id = sentenceId,
                 CitationPart = sentence.GetAttributeByName("citation-part"),
                 Date = sentence.GetAttributeByName("date"),
                 Parser = sentence.GetAttributeByName("parser"),
